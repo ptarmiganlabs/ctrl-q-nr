@@ -1,0 +1,179 @@
+<script type="text/javascript">
+    // eslint-disable-next-line no-undef
+    RED.nodes.registerType('qseow-task', {
+        category: 'Qlik Sense',
+        color: '#589442',
+        defaults: {
+            name: { value: '' },
+            server: { value: '', type: 'qlik-sense-server' },
+            op: { value: 'start', options: ['start'], required: true },
+            taskId: { value: '', required: false },
+            taskSource1: { value: 'predefined', options: ['predefined', 'msg-in'] },
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'file.png',
+        label() {
+            return this.name || 'qseow-task';
+        },
+        oneditprepare() {
+            // eslint-disable-next-line no-unused-vars
+            const node = this;
+    
+            // eslint-disable-next-line no-undef
+            this.editorTaskId = RED.editor.createEditor({
+                id: 'node-input-taskId-editor',
+                mode: 'ace/mode/text',
+                value: this.taskId || '',
+            });
+
+            // Only show the task ID editor if the task ID source is "predefined"
+            // eslint-disable-next-line no-undef
+            const appOpInput = $('#node-input-op');
+            // eslint-disable-next-line no-undef
+            const taskSourceInput1 = $('#node-input-taskSource1');
+            // eslint-disable-next-line no-undef
+            const taskIdEditorRow = $('#node-input-taskId-editor').parent();
+            function updateTaskIdSource() {
+                if (appOpInput.val() === 'c') {
+                    // Create task
+                } else if (appOpInput.val() === 'r') {
+                    // Read task
+                } else if (appOpInput.val() === 'u') {
+                    // Update task
+                } else if (appOpInput.val() === 'd') {
+                    // Delete task
+                    taskIdEditorRow.hide();
+                } else if (appOpInput.val() === 'start') {
+                    // Start task
+                    if (taskSourceInput1.val() === 'predefined') {
+                        // Show the task source selection that offers both "predefined" and "msg-in" options
+                        taskIdEditorRow.show();
+                    } else {
+                        taskIdEditorRow.hide();
+                    }
+                }
+            }
+            appOpInput.on('change', updateTaskIdSource);
+            taskSourceInput1.on('change', updateTaskIdSource);
+            updateTaskIdSource();
+        },
+        oneditsave() {
+            this.taskId = this.editorTaskId.getValue();
+            this.editorTaskId.destroy();
+            delete this.editorTaskId;
+        },
+        oneditcancel() {
+            this.editorTaskId.destroy();
+            delete this.editorTaskId;
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="qseow-task">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-server"></i> Qlik Sense Server</label>
+        <input type="text" id="node-input-server" placeholder="Select Qlik Sense Server" readonly>
+    </div>
+    <div class="form-row">
+        <label for="node-input-op"><i class="fa fa-cog"></i> Operation</label>
+        <select id="node-input-op">
+            <!-- <option value="c">Create</option> -->
+            <!-- <option value="r">Read</option>
+            <option value="u">Update</option>
+            <option value="d">Delete</option> -->
+            <option value="start">Start</option>
+        </select>
+    <div class="form-row">
+        <label for="node-input-taskSource1"><i class="fa fa-cog"></i> Source of task IDs</label>
+        <select id="node-input-taskSource1">
+            <option value="predefined">Predefined task IDs</option>
+            <option value="msg-in">Task IDs in incoming message</option>
+        </select>
+    </div>
+    <div class="form-row" id="node-input-taskId-editor-row" style="display:none">
+        <label for="node-input-taskId-editor"><i class="fa fa-tasks"></i> Task IDs</label>
+        <div style="height: 250px; min-height:150px;" class="node-text-taskId" id="node-input-taskId-editor"></div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="qseow-task">
+    <p>A node that perform operations on apps in a client-managed Qlik Sense environment.<br>
+        Several kinds of tasks are supported:</p>
+    <ul>
+        <li><strong>Reload tasks:</strong> Reload data in Qlik Sense apps.</li>
+        <li><strong>External program tasks:</strong> Run external programs on the Qlik Sense server.</li>
+        <li><strong>Distribution tasks:</strong> Distribute Qlik Sense apps to Qlik Sense Cloud.</li>
+        <li><strong>User synchronization tasks:</strong> Synchronize users and groups between Qlik Sense and external user directories.</li>
+    </ul>
+
+    The node will figure out what kind of tasks (reload, external program etc) it is dealing with based on each task's ID.
+
+    <h2>Shared properties</h2>
+    <ul>
+        <li><strong>Name:</strong> The name of the node.</li>
+        <li><strong>Server:</strong> The Qlik Sense server to use.</li>
+        <li><strong>Operation:</strong> The operation to perform on the task(s). The options are:
+            <ul>
+                <li><strong>Start:</strong> Start one or more tasks.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Operation specific properties</h2>
+    
+    <h3>Start task properties</h3>
+    <p> The tasks to be started can be defined in one of two ways:</p>
+    <ul>
+        <li><strong>Predefined task IDs:</strong> The task IDs are defined in the node itself.</li>
+        <li><strong>Task IDs in incoming message:</strong> The task IDs are in the <code>payload.taskId</code> property of the incoming message.</li>
+    </ul>
+
+    <h4>Predefined task IDs</h4>
+    <p>Enter one task id per line in the editor.<br>
+       Empty lines are ignored. Lines starting with a hash sign (#) are ignored.</p>
+    <p>Example:</p>
+    <pre>
+# Reload tasks
+f4c9d5e7-8b6a-4d2c-9f1e-0a3b7e6d8c5f
+a1b2c3d4-e5f6-7a8b-9c0d-1e2f3g4h5i6j
+
+# External program tasks
+b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
+    </pre>
+
+    <h4>Task IDs in incoming message</h4>
+    <p>The task IDs are in the <code>payload.taskId</code> array of the incoming message.</p>
+    <p>Example:</p>
+    <pre>
+[
+    "f4c9d5e7-8b6a-4d2c-9f1e-0a3b7e6d8c5f",
+    "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3g4h5i6j",
+    "b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p"
+]
+    </pre>
+
+    <h2>Input</h2>
+    <p> The node's logic will trigger when it receives a message on its input.</p>
+
+    <h2>Output</h2>
+    <p> The node will output a message with the following properties:</p>
+    <ul>
+        <li><strong>payload.started.reloadTask:</strong> Array of reload task objects that were started.</li>
+        <li><strong>payload.started.externalProgramTask:</strong> Array of external program task objects that were started.</li>
+        <li><strong>payload.started.distributionTask:</strong> Array of distribution task objects that were started.</li>
+        <li><strong>payload.started.userSyncTask:</strong> Array of user sync task objects that were started.</li>
+        <li><strong>payload.taskIdNoExist:</strong> Array of task IDs that does not exist on the Sense server.</li>
+    </ul>
+
+    <h2>Example usage</h2>
+    <p>Here is an example of how to use the qseow-task node in a Node-RED flow:</p>
+    <pre>
+
+    </pre>
+
+</script>

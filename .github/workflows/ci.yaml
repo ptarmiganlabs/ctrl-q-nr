@@ -1,0 +1,118 @@
+name: ci
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      release_tag_name: ${{ steps.release.outputs['tag_name'] }}
+      release_upload_url: ${{ steps.release.outputs['upload_url'] }}
+    env:
+      GITHUB_REF: ${{ github.ref }}
+      GITHUB_TOKEN: ${{ secrets.PAT }}
+      DIST_FILE_NAME: ctrl-q-nr
+    steps:
+      - name: Show github.ref
+        run: echo "$GITHUB_REF"
+
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        if: github.repository_owner == 'ptarmiganlabs'
+        with:
+          # command: manifest
+          # bootstrap-sha: ad2255c9c24f68d0adb5255159fa5a849ab880e4
+          # last-release-sha: b6266be9857c88405364c8af54fbfbed83bb9f66
+          release-as: 0.0.1
+          release-type: node
+          package-name: ctrl-q-nr
+          default-branch: master
+          prerelease: true
+          release-search-depth: 5
+          commit-search-depth: 200
+          draft: true
+          changelog-types: '[{"type": "feat","section": "Features","hidden": false},{"type": "fix","section": "Bug Fixes","hidden": false},{"type": "chore","section": "Miscellaneous","hidden": false},{"type": "refactor","section": "Refactoring","hidden": false},{"type": "docs","section": "Documentation","hidden": false},{"type": "build","section": "Miscellaneous","hidden": false}]'
+
+      - name: Show output from Release-Please
+        if: always()
+        env:
+          RELEASE_PLEASE_OUTPUT: ${{ toJSON(steps.release.outputs) }}
+        run: echo "$RELEASE_PLEASE_OUTPUT"
+
+      - name: Show output from Release-Please
+        run: |
+          echo "releases_created: ${{ steps.release.outputs.releases_created }}"
+          echo "release_created : ${{ steps.release.outputs.release_created }}"
+          echo "draft           : ${{ steps.release.outputs['draft'] }}"
+          echo "path            : ${{ steps.release.outputs['path'] }}"
+          echo "upload_url      : ${{ steps.release.outputs['upload_url'] }}"
+          echo "html_url        : ${{ steps.release.outputs['html_url'] }}"
+          echo "tag_name        : ${{ steps.release.outputs['tag_name'] }}"
+          echo "version         : ${{ steps.release.outputs['version'] }}"
+          echo "major           : ${{ steps.release.outputs['major'] }}"
+          echo "minor           : ${{ steps.release.outputs['minor'] }}"
+          echo "patch           : ${{ steps.release.outputs['patch'] }}"
+          echo "sha             : ${{ steps.release.outputs['sha'] }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+  
+      - name: Install dependencies
+        run: |
+          node -v
+          npm install
+ 
+  release-linux:
+    needs: release-please
+    runs-on: ubuntu-latest
+    # timeout-minutes: 15
+
+    if: ${{ needs.release-please.outputs.releases_created }} 
+    env:
+      DIST_FILE_NAME: ctrl-q-nr
+      GITHUB_TOKEN: ${{ secrets.PAT }}
+    steps:
+      - name: Release tag and upload url from previous job
+        run: |
+          echo "tag_name   : ${{ needs.release-please.outputs.release_tag_name }}"
+          echo "upload_url : ${{ needs.release-please.outputs.release_upload_url }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: |
+          pwd 
+          npm ci
+          npm run pc
+
+      - name: Run Snyk to check for vulnerabilities
+        if: |
+          github.repository_owner == 'ptarmiganlabs'
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=./package.json --sarif-file-output=snyk.sarif
+          # command: test
+          
+      - name: Upload Snyk result to GitHub Code Scanning
+        if: |
+          github.repository_owner == 'ptarmiganlabs'
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+
+      - name: Publish to npm
+        uses: JS-DevTools/npm-publish@v2
+        with:
+          token: ${{ secrets.NPM_PUBLISH_TOKEN }}

@@ -1,0 +1,28 @@
+env:
+    # es6: true
+    es2021: true
+    commonjs: true
+    node: true
+extends:
+    - airbnb-base
+    - prettier
+parserOptions:
+    ecmaVersion: latest
+    # sourceType: module
+rules:
+    prettier/prettier: error
+    indent: ["error", 4]
+    # indent: ["error", 4, { "SwitchCase": 1 }]
+    max-len: ["error",{"code": 140,"tabWidth": 4,"ignoreUrls": true}]
+    no-tabs: ["error", {"allowIndentationTabs": true}]
+plugins:
+    - prettier
+    - html
+globals:
+    beforeAll: readonly
+    afterAll: readonly
+    describe: readonly
+    expect: readonly
+    test: readonly
+    it: readonly
+    NodeJS: true

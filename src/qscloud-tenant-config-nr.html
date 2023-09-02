@@ -1,0 +1,86 @@
+<script type="text/javascript">
+    // eslint-disable-next-line no-undef
+    RED.nodes.registerType('qscloud-tenant', {
+        category: 'config',
+        defaults: {
+            name: { value: '' },
+            tenant: { value: '', required: true },
+            region: { value: 'eu', required: true, options: ['eu', 'us'] },
+            authType: { value: 'oauth-m2m', required: true, options: ['oauth2-m2m', 'apikey'] },
+            clientId: { value: '', required: false },
+            clientSecret: { value: '', required: false },
+            apiKey: { value: '', required: false },
+        },
+        label() {
+            return this.name || 'qscloud-tenant';
+        },
+        oneditprepare() {
+            // eslint-disable-next-line no-unused-vars
+            const node = this;
+
+            // Show/hide the certificate file and JWT input fields based on the authType value
+            // eslint-disable-next-line no-undef
+            const authTypeInput = $('#node-config-input-authType');
+            // eslint-disable-next-line no-undef
+            const clientIdRow = $('#node-config-input-clientId').parent();
+            // eslint-disable-next-line no-undef
+            const clientSecretRow = $('#node-config-input-clientSecret').parent();
+            // eslint-disable-next-line no-undef
+            const apiKeyRow = $('#node-config-input-apiKey').parent();
+            function updateAuthType() {
+                if (authTypeInput.val() === 'oauth2-m2m') {
+                    clientIdRow.show();
+                    clientSecretRow.show();
+                    apiKeyRow.hide();
+                } else if (authTypeInput.val() === 'apikey') {
+                    clientIdRow.hide();
+                    clientSecretRow.hide();
+                    apiKeyRow.show();
+                }
+            }
+            authTypeInput.on('change', updateAuthType);
+            updateAuthType();
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="qscloud-tenant">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-region"><i class="fa fa-plug"></i> Region</label>
+        <select id="node-config-input-region">
+            <option value="eu">EU</option>
+            <option value="us">US</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-tenant"><i class="fa fa-plug"></i> Tenant</label>
+        <input type="text" id="node-config-input-tenant" placeholder="tenant host" value="">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-authType"><i class="fa fa-lock"></i> Authentication type</label>
+        <select id="node-config-input-authType">
+            <option value="oauth2-m2m">OAuth2 m2m</option>
+            <option value="apikey">API key</option>
+
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-clientId"><i class="fa fa-lock"></i> Client ID</label>
+        <input type="text" id="node-config-input-clientId" placeholder="client id" value="">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-clientSecret"><i class="fa fa-lock"></i> Client secret</label>
+        <input type="text" id="node-config-input-clientSecret" placeholder="client secret" value="">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-apiKey"><i class="fa fa-lock"></i> API key</label>
+        <input type="text" id="node-config-input-apiKey" placeholder="api key" value="">
+</script>
+
+<script type="text/html" data-help-name="qscloud-tenant">
+    <p>A configuration node that represents a Qlik Sense Could tenant</p>
+</script>

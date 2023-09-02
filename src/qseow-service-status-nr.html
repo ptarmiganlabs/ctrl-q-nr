@@ -1,0 +1,60 @@
+<script type="text/javascript">
+    // eslint-disable-next-line no-undef
+    RED.nodes.registerType('qseow-service-status', {
+        category: 'Qlik Sense',
+        color: '#589442',
+        defaults: {
+            name: { value: '' },
+            server: { value: '', type: 'qlik-sense-server' },
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'file.png',
+        label() {
+            return this.name || 'qseow-service-status';
+        },
+        oneditprepare() {
+            // eslint-disable-next-line no-unused-vars
+            const node = this;
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="qseow-service-status">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-server"></i> Qlik Sense Server</label>
+        <input type="text" id="node-input-server" placeholder="Select Qlik Sense Server" readonly>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="qseow-service-status">
+    <p>A node that gets statuses from client-managed Qlik Sense services</p>
+
+    <p>It can for example be used to check if a Qlik Sense service is running or not.</p>
+    
+    <h2>Properties</h2>
+
+    <ul>
+        <li><strong>Name:</strong> The name of the node.</li>
+        <li><strong>Server:</strong> The Qlik Sense server to use.</li>
+    </ul>
+
+    <h2>Input</h2>
+    <p> The node's logic will trigger when it receives a message on its input.</p>
+
+    <h2>Output</h2>
+    <p> The node will output a message with the following properties:</p>
+    <ul>
+        <li><strong>payload.serviceStatus:</strong> Array of service status objects, as returned by the Sense server.</li>
+    </ul>
+
+    <h2>Example usage</h2>
+    <p>Get the status of all services, then filter out the ones that are not running:</p>
+    <pre>
+
+    </pre>
+</script>
