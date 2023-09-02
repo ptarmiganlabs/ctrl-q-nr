@@ -1,6 +1,6 @@
 <script type="text/javascript">
     // eslint-disable-next-line no-undef
-    RED.nodes.registerType('qlik-sense-server', {
+    RED.nodes.registerType('qseow-sense-server', {
         category: 'config',
         defaults: {
             name: { value: '' },
@@ -13,7 +13,7 @@
             jwt: { value: '', required: false },
         },
         label() {
-            return this.name || 'qlik-sense-server';
+            return this.name || 'qseow-sense-server';
         },
         oneditprepare() {
             // eslint-disable-next-line no-unused-vars
@@ -45,7 +45,7 @@
     });
 </script>
 
-<script type="text/html" data-template-name="qlik-sense-server">
+<script type="text/html" data-template-name="qseow-sense-server">
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name" placeholder="Name">
@@ -87,7 +87,7 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="qlik-sense-server">
+<script type="text/html" data-help-name="qseow-sense-server">
     <p>A configuration node that represents a Qlik Sense server</p>
 
     <h2>Properties</h2>

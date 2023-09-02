@@ -298,7 +298,7 @@ module.exports = function (RED) {
 
     RED.nodes.registerType('qseow-app', QseowApp, {
         defaults: {
-            senseServer: { value: '', type: 'qlik-sense-server', required: true },
+            senseServer: { value: '', type: 'qseow-sense-server', required: true },
         },
     });
 };

@@ -130,7 +130,7 @@ module.exports = function (RED) {
 
     RED.nodes.registerType('qseow-tag', QseowTag, {
         defaults: {
-            senseServer: { value: '', type: 'qlik-sense-server', required: true },
+            senseServer: { value: '', type: 'qseow-sense-server', required: true },
             tagNames: { value: [], required: false },
         },
     });

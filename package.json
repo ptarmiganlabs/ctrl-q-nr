@@ -49,10 +49,12 @@
   "node-red": {
     "version": ">=3.0.0",
     "nodes": {
+      "qseow-sense-server": "src/qseow-server-config-nr.js",
       "qseow-app": "src/qseow-app-nr.js",
       "qseow-task": "src/qseow-task-nr.js",
       "qseow-service-status": "src/qseow-service-status-nr.js",
       "qseow-tag": "src/qseow-tag-nr.js",
+      "qscloud-tenant": "src/qscloud-tenant-config-nr.js",
       "qscloud-app": "src/qscloud-app-nr.js",
       "qscloud-license": "src/qscloud-license-nr.js",
       "qscloud-reload": "src/qscloud-reload-nr.js",

@@ -15,5 +15,5 @@ module.exports = function (RED) {
             node.jwt = config.jwt || '';
         }
     }
-    RED.nodes.registerType('qlik-sense-server', QlikSenseServerNode, {});
+    RED.nodes.registerType('qseow-sense-server', QlikSenseServerNode, {});
 };
