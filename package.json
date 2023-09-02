@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "@qlik/sdk": "^0.24.0",
-    "axios": "^1.4.0"
+    "axios": "^1.5.0"
   },
   "devDependencies": {
     "esbuild": "^0.19.2",
