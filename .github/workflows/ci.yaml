@@ -57,13 +57,13 @@ jobs:
           echo "patch           : ${{ steps.release.outputs['patch'] }}"
           echo "sha             : ${{ steps.release.outputs['sha'] }}"
 
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # - name: Checkout repository
+      #   uses: actions/checkout@v3
   
-      - name: Install dependencies
-        run: |
-          node -v
-          npm install
+      # - name: Install dependencies
+      #   run: |
+      #     node -v
+      #     npm install
  
   release-linux:
     needs: release-please
