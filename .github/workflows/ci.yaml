@@ -57,14 +57,38 @@ jobs:
           echo "patch           : ${{ steps.release.outputs['patch'] }}"
           echo "sha             : ${{ steps.release.outputs['sha'] }}"
 
-      # - name: Checkout repository
-      #   uses: actions/checkout@v3
-  
-      # - name: Install dependencies
-      #   run: |
-      #     node -v
-      #     npm install
- 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: |
+          pwd 
+          npm ci
+
+      - name: Run Snyk to check for vulnerabilities
+        if: |
+          github.repository_owner == 'ptarmiganlabs'
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=./package.json --sarif-file-output=snyk.sarif
+          # command: test
+          
+      - name: Upload Snyk result to GitHub Code Scanning
+        if: |
+          github.repository_owner == 'ptarmiganlabs'
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+
+
   release-linux:
     needs: release-please
     runs-on: ubuntu-latest
@@ -92,25 +116,6 @@ jobs:
         run: |
           pwd 
           npm ci
-          npm run pc
-
-      - name: Run Snyk to check for vulnerabilities
-        if: |
-          github.repository_owner == 'ptarmiganlabs'
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --file=./package.json --sarif-file-output=snyk.sarif
-          # command: test
-          
-      - name: Upload Snyk result to GitHub Code Scanning
-        if: |
-          github.repository_owner == 'ptarmiganlabs'
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk.sarif
 
       - name: Publish to npm
         uses: JS-DevTools/npm-publish@v2
