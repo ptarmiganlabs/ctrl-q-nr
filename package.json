@@ -18,6 +18,10 @@
   "bugs": {
     "url": "https://github.com/ptarmiganlabs/ctrl-q-nr/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ptarmiganlabs/ctrl-q-nr.git"
+  },
   "keywords": [
     "ctrl-q",
     "butler",
