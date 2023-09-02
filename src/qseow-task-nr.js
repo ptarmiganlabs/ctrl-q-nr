@@ -7,6 +7,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
         const node = this;
 
+        // 
         // Get data from node configuration
         node.senseServer = RED.nodes.getNode(config.server);
         node.op = config.op;
