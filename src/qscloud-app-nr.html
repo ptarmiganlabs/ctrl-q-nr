@@ -1,0 +1,165 @@
+<script type="text/javascript">
+    // eslint-disable-next-line no-undef
+    RED.nodes.registerType('qscloud-app', {
+        category: 'Qlik Sense Cloud',
+        color: '#6BC46D',
+        defaults: {
+            name: { value: '' },
+            tenant: { value: '', type: 'qscloud-tenant' },
+            op: { value: 'r', options: ['c', 'r', 'u', 'd', 'reload'], required: true },
+            appId: { value: '', required: false },
+            appSource1: { value: 'predefined', options: ['predefined', 'msg-in'] },
+            appSource2: { value: 'msg-in', options: ['msg-in'] },
+        },
+        inputs: 1,
+        outputs: 1,
+        outputLabels: ['One message containing all metadata for all matching apps'],
+        icon: 'file.png',
+        label() {
+            return this.name || 'qscloud-app';
+        },
+        oneditprepare() {
+            // eslint-disable-next-line no-unused-vars
+            const node = this;
+
+            // eslint-disable-next-line no-undef
+            this.editorAppId = RED.editor.createEditor({
+                id: 'node-input-appId-editor',
+                mode: 'ace/mode/text',
+                value: this.appId || '',
+            });
+
+            // Only show the task ID editor if the task ID source is "predefined"
+            // eslint-disable-next-line no-undef
+            const appOpInput = $('#node-input-op');
+            // eslint-disable-next-line no-undef
+            const appSourceInput1Row = $('#node-input-appSource1').parent();
+            // eslint-disable-next-line no-undef
+            const appSourceInput1 = $('#node-input-appSource1');
+            // eslint-disable-next-line no-undef
+            const appSourceInput2Row = $('#node-input-appSource2').parent();
+            // eslint-disable-next-line no-undef
+            const appSourceInput2 = $('#node-input-appSource2');
+            // eslint-disable-next-line no-undef
+            const appIdEditorRow = $('#node-input-appId-editor').parent();
+            function updateOpAppIdSource() {
+                if (appOpInput.val() === 'c') {
+                    appIdEditorRow.show();
+                } else if (appOpInput.val() === 'r') {
+                    // Show the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.show();
+
+                    // Hide the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.hide();
+
+                    if (appSourceInput1.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    } else if (appSourceInput1.val() === 'predefined') {
+                        appIdEditorRow.show();
+                    }
+                } else if (appOpInput.val() === 'u') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.show();
+
+                    if (appSourceInput2.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    }
+                } else if (appOpInput.val() === 'd') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.show();
+
+                    if (appSourceInput2.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    }
+                } else if (appOpInput.val() === 'dupl') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.show();
+
+                    if (appSourceInput2.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    }
+                } else if (appOpInput.val() === 'reload') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.show();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.hide();
+
+                    if (appSourceInput1.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    } else if (appSourceInput1.val() === 'predefined') {
+                        appIdEditorRow.show();
+                    }
+                } else {
+                    appIdEditorRow.hide();
+                }
+            }
+            appOpInput.on('change', updateOpAppIdSource);
+            appSourceInput1.on('change', updateOpAppIdSource);
+            appSourceInput2.on('change', updateOpAppIdSource);
+            updateOpAppIdSource();
+        },
+        oneditsave() {
+            this.appId = this.editorAppId.getValue();
+            this.editorAppId.destroy();
+            delete this.editorAppId;
+        },
+        oneditcancel() {
+            this.editorAppId.destroy();
+            delete this.editorAppId;
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="qscloud-app">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenant"><i class="fa fa-server"></i> Qlik Sense Cloud tenant</label>
+        <input type="text" id="node-input-tenant" placeholder="Select tenant" readonly>
+    </div>
+    <div class="form-row">
+        <label for="node-input-op"><i class="fa fa-cog"></i> Operation</label>
+        <select id="node-input-op">
+            <!-- <option value="c">Create</option> -->
+            <option value="r">Read</option>
+            <!-- <option value="u">Update</option>
+            <option value="d">Delete</option>
+            <option value="dupl">Duplicate</option> -->
+            <option value="reload">Reload</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-appSource1"><i class="fa fa-cog"></i> Source of apps</label>
+        <select id="node-input-appSource1">
+            <option value="predefined">App IDs below</option>
+            <option value="msg-in">App IDs in incoming message</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-appSource2"><i class="fa fa-cog"></i> Source of apps</label>
+        <select id="node-input-appSource2">
+            <option value="msg-in">App IDs in incoming message</option>
+        </select>
+    </div>
+    <div class="form-row" id="node-input-appId-editor-row" style="display:none">
+        <label for="node-input-appId-editor"><i class="fa fa-tasks"></i> App IDs</label>
+        <div style="height: 250px; min-height:150px;" class="node-text-appId" id="node-input-appId-editor"></div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="qscloud-app">
+    <p>A node that gets license information from Qlik Sense Cloud</p>
+</script>
+

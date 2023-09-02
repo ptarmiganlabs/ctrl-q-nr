@@ -1,0 +1,112 @@
+<script type="text/javascript">
+    // eslint-disable-next-line no-undef
+    RED.nodes.registerType('qlik-sense-server', {
+        category: 'config',
+        defaults: {
+            name: { value: '' },
+            protocol: { value: 'https', required: true, options: ['http', 'https'] },
+            host: { value: 'qlikserver.com', required: true },
+            port: { value: '4242', required: true },
+            authType: { value: 'cert', required: true, options: ['jwt', 'cert'] },
+            certFile: { value: '', required: false },
+            keyFile: { value: '', required: false },
+            jwt: { value: '', required: false },
+        },
+        label() {
+            return this.name || 'qlik-sense-server';
+        },
+        oneditprepare() {
+            // eslint-disable-next-line no-unused-vars
+            const node = this;
+
+            // Show/hide the certificate file and JWT input fields based on the authType value
+            // eslint-disable-next-line no-undef
+            const authTypeInput = $('#node-config-input-authType');
+            // eslint-disable-next-line no-undef
+            const certFileRow = $('#node-config-input-certFile').parent();
+            // eslint-disable-next-line no-undef
+            const keyFileRow = $('#node-config-input-keyFile').parent();
+            // eslint-disable-next-line no-undef
+            const jwtRow = $('#node-config-input-jwt-row');
+            function updateAuthType() {
+                if (authTypeInput.val() === 'cert') {
+                    certFileRow.show();
+                    keyFileRow.show();
+                    jwtRow.hide();
+                } else {
+                    certFileRow.hide();
+                    keyFileRow.hide();
+                    jwtRow.show();
+                }
+            }
+            authTypeInput.on('change', updateAuthType);
+            updateAuthType();
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="qlik-sense-server">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-protocol"><i class="fa fa-plug"></i> Protocol</label>
+        <select id="node-config-input-protocol">
+            <option value="http">HTTP</option>
+            <option value="https">HTTPS</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-plug"></i> QRS host</label>
+        <input type="text" id="node-config-input-host" placeholder="qlikserver.com" value="">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="fa fa-plug"></i> QRS port</label>
+        <input type="text" id="node-config-input-port" placeholder="Port" value="4242">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-authType"><i class="fa fa-lock"></i> Authentication type</label>
+        <!-- <input type="text" id="node-config-input-authType"> -->
+        <select id="node-config-input-authType">
+            <option value="cert">Certificate</option>
+            <!-- <option value="jwt">JWT</option> -->
+        </select>
+    </div>
+    <div class="form-row" id="node-config-input-jwt-row" style="display:none">
+        <label for="node-config-input-jwt"><i class="fa fa-lock"></i> JWT</label>
+        <input type="text" id="node-config-input-jwt" placeholder="JWT" value="">
+    </div>
+    <div class="form-row" id="node-config-input-certFile-row" style="display:none">
+        <label for="node-config-input-certFile"><i class="fa fa-file"></i> Certificate file</label>
+        <input type="text" id="node-config-input-certFile" placeholder="/path/to/client.pem" value="">
+    </div>
+    <div class="form-row" id="node-config-input-keyFile-row" style="display:none">
+        <label for="node-config-input-keyFile"><i class="fa fa-file"></i> Key file</label>
+        <input type="text" id="node-config-input-keyFile" placeholder="/path/to/client_key.pem" value="">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="qlik-sense-server">
+    <p>A configuration node that represents a Qlik Sense server</p>
+
+    <h2>Properties</h2>
+        <ul>
+            <li><strong>Name:</strong> The name of the node.</li>
+            <li><strong>Protocol:</strong> The protocol to use when connecting to the Qlik Sense server.</li>
+            <li><strong>QRS host:</strong> The host name or IP address where the Qlik Sense repository server (QRS) runs.</li>
+            <li><strong>QRS port:</strong> The port number of the QRS.</li>
+            <li><strong>Authentication type:</strong> The authentication type to use when connecting to the QRS.
+                <ul>
+                    <li>For authentication type <strong>Certificate</strong>, you must provide the location of the certificate and key files. Note that Node-RED must be able to access these files.</li>
+                        <ul>
+                            <li><strong>Certificate file:</strong> The location of the certificate file.</li>
+                            <li><strong>Key file:</strong> The location of the key file.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+</h2>
+
+</script>

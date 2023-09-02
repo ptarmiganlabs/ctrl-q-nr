@@ -1,3 +1,7 @@
+# Project specific files
+.cache_ggshield
+
+
 # Logs
 logs
 *.log

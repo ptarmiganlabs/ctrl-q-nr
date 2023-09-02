@@ -1,0 +1,61 @@
+name: 🐞 Bug Report
+description: Create a bug report for Ctrl-Q NR
+labels: 'template: bug'
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to file a bug report! Please fill out this form as completely as possible.
+  - type: markdown
+    attributes:
+      value: 'Please first search the repository for similar issues and discussions.'
+  - type: input
+    attributes:
+      label: What version of Ctrl-Q NR are you using?
+      description: 'Available in the Node-RED modules palette. For example: 1.2.3'
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: What version of Node-RED are you using?
+      description: 'Available in the menu in upper right corner of Node-RED. For example: 3.0.2'
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: What operating system are you running Node-RED on?
+      description: 'For example: macOS, Windows, Windows Server, Ubuntu 20.04, Docker'
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: What Qlik Sense versions are you using?
+      description: 'For example: 2021-November sp2'
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior, please provide as clear as possible description. Screenshots can be provided in the issue body below.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: Before posting the issue go through the steps you've written down to make sure the steps provided are detailed and clear.
+  - type: markdown
+    attributes:
+      value: Contributors should be able to follow the steps provided in order to reproduce the bug.
+  - type: markdown
+    attributes:
+      value: The information you enter on this page will be used to improve and enhance this project. Thanks in advance!

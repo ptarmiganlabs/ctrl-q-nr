@@ -1,0 +1,263 @@
+<script type="text/javascript">
+    // eslint-disable-next-line no-undef
+    RED.nodes.registerType('qseow-app', {
+        category: 'Qlik Sense',
+        color: '#589442',
+        defaults: {
+            name: { value: '' },
+            server: { value: '', type: 'qlik-sense-server' },
+            op: { value: 'r', options: ['c', 'r', 'u', 'd'], required: true },
+            appId: { value: '', required: false },
+            appSource1: { value: 'predefined', options: ['predefined', 'msg-in'] },
+            appSource2: { value: 'msg-in', options: ['msg-in'] },
+        },
+        inputs: 1,
+        outputs: 1,
+        outputLabels: ['One message containing all metadata for all matching apps'],
+        icon: 'file.png',
+        label() {
+            return this.name || 'qseow-app';
+        },
+        oneditprepare() {
+            // eslint-disable-next-line no-unused-vars
+            const node = this;
+
+            // eslint-disable-next-line no-undef
+            this.editorAppId = RED.editor.createEditor({
+                id: 'node-input-appId-editor',
+                mode: 'ace/mode/text',
+                value: this.appId || '',
+            });
+
+            // Only show the task ID editor if the task ID source is "predefined"
+            // eslint-disable-next-line no-undef
+            const appOpInput = $('#node-input-op');
+            // eslint-disable-next-line no-undef
+            const appSourceInput1Row = $('#node-input-appSource1').parent();
+            // eslint-disable-next-line no-undef
+            const appSourceInput1 = $('#node-input-appSource1');
+            // eslint-disable-next-line no-undef
+            const appSourceInput2Row = $('#node-input-appSource2').parent();
+            // eslint-disable-next-line no-undef
+            const appSourceInput2 = $('#node-input-appSource2');
+            // eslint-disable-next-line no-undef
+            const appIdEditorRow = $('#node-input-appId-editor').parent();
+            function updateOpAppIdSource() {
+                if (appOpInput.val() === 'c') {
+                    appIdEditorRow.show();
+                } else if (appOpInput.val() === 'r') {
+                    // Show the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.show();
+
+                    // Hide the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.hide();
+
+                    if (appSourceInput1.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    } else if (appSourceInput1.val() === 'predefined') {
+                        appIdEditorRow.show();
+                    }
+                } else if (appOpInput.val() === 'u') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.show();
+
+                    if (appSourceInput2.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    }
+                } else if (appOpInput.val() === 'd') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.show();
+
+                    if (appSourceInput2.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    }
+                } else if (appOpInput.val() === 'dupl') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.show();
+
+                    if (appSourceInput2.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    }
+                } else {
+                    appIdEditorRow.hide();
+                }
+            }
+            appOpInput.on('change', updateOpAppIdSource);
+            appSourceInput1.on('change', updateOpAppIdSource);
+            appSourceInput2.on('change', updateOpAppIdSource);
+            updateOpAppIdSource();
+        },
+        oneditsave() {
+            this.appId = this.editorAppId.getValue();
+            this.editorAppId.destroy();
+            delete this.editorAppId;
+        },
+        oneditcancel() {
+            this.editorAppId.destroy();
+            delete this.editorAppId;
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="qseow-app">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-server"></i> Qlik Sense server</label>
+        <input type="text" id="node-input-server" placeholder="Select Qlik Sense Server" readonly>
+    </div>
+    <div class="form-row">
+        <label for="node-input-op"><i class="fa fa-cog"></i> Operation</label>
+        <select id="node-input-op">
+            <!-- <option value="c">Create</option> -->
+            <option value="r">Read</option>
+            <option value="u">Update</option>
+            <option value="d">Delete</option>
+            <option value="dupl">Duplicate</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-appSource1"><i class="fa fa-cog"></i> Source of apps</label>
+        <select id="node-input-appSource1">
+            <option value="predefined">App IDs below</option>
+            <option value="msg-in">App IDs in incoming message</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-appSource2"><i class="fa fa-cog"></i> Source of apps</label>
+        <select id="node-input-appSource2">
+            <option value="msg-in">App IDs in incoming message</option>
+        </select>
+    </div>
+    <div class="form-row" id="node-input-appId-editor-row" style="display:none">
+        <label for="node-input-appId-editor"><i class="fa fa-tasks"></i> App IDs</label>
+        <div style="height: 250px; min-height:150px;" class="node-text-appId" id="node-input-appId-editor"></div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="qseow-app">
+    <p><p>A node that perform operations on apps on a client-managed Qlik Sense server.</p>
+    
+    <h2>Shared properties</h2>
+    <ul>
+        <li><strong>Name:</strong> The name of the node.</li>
+        <li><strong>Qlik Sense server:</strong> The Qlik Sense server to connect to.</li>
+        <li><strong>Operation:</strong> The operation to perform. The options are:
+            <ul>
+                <!-- <li><strong>Create:</strong> Create one or more apps.</li> -->
+                <li><strong>Read:</strong> Read metadata for one or more apps.</li>
+                <li><strong>Update:</strong> Update metadata for one or more apps.</li>
+                <li><strong>Delete:</strong> Delete one or more apps.</li>
+                <li><strong>Duplicate:</strong> Duplicate one or more apps.</li>
+            </ul>
+        </li>
+    </ul>0
+
+    <h2>Operation specific properties</h2>
+
+    <h3>Source of apps</h3>
+    <p>The app IDs to be used can be defined in one of two ways:</p>
+    <ul>
+        <li><strong>App IDs below:</strong> The app IDs are defined in the node's config.</li>
+        <li><strong>App IDs in incoming message:</strong> The app IDs are in the incoming message.</li>
+    </ul>
+    
+    <h3>App IDs defined in the node itself</h3>
+    <p>Enter one app ID per line in the editor.<br>
+       Empty lines are ignored. Lines starting with a hash sign (#) are ignored.</p>
+    <p>Example:</p>
+    <pre>
+# Sales related apps
+a1b2c3d4-e5f6-7a8b-9c0d-1e2f3g4h5i6j
+f4c9d5e7-8b6a-4d2c-9f1e-0a3b7e6d8c5f
+
+# Finance related apps
+b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
+    </pre>
+
+    <h3>App IDs in incoming message</h3>
+    <p>The app IDs are in the <code>payload.appId</code> array of the incoming message.</p>
+    <p>Example:</p>
+    <pre>
+[
+    "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3g4h5i6j",
+    "f4c9d5e7-8b6a-4d2c-9f1e-0a3b7e6d8c5f",
+    "b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p"
+]
+    </pre>
+
+    <h2>Operations</h2>
+
+    <h3>Read</h3>
+    <p>Read metadata for one or more apps.</p>
+    <p>If no app IDs are specified, metadata for all apps will be retrieved.</p>
+    <p>The output message includes the following properties:</p>
+    <ul>
+        <li><strong>payload.app:</strong> Array of app objects, one for each app that was read.</li>
+        <li><strong>payload.appIdNoExist:</strong> Array of app IDs, one for each app that was not found on the Sense server.</li>
+    </ul>
+    
+    <h3>Update</h3>
+    <p>Update metadata for one or more apps.</p>
+
+    <h4>Input message</h4>
+    <p>The input message <strong>must</strong> contain the following properties:</p>
+    <ul>
+        <li><strong>payload.app:</strong> Array of objects, one for each app to be updated. The objects have at least one of these properties set:</li>
+            <ul>
+                <li><strong>id:</strong> Id of the app to be updated.</li>
+            </ul>
+        <li><strong>payload.newData</strong> Object with the new metadata for the app. The object may contain the following properties:</li>
+            <ul>
+                <li><strong>name:</strong> New name of the app.</li>
+                <li><strong>description:</strong> New description of the app.</li>
+                <li><strong>tag:</strong> Array of tags to be added to the app, in addition to any existing tags the app already has.</li>
+            </ul>    
+    </ul>
+
+    <p>The input message <strong>may</strong> contain the following properties:</p>
+    <ul>
+        <li><strong>payload.appId:</strong> Array of app IDs, one for each app to be updated.</li>
+    </ul>
+
+    <h4>Output message</h4>
+    <p>The output message includes the following properties:</p>
+    <ul>
+        <li><strong>payload.appUpdated:</strong> Array of app objects, one for each app that was updated.</li>
+        <li><strong>payload.appIdNoExist:</strong> Array of app IDs, one for each app that was not found on the Sense server.</li>
+    </ul>
+
+    <h3>Delete</h3>
+    <p>Delete one or more apps.</p>
+
+    <h4>Input message</h4>
+    <p>The input message <strong>must</strong> contain the following properties:</p>
+    <ul>
+        <li><strong>payload.appId:</strong> Array of app IDs, one for each app to be deleted.</li>
+    </ul>
+
+    <p>The output message includes the following properties:</p>
+    <ul>
+        <li><strong>payload.appDeleted:</strong> Array of app objects, one for each app that was deleted.</li>
+        <li><strong>payload.appIdNoExist:</strong> Array of app IDs, one for each app that was not found on the Sense server.</li>
+    </ul>
+
+    <h3>Duplicate</h3>
+    <p>Duplicate one or more apps.</p>
+    <p>The output message includes the following properties:</p>
+    <ul>
+        <li><strong>payload.appDuplicated:</strong> Array of app objects, one for each new app that was created.</li>
+        <li><strong>payload.appNoExist:</strong> Array of app IDs, one for each source app ID that was not found on the Sense server.</li>
+    </ul>
+</script>
