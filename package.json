@@ -1,6 +1,6 @@
 {
   "name": "@ptarmiganlabs/ctrl-q-nr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Node-RED components for cloud and client-managed Qlik Sense",
   "main": "index.js",
   "scripts": {
@@ -15,9 +15,9 @@
     }
   ],
   "license": "MIT",
-      "bugs": {
-        "url": "https://github.com/ptarmiganlabs/ctrl-q-nr/issues"
-    },
+  "bugs": {
+    "url": "https://github.com/ptarmiganlabs/ctrl-q-nr/issues"
+  },
   "keywords": [
     "ctrl-q",
     "butler",
