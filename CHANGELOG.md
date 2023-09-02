@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.2](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.1...v0.0.2) (2023-09-02)
+
+
+### Bug Fixes
+
+* Add missing config nodes ([b24ad1a](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/b24ad1aede6f776ff2e7cac3fa66b9d724211f6f))
+* Improve Node-RED scorecard ranking ([1d69040](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/1d690400c83550a5024d5af1be013e8fff23a755))
+* Publish to npm public package ([ebd5077](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/ebd507771c226a4a88813bd82cd5b3b38bfec83d))
+
+
+### Miscellaneous
+
+* **main:** release 0.0.1 ([4e9ccb6](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/4e9ccb6f4e3ba46586558a355ad9a1d7d486576f))
+
 ## [0.0.1](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.1...v0.0.1) (2023-09-02)
 
 
