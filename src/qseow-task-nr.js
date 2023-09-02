@@ -81,7 +81,7 @@ module.exports = function (RED) {
 
     RED.nodes.registerType('qseow-task', QseowTask, {
         defaults: {
-            senseServer: { value: '', type: 'qlik-sense-server', required: true },
+            senseServer: { value: '', type: 'qseow-sense-server', required: true },
             taskId: { value: [], required: false },
         },
     });
