@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.3](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.2...v0.0.3) (2023-09-02)
+
+
+### Bug Fixes
+
+* Add link to GitHub repo from npm ([c9535cc](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/c9535cc0909dda46d806453a961fa6cc4bda4dd1))
+
+
+### Documentation
+
+* Add content to readme file ([e34fc05](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/e34fc05fd823914f30bfdf9f62c8f02868524d08))
+
 ## [0.0.2](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.1...v0.0.2) (2023-09-02)
 
 
