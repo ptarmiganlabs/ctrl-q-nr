@@ -29,7 +29,7 @@ jobs:
           release-as: 0.0.1
           release-type: node
           package-name: ctrl-q-nr
-          default-branch: master
+          default-branch: main
           prerelease: true
           release-search-depth: 5
           commit-search-depth: 200
