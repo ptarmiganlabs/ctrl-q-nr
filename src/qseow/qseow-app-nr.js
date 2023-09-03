@@ -223,7 +223,8 @@ module.exports = function (RED) {
                     // Incoming message is an array of objects with properties
                     // - "sourceAppId" Id of source app. Mandatory
                     // - "newAppName" Name of new app. If empty, use name of source app + "copy" + timestamp
-                    // - "includeCustomProperties" Flag to indicate if source app's custom properties should be copied. true/false  (default: false)
+                    // - "includeCustomProperties" Flag to indicate if source app's custom properties should be copied.
+                    //   true/false  (default: false)
 
                     // Sanity check structure of incoming message.
                     // Error and return if a mandatory property is missing or if payload is not an array
