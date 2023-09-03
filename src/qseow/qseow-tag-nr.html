@@ -19,7 +19,7 @@
         oneditprepare() {
             // eslint-disable-next-line no-unused-vars
             const node = this;
-    
+
             // eslint-disable-next-line no-undef
             this.editorTagName = RED.editor.createEditor({
                 id: 'node-input-tagName-editor',
@@ -70,11 +70,11 @@
 <script type="text/html" data-template-name="qseow-tag">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <input type="text" id="node-input-name" placeholder="Name" />
     </div>
     <div class="form-row">
         <label for="node-input-server"><i class="fa fa-server"></i> Qlik Sense Server</label>
-        <input type="text" id="node-input-server" placeholder="Select Qlik Sense Server" readonly>
+        <input type="text" id="node-input-server" placeholder="Select Qlik Sense Server" readonly />
         <!-- <a href="#" class="editor-button editor-button-small" id="node-input-server-select"><i class="fa fa-pencil"></i></a> -->
     </div>
     <div class="form-row">
@@ -106,22 +106,27 @@
     <ul>
         <li><strong>Name:</strong> The name of the node.</li>
         <li><strong>Server:</strong> The Qlik Sense server to connect to.</li>
-        <li><strong>Source of tag names:</strong> The source of the tag names to use. The options are "Tags below" and "Tags in incoming message".</li>
+        <li>
+            <strong>Source of tag names:</strong> The source of the tag names to use. The options are "Tags below" and "Tags in incoming
+            message".
+        </li>
         <li><strong>Operation:</strong> The operation to perform. The options are "Create", "Read" and "Delete".</li>
     </ul>
 
     <h2>Operation specific properties</h2>
-    
+
     <h3>Tag select properties</h3>
-    <p> The tags to be used can be defined in one of two ways:</p>
+    <p>The tags to be used can be defined in one of two ways:</p>
     <ul>
         <li><strong>App IDs below:</strong> The tags are defined in the node's config.</li>
         <li><strong>Tags in incoming message:</strong> The tags are in the <code>payload.tag</code> property of the incoming message.</li>
     </ul>
 
     <h4>Tags defined in the node itself</h4>
-    <p>Enter one tag per line in the editor.<br>
-       Empty lines are ignored. Lines starting with a hash sign (#) are ignored.</p>
+    <p>
+        Enter one tag per line in the editor.<br />
+        Empty lines are ignored. Lines starting with a hash sign (#) are ignored.
+    </p>
     <p>Example:</p>
     <pre>
 # Sales related tags
@@ -131,7 +136,8 @@ sales-app
 # Year tagging
 2024
 2023
-    </pre>
+    </pre
+    >
 
     <h4>Tags in incoming message</h4>
     <p>The tags are in the <code>payload.tag</code> array of the incoming message.</p>
@@ -143,7 +149,8 @@ sales-app
     "2024",
     "2023
 ]
-    </pre>
+    </pre
+    >
 
     <h2>Operations</h2>
 
@@ -161,7 +168,10 @@ sales-app
     <p>The output message includes the following properties:</p>
     <ul>
         <li><strong>payload.tag:</strong> Array of tag objects, one for each tag that was read.</li>
-        <li><strong>payload.tagNameNoExist:</strong> Array of tag names that do not exist on the Sense server. Only relevant if at least one tag was specified.</li>
+        <li>
+            <strong>payload.tagNameNoExist:</strong> Array of tag names that do not exist on the Sense server. Only relevant if at least one
+            tag was specified.
+        </li>
     </ul>
 
     <h2>Delete</h2>
@@ -173,7 +183,5 @@ sales-app
     </ul>
 
     <h2>Example usage</h2>
-    <pre>
-
-    </pre>
+    <pre></pre>
 </script>

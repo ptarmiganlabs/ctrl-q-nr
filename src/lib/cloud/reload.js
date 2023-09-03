@@ -7,6 +7,7 @@ async function getAllReloads(auth) {
     const allItems = [];
     let path = '/reloads';
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         const response = await auth.rest(path);
         const reloads = await response.json();

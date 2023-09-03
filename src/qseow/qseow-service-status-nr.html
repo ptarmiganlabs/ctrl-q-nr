@@ -23,11 +23,11 @@
 <script type="text/html" data-template-name="qseow-service-status">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <input type="text" id="node-input-name" placeholder="Name" />
     </div>
     <div class="form-row">
         <label for="node-input-server"><i class="fa fa-server"></i> Qlik Sense Server</label>
-        <input type="text" id="node-input-server" placeholder="Select Qlik Sense Server" readonly>
+        <input type="text" id="node-input-server" placeholder="Select Qlik Sense Server" readonly />
     </div>
 </script>
 
@@ -35,7 +35,7 @@
     <p>A node that gets statuses from client-managed Qlik Sense services</p>
 
     <p>It can for example be used to check if a Qlik Sense service is running or not.</p>
-    
+
     <h2>Properties</h2>
 
     <ul>
@@ -44,17 +44,15 @@
     </ul>
 
     <h2>Input</h2>
-    <p> The node's logic will trigger when it receives a message on its input.</p>
+    <p>The node's logic will trigger when it receives a message on its input.</p>
 
     <h2>Output</h2>
-    <p> The node will output a message with the following properties:</p>
+    <p>The node will output a message with the following properties:</p>
     <ul>
         <li><strong>payload.serviceStatus:</strong> Array of service status objects, as returned by the Sense server.</li>
     </ul>
 
     <h2>Example usage</h2>
     <p>Get the status of all services, then filter out the ones that are not running:</p>
-    <pre>
-
-    </pre>
+    <pre></pre>
 </script>

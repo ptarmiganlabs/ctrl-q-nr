@@ -20,6 +20,12 @@ module.exports = function (RED) {
 
                 // Get auth object
                 const auth = await authenticate(node, done);
+                if (!auth) {
+                    // Error when authenticating
+                    node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });
+                    done('Error authenticating');
+                    return false;
+                }
 
                 // Which operation to perform?
                 if (node.op === 'c') {
@@ -60,7 +66,8 @@ module.exports = function (RED) {
 
                     // 1. Get reload history from Qlik Sense Cloud
                     // 2. Init a state machine to keep track of each reload's state
-                    // 3. Possible states: There are seven states. QUEUED, RELOADING, CANCELING are the active states. SUCCEEDED, FAILED,CANCELED,EXCEEDED_LIMIT are the end states.
+                    // 3. Possible states: There are seven states. QUEUED, RELOADING, CANCELING are the active states.
+                    //    SUCCEEDED, FAILED,CANCELED,EXCEEDED_LIMIT are the end states.
                     // 4. For each reload that is a) new or b) in a non.end state, check the state and update the state machine
                     // 5. Update the state machine every 15 seconds
 
@@ -72,7 +79,7 @@ module.exports = function (RED) {
                     node.status({ fill: 'red', shape: 'ring', text: 'invalid operation' });
                     node.log(`Invalid operation: ${node.op}`);
                     done(`Invalid operation: ${node.op}`);
-                    return;
+                    return false;
                 }
 
                 // Send message to output 1
@@ -83,6 +90,8 @@ module.exports = function (RED) {
                 node.error(err);
                 done(err);
             }
+
+            return true;
         });
     }
 

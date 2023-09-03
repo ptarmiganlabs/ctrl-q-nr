@@ -17,7 +17,6 @@ function getAuth(node) {
     let httpsAgent;
 
     if (authType === 'cert') {
-
         // Ensure that the cert and key files exist
         if (!fs.existsSync(node.senseServer.certFile)) {
             node.error(`Cert file does not exist: ${node.senseServer.certFile}`);
@@ -35,29 +34,46 @@ function getAuth(node) {
                 node.error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
                 throw new Error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
             }
+            process.env.NODE_EXTRA_CA_CERTS = 'node.senseServer.certCaFile';
         }
 
         const cert = fs.readFileSync(node.senseServer.certFile);
         const key = fs.readFileSync(node.senseServer.keyFile);
 
+        httpsAgent = new https.Agent({
+            cert,
+            key,
+            rejectUnauthorized: false,
+        });
+
         // Only use the cert CA file if it is specified
-        if (node.senseServer.certCaFile !== '') {
-            const ca = fs.readFileSync(node.senseServer.certCaFile);
+        // if (node.senseServer.certCaFile !== '') {
+        //     node.log('Using root CA file');
+        //     // Debug which files are being used
+        //     node.log(`Using cert file: "${node.senseServer.certFile}"`);
+        //     node.log(`Using key file: "${node.senseServer.keyFile}"`);
+        //     node.log(`Using cert CA file: "${node.senseServer.certCaFile}"`);
 
-            httpsAgent = new https.Agent({
-                cert,
-                key,
-                ca,
-                rejectUnauthorized: false,
-            });
-        } else {
-            httpsAgent = new https.Agent({
-                cert,
-                key,
-                rejectUnauthorized: false,
-            });
-        }
+        //     const ca = fs.readFileSync(node.senseServer.certCaFile);
 
+        //     httpsAgent = new https.Agent({
+        //         cert,
+        //         key,
+        //         ca,
+        //         rejectUnauthorized: false,
+        //     });
+        // } else {
+        //     node.log('Not using root CA file');
+        //     node.log(`Using cert file: "${node.senseServer.certFile}"`);
+        //     node.log(`Using key file: "${node.senseServer.keyFile}"`);
+        //     node.log(`Using cert CA file: "${node.senseServer.certCaFile}"`);
+
+        //     httpsAgent = new https.Agent({
+        //         cert,
+        //         key,
+        //         rejectUnauthorized: false,
+        //     });
+        // };
     } else if (authType === 'jwt') {
         const token = node.senseServer.jwt;
         headers.Authorization = `Bearer ${token}`;

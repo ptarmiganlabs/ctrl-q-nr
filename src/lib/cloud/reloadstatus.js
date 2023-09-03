@@ -217,12 +217,17 @@ class ReloadStateMachine {
     // Check via the get /reloads endpoint if
     //   a) there are any new reloads that are not in the state machine and add them
     //   b) there are any reloads in the state machine that are not in the response and delete them
-    async updateReloadStates() {
+    async updateReloadStates(node) {
         // Debug
         this.node.log('updating reload states');
 
         // Get reloads from Qlik Sense Cloud
-        const auth = await authenticate(this.node);
+        const auth = await authenticate(node);
+        if (!auth) {
+            // Error when authenticating
+            node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });
+            return false;
+        }
 
         const allItemsInCloud = [];
         try {
@@ -258,6 +263,8 @@ class ReloadStateMachine {
 
         // Reset number of remaining seconds
         this.remainingSeconds = this.updateIntervalSeconds;
+
+        return true;
     }
 }
 

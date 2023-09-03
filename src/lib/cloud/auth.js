@@ -15,6 +15,25 @@ async function authenticate(node, done) {
     // Which authentication type to use?
     let auth;
     if (node.tenant.authType === 'oauth2-m2m') {
+        // Make sure that the client ID and client secret are specified
+        if (node.tenant.clientId === '') {
+            node.status({ fill: 'red', shape: 'ring', text: 'client ID not specified' });
+            node.log('Client ID not specified');
+            if (done) {
+                done('Client ID not specified');
+            }
+            return false;
+        }
+
+        if (node.tenant.clientSecret === '') {
+            node.status({ fill: 'red', shape: 'ring', text: 'client secret not specified' });
+            node.log('Client secret not specified');
+            if (done) {
+                done('Client secret not specified');
+            }
+            return false;
+        }
+
         // Authenticate with OAuth2 m2m
         auth = new Auth({
             authType: AuthType.OAuth2,
@@ -25,6 +44,16 @@ async function authenticate(node, done) {
 
         await auth.authorize();
     } else if (node.tenant.authType === 'apikey') {
+        // Make sure that the API key is specified
+        if (node.tenant.apiKey === '') {
+            node.status({ fill: 'red', shape: 'ring', text: 'API key not specified' });
+            node.log('API key not specified');
+            if (done) {
+                done('API key not specified');
+            }
+            return false;
+        }
+
         // Authenticate with API key
         auth = new Auth({
             authType: AuthType.APIKey,
@@ -38,10 +67,9 @@ async function authenticate(node, done) {
         if (done) {
             done(`Invalid auth type: ${node.tenant.authType}`);
         }
-        return;
+        return false;
     }
 
-    // eslint-disable-next-line consistent-return
     return auth;
 }
 
