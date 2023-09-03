@@ -17,13 +17,47 @@ function getAuth(node) {
     let httpsAgent;
 
     if (authType === 'cert') {
+
+        // Ensure that the cert and key files exist
+        if (!fs.existsSync(node.senseServer.certFile)) {
+            node.error(`Cert file does not exist: ${node.senseServer.certFile}`);
+            throw new Error(`Cert file does not exist: ${node.senseServer.certFile}`);
+        }
+
+        if (!fs.existsSync(node.senseServer.keyFile)) {
+            node.error(`Key file does not exist: ${node.senseServer.keyFile}`);
+            throw new Error(`Key file does not exist: ${node.senseServer.keyFile}`);
+        }
+
+        // If the cert CA file is specified, ensure that it exists
+        if (node.senseServer.certCaFile !== '') {
+            if (!fs.existsSync(node.senseServer.certCaFile)) {
+                node.error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
+                throw new Error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
+            }
+        }
+
         const cert = fs.readFileSync(node.senseServer.certFile);
         const key = fs.readFileSync(node.senseServer.keyFile);
-        httpsAgent = new https.Agent({
-            cert,
-            key,
-            rejectUnauthorized: false,
-        });
+
+        // Only use the cert CA file if it is specified
+        if (node.senseServer.certCaFile !== '') {
+            const ca = fs.readFileSync(node.senseServer.certCaFile);
+
+            httpsAgent = new https.Agent({
+                cert,
+                key,
+                ca,
+                rejectUnauthorized: false,
+            });
+        } else {
+            httpsAgent = new https.Agent({
+                cert,
+                key,
+                rejectUnauthorized: false,
+            });
+        }
+
     } else if (authType === 'jwt') {
         const token = node.senseServer.jwt;
         headers.Authorization = `Bearer ${token}`;

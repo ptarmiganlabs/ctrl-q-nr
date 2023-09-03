@@ -1,5 +1,5 @@
-const { getCandidateTags } = require('./lib/qseow/tagconfig');
-const { getTags, createTags, deleteTags } = require('./lib/qseow/tag');
+const { getCandidateTags } = require('../lib/qseow/tagconfig');
+const { getTags, createTags, deleteTags } = require('../lib/qseow/tag');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {
