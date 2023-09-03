@@ -14,7 +14,11 @@ module.exports = function (RED) {
         const reloadState = new ReloadStateMachine(node, 15000);
 
         // Do initial update of reload states
-        reloadState.updateReloadStates();
+        // const res = await reloadState.updateReloadStates(node);
+        // if (!res) {
+        //     node.error('Error updating reload states');
+        //     return false;
+        // }
 
         node.on('input', async (msg, send, done) => {
             try {
@@ -36,7 +40,12 @@ module.exports = function (RED) {
                     node.status({ fill: 'green', shape: 'dot', text: 'timer started' });
                 } else if (msg.payload.operation === 'updateReloadStates') {
                     // Update the reload states
-                    reloadState.updateReloadStates();
+                    const res2 = await reloadState.updateReloadStates(node);
+                    if (!res2) {
+                        node.error('Error updating reload states');
+                        node.status({ fill: 'red', shape: 'ring', text: 'error updating reload states' });
+                        return false;
+                    }
                 } else if (msg.payload.operation === 'setUpdateInterval') {
                     // Set the update interval in milliseconds
                     reloadState.setUpdateInterval(msg.payload.updateInterval);
@@ -49,7 +58,7 @@ module.exports = function (RED) {
                     node.error(`Invalid operation: ${msg.payload.operation}`);
                     node.status({ fill: 'red', shape: 'ring', text: 'invalid operation' });
                     done(`Invalid operation: ${msg.payload.operation}`);
-                    return;
+                    return false;
                 }
 
                 done();
@@ -57,6 +66,8 @@ module.exports = function (RED) {
                 node.error(err);
                 done(err);
             }
+
+            return true;
         });
     }
 

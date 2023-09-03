@@ -23,6 +23,12 @@ module.exports = function (RED) {
 
                 // Get auth object
                 const auth = await authenticate(node, done);
+                if (!auth) {
+                    // Error when authenticating
+                    node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });
+                    done('Error authenticating');
+                    return false;
+                }
 
                 // Which operation to perform?
                 if (node.op === 'c') {
@@ -179,7 +185,7 @@ module.exports = function (RED) {
                     node.status({ fill: 'red', shape: 'ring', text: 'invalid operation' });
                     node.log(`Invalid operation: ${node.op}`);
                     done(`Invalid operation: ${node.op}`);
-                    return;
+                    return false;
                 }
 
                 // Send message to output 1
@@ -190,6 +196,8 @@ module.exports = function (RED) {
                 node.error(err);
                 done(err);
             }
+
+            return true;
         });
     }
 

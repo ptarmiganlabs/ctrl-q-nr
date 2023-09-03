@@ -33,44 +33,6 @@ module.exports = function (RED) {
 
                 await auth.authorize();
 
-                // let resp = await auth.rest('/users/me').then((output) => output.json());
-                // console.log(resp);
-
-                // // get a list of applications
-                // resp = await auth.rest('/apps').then((output) => output.json());
-
-                // // iterate through the resulting array and retrieve the app id and name
-                // resp.data.forEach((item) => {
-                //     // console output to show the app information from the rest endpoint
-                //     console.log(`${item.attributes.id} - ${item.attributes.name}`);
-                // });
-                // const apps = new Apps(auth);
-
-                // // get the reference to the first app returned in the list
-                // let app = await apps.get(resp.data[0].attributes.id);
-
-                // // open the app
-                // await app.open();
-
-                // // get the app layout
-                // let appLayout = await app.getAppLayout();
-                // // console output from the Qlik Analytics Engine containing app metadata
-                // console.log(appLayout);
-
-                // const licenses = new Licenses(auth);
-
-                // let response = await auth.rest('/licenses/status').then((output) => output.json());
-                // let response = await auth.rest('/licenses/status').then((output) => {
-                //     const a = await output.json();
-                //     console.log(a);
-
-                //     return {
-                //         data: output.json(),
-                //         status: output.status,
-
-                //     }
-                // } );
-
                 // Get endpoint /licenses/overview
                 let response = await auth.rest('/licenses/overview');
                 const licenseOverview = await response.json();
