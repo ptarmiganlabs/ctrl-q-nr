@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.4](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.3...v0.0.4) (2023-09-03)
+
+
+### Bug Fixes
+
+* Add CA cert support for QSEoW ([ff4a715](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/ff4a7150118dbb06b770a6b990a01d6da9056656)), closes [#20](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/20)
+
+
+### Refactoring
+
+* Put cloud and QSEoW files in separate directories ([dece4b3](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/dece4b31157121023ff4430fac198271371e9881)), closes [#21](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/21)
+
 ## [0.0.3](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.2...v0.0.3) (2023-09-02)
 
 ### Bug Fixes
