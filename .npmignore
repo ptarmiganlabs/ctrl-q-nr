@@ -1,0 +1,11 @@
+# Project specific files
+.cache_ggshield
+.eslintrc.yml
+.gitignore
+.npmignore
+.pre-commit-config.yaml
+.prettieriignore
+.prettierrc.yaml
+.snyk
+renovate.json
+.github
