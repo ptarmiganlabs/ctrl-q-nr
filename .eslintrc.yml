@@ -11,10 +11,10 @@ parserOptions:
     # sourceType: module
 rules:
     prettier/prettier: error
-    indent: ["error", 4]
+    indent: ['error', 4]
     # indent: ["error", 4, { "SwitchCase": 1 }]
-    max-len: ["error",{"code": 140,"tabWidth": 4,"ignoreUrls": true}]
-    no-tabs: ["error", {"allowIndentationTabs": true}]
+    max-len: ['error', { 'code': 140, 'tabWidth': 4, 'ignoreUrls': true }]
+    no-tabs: ['error', { 'allowIndentationTabs': true }]
 plugins:
     - prettier
     - html

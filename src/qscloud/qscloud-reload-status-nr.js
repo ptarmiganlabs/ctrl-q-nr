@@ -1,4 +1,4 @@
-const { ReloadStateMachine } = require('./lib/cloud/reloadstatus');
+const { ReloadStateMachine } = require('../lib/cloud/reloadstatus');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {

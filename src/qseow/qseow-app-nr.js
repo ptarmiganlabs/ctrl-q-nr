@@ -1,5 +1,5 @@
-const { getApps, deleteApps, duplicateApps, updateApps } = require('./lib/qseow/app');
-const { getCandidateAppsPredefAndIncoming } = require('./lib/qseow/appconfig');
+const { getApps, deleteApps, duplicateApps, updateApps } = require('../lib/qseow/app');
+const { getCandidateAppsPredefAndIncoming } = require('../lib/qseow/appconfig');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {

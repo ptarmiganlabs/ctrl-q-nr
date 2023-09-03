@@ -1,4 +1,4 @@
-const { getServiceStatus } = require('./lib/qseow/servicestatus');
+const { getServiceStatus } = require('../lib/qseow/servicestatus');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {

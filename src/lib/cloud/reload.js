@@ -9,7 +9,6 @@ async function getAllReloads(auth) {
 
     while (true) {
         const response = await auth.rest(path);
-        const responseStatus = response.status;
         const reloads = await response.json();
 
         // Push all objects to the allItems array
@@ -27,7 +26,7 @@ async function getAllReloads(auth) {
         // Only use the path after the ..../api/v1 part
         // eslint-disable-next-line prefer-destructuring
         path = reloads.links.next.href.split('/api/v1')[1];
-        console.log(`next path: ${path}`);
+        // console.log(`next path: ${path}`);
     }
 
     return allItems;

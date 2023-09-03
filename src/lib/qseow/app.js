@@ -136,7 +136,8 @@ async function deleteApps(node, appIdsToDelete) {
 // - node: the node object
 // - apps: an array of app objects, including the new app name
 //   - sourceAppId: the source app object. Mandatory.
-//   - newAppName: the name of the new app. Optional. If not specified, the new app name will be the source app name + '_copy_' + timestamp in "YYYY-MM-DD_HH-MM-SS" format
+//   - newAppName: the name of the new app. Optional.
+//     If not specified, the new app name will be the source app name + '_copy_' + timestamp in "YYYY-MM-DD_HH-MM-SS" format
 //   - includeCustomProperties: Optional. Whether to include custom properties. Optional. Default is false.
 async function duplicateApps(node, apps) {
     const { axiosConfig, xref } = getAuth(node);
@@ -180,7 +181,8 @@ async function duplicateApps(node, apps) {
             // Debug
             // node.log(`existingApp: ${JSON.stringify(existingApp, null, 2)}`);
 
-            // If newAppName does not exist in app object, create a new name consisting of source app name + '_copy_' + timestamp in "YYYY-MM-DD_HH-MM-SS" format
+            // If newAppName does not exist in app object, create a new name consisting of
+            // source app name + '_copy_' + timestamp in "YYYY-MM-DD_HH-MM-SS" format
             let newAppName;
             if (duplInfo.newAppName === undefined) {
                 const date = new Date();
@@ -199,6 +201,7 @@ async function duplicateApps(node, apps) {
             }
 
             // Build URL
+            // eslint-disable-next-line max-len
             axiosConfig.url = `/qrs/app/${existingApp.id}/copy?name=${newAppName}&includecustomproperties=${includeCustomProperties}&xrfkey=${xref}`;
 
             // Debug
@@ -220,6 +223,7 @@ async function duplicateApps(node, apps) {
                 node.status({ fill: 'red', shape: 'ring', text: 'error duplicating app' });
                 node.log(`Error duplicating app on Qlik Sense server: ${response.status} ${response.statusText}`);
                 throw new Error(
+                    // eslint-disable-next-line max-len
                     `Error duplicating app ${existingApp.id} ("${existingApp.name}") on Qlik Sense server: ${response.status} ${response.statusText}`
                 );
             } else {

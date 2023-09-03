@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
-const { authenticate } = require('./lib/cloud/auth');
-const { getAllReloads } = require('./lib/cloud/reload');
+const { authenticate } = require('../lib/cloud/auth');
+const { getAllReloads } = require('../lib/cloud/reload');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {

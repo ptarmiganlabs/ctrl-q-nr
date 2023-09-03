@@ -1,5 +1,5 @@
-const { getCandidateTasks } = require('./lib/qseow/taskconfig');
-const { startTasks } = require('./lib/qseow/task');
+const { getCandidateTasks } = require('../lib/qseow/taskconfig');
+const { startTasks } = require('../lib/qseow/task');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {
