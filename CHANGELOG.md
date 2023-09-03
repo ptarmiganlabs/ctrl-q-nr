@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.5](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.4...v0.0.5) (2023-09-03)
+
+
+### Bug Fixes
+
+* Better handling of root CA certs for QSEoW ([638bfb7](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/638bfb7d520e6d3a53f8a7e3cc07fa799c9b53c9))
+* Improve handling of API key/Oauth for cloud ([2539c4d](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/2539c4d5a094762d98ef34495dbac27466d72cd6)), closes [#25](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/25)
+
 ## [0.0.4](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.3...v0.0.4) (2023-09-03)
 
 ### Bug Fixes
