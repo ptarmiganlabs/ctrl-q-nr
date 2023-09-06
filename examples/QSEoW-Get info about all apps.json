@@ -1,0 +1,69 @@
+[
+    {
+        "id": "9617fd5ffc0135ef",
+        "type": "inject",
+        "z": "adaddf859632b31a",
+        "name": "Get info about all apps",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 160,
+        "y": 80,
+        "wires": [
+            [
+                "2e42b8027c2118fb"
+            ]
+        ]
+    },
+    {
+        "id": "03e0018f6e4ca2b5",
+        "type": "debug",
+        "z": "adaddf859632b31a",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2e42b8027c2118fb",
+        "type": "qseow-app",
+        "z": "adaddf859632b31a",
+        "name": "Empty list of app IDs",
+        "server": "18609cb899039437",
+        "op": "r",
+        "appId": "",
+        "appSource1": "predefined",
+        "appSource2": "msg-in",
+        "x": 560,
+        "y": 80,
+        "wires": [
+            [
+                "03e0018f6e4ca2b5"
+            ]
+        ]
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "/secret/root.pem",
+        "jwt": ""
+    }
+]
