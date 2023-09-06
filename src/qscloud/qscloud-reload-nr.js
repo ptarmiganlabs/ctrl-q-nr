@@ -37,7 +37,6 @@ module.exports = function (RED) {
 
                     // Add app arrays to out message
                     outMsg.payload.appReload = [];
-                    outMsg.payload.error = [];
 
                     const allItems = [];
                     try {
@@ -60,20 +59,6 @@ module.exports = function (RED) {
                     // Update apps
                 } else if (node.op === 'd') {
                     // Delete apps
-                } else if (node.op === 'monitorstate') {
-                    // Monitor state of reloads
-                    node.log('Monitoring state of reloads on Qlik Sense Cloud...');
-
-                    // 1. Get reload history from Qlik Sense Cloud
-                    // 2. Init a state machine to keep track of each reload's state
-                    // 3. Possible states: There are seven states. QUEUED, RELOADING, CANCELING are the active states.
-                    //    SUCCEEDED, FAILED,CANCELED,EXCEEDED_LIMIT are the end states.
-                    // 4. For each reload that is a) new or b) in a non.end state, check the state and update the state machine
-                    // 5. Update the state machine every 15 seconds
-
-                    // Add app arrays to out message
-                    outMsg.payload.appReload = [];
-                    outMsg.payload.error = [];
                 } else {
                     // Invalid operation. Log error and return
                     node.status({ fill: 'red', shape: 'ring', text: 'invalid operation' });

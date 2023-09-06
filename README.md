@@ -1,10 +1,18 @@
-# Ctrl-Q NR
+<p align="center"><img src="docs/logo/ctrl-q-nr_25.png"><p>
 
-Node-RED nodes for interacting with cloud and client-managed Qlik Sense
+<h1 align="center">Node-RED nodes for interacting with cloud and client-managed Qlik Sense.
+</h1>
 
-Ctrl-Q NR is a collection of Node-RED nodes that allow you to interact with Qlik Sense, both the cloud and on-premises (=client-managed) versions.  
-The nodes are designed to be easy to use and can be used to build powerful data-driven applications and integrations in Node-RED.
+<p align="center">
+<a href="https://github.com/ptarmiganlabs/ctrl-q-nr"><img src="https://img.shields.io/badge/Source---" alt="Source"></a>
+<a href="https://github.com/ptarmiganlabs/ctrl-q-nr/actions/workflows/ci.yaml"><img src="https://github.com/ptarmiganlabs/ctrl-q-nr/actions/workflows/ci.yaml/badge.svg" alt="Continuous Integration"></a>
+<a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
+<img src="https://hits.dwyl.com/ptarmiganlabs/ctrl-q-nr.svg" />
+</p>
 
+Ctrl-Q NR is a collection of Node-RED nodes that allow you to interact with Qlik Sense, both the cloud and on-premises (=client-managed) versions.
+
+The nodes are designed to be easy to use and can be used to build powerful data-driven applications and integrations on the low-code Node-RED platform.
 ## Installation
 
 To use these nodes, you will need to have Node-RED installed. Once you have Node-RED installed, you can install these nodes using the Node-RED palette manager.

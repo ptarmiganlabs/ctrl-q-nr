@@ -160,5 +160,93 @@
 </script>
 
 <script type="text/html" data-help-name="qscloud-app">
-    <p>A node that gets license information from Qlik Sense Cloud</p>
+        <p>A node that performas operations on Qlik Sense Cloud apps.</p>
+
+        <h2>Shared properties</h2>
+        <ul>
+            <li><b>Name</b> - Name of the node.</li>
+            <li><b>Qlik Sense Cloud tenant</b> - The Qlik Sense Cloud tenant to use.</li>
+            <li><b>Operation</b> - The operation to perform.</li>
+                <ul>
+                    <!-- <li><b>Create</b> - Create a new app.</li> -->
+                    <li><b>Read</b> - Read the metadata of an app.</li>
+                    <!-- <li><b>Update</b> - Update the metadata of an app.</li>
+                    <li><b>Delete</b> - Delete an app.</li> -->
+                    <!-- <li><b>Duplicate</b> - Duplicate an app.</li> -->
+                    <li><b>Reload</b> - Reload an app.</li>
+                </ul>
+            </ul>
+        </ul>
+
+        <h2>Operation-specific properties</h2>
+
+        <h3>Source of apps</h3>
+        <p>The app IDs to be used can be defined in one of two ways:</p>
+        <ul>
+            <li><strong>App IDs below:</strong> The app IDs are defined in the node's config.</li>
+            <li><strong>App IDs in incoming message:</strong> The app IDs are in the incoming message.</li>
+        </ul>
+
+        <h3>App IDs defined in the node itself</h3>
+        <p>
+            Enter one app ID per line in the editor.<br />
+            Empty lines are ignored. Lines starting with a hash sign (#) are ignored.
+        </p>
+        <p>Example:</p>
+        <pre>
+    # Sales related apps
+    a1b2c3d4-e5f6-7a8b-9c0d-1e2f3g4h5i6j
+    f4c9d5e7-8b6a-4d2c-9f1e-0a3b7e6d8c5f
+
+    # Finance related apps
+    b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
+        </pre>
+
+        <h3>App IDs in incoming message</h3>
+        <p>The app IDs are in the <code>payload.appId</code> array of the incoming message.</p>
+        <p>Example:</p>
+        <pre>
+    [
+        "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3g4h5i6j",
+        "f4c9d5e7-8b6a-4d2c-9f1e-0a3b7e6d8c5f",
+        "b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p"
+    ]
+        </pre>
+
+        <h2>Operations</h2>
+
+        <h3>Read</h3>
+        <p>Read metadata for one or more apps.</p>
+        <p>If no app IDs are specified, metadata for all apps will be retrieved.</p>
+
+        <h4>Input message</h4>
+        <p>If <code>Source of apps</code> is set to "App IDs in incoming message", the input message should contain the following properties:</p>
+        <ul>
+            <li><strong>payload.appId:</strong> Array of app ids, one for each app to be read.</li>
+        </ul>
+
+        <p>Output message</p>
+        <p>The output message includes the following properties:</p>
+        <ul>
+            <li><strong>payload.app:</strong> Array of app objects, one for each app that was read.</li>
+            <li><strong>payload.appIdNoExist:</strong> Array of app IDs, one for each app that was not found on the Sense server.</li>
+        </ul>
+
+        <h3>Reload</h3>
+        <p>Reload one or more apps in Qlik Sense Cloud.</p>
+        <p>If no app IDs are specified, no apps will be reloaded.</p>
+        <p>All app reloads are "full reloads", partial reloads are currently not supported.</p>
+
+        <h4>Input message</h4>
+        <p>If <code>Source of apps</code> is set to "App IDs in incoming message", the input message should contain the following properties:</p>
+        <ul>
+            <li><strong>payload.appId:</strong> Array of app ids, one for each app to be read.</li>
+        </ul>
+
+        <h4>Output message</h4>
+        <p>The output message includes the following properties:</p>
+        <ul>
+            <li><strong>payload.app:</strong> Array of app reload result objects, one for each app that was read.</li>
+            <li><strong>payload.appError:</strong> Array of app reload result objects, one for each app that failed to reload.</li>
+        </ul>
 </script>

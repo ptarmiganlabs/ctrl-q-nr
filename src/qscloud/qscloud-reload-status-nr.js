@@ -11,14 +11,7 @@ module.exports = function (RED) {
         node.op = config.op || '';
 
         // Create a reload state object
-        const reloadState = new ReloadStateMachine(node, 15000);
-
-        // Do initial update of reload states
-        // const res = await reloadState.updateReloadStates(node);
-        // if (!res) {
-        //     node.error('Error updating reload states');
-        //     return false;
-        // }
+        const reloadState = new ReloadStateMachine(node, 60000);
 
         node.on('input', async (msg, send, done) => {
             try {
@@ -29,6 +22,7 @@ module.exports = function (RED) {
                 if (msg.payload.operation === 'getFullState') {
                     // If msg.payload.operation = getFullState, send the entire state machine to output 2
                     outMsg.payload = reloadState.getFullState();
+                    node.status({ fill: 'green', shape: 'dot', text: 'full state sent to output 2' });
                     node.send([null, outMsg]);
                 } else if (msg.payload.operation === 'stopTimer') {
                     // Stop the timer
@@ -46,16 +40,19 @@ module.exports = function (RED) {
                         node.status({ fill: 'red', shape: 'ring', text: 'error updating reload states' });
                         return false;
                     }
+                    node.status({ fill: 'green', shape: 'dot', text: 'reload states updated' });
                 } else if (msg.payload.operation === 'setUpdateInterval') {
                     // Set the update interval in milliseconds
                     reloadState.setUpdateInterval(msg.payload.updateInterval);
+                    node.status({ fill: 'green', shape: 'dot', text: 'update interval set' });
                 } else if (msg.payload.operation === 'getUpdateInterval') {
                     // Get the update interval in milliseconds and seconds
                     // Sends the update interval to output 2
                     reloadState.getUpdateInterval();
+                    node.status({ fill: 'green', shape: 'dot', text: 'update interval retrieved' });
                 } else {
                     // Invalid operation
-                    node.error(`Invalid operation: ${msg.payload.operation}`);
+                    // node.error(`Invalid operation: ${msg.payload.operation}`);
                     node.status({ fill: 'red', shape: 'ring', text: 'invalid operation' });
                     done(`Invalid operation: ${msg.payload.operation}`);
                     return false;

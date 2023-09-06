@@ -34,4 +34,113 @@
 
 <script type="text/html" data-help-name="qscloud-reload-status">
     <p>A node that keeps track of app reload statuses in Qlik Sense Cloud</p>
+
+    <p>
+        Given an input message, the node will check the <strong>msg.payload.operation</strong> property of that message and perform various
+        actions depending on the value of that property.
+    </p>
+
+    <p>
+        This node creates a state machine that mirrors the reload state of all apps in a tenant.<br />
+        "Reload state" refers to the last result of an app reload.<br />
+        For example, app reloads can succeed, fail or be aborted.
+    </p>
+
+    <p>
+        Initially the state machine is empty.<br />
+        By sending a message with operation <strong>updateReloadStates</strong> the state machine will be updated with the lastest states
+        for all apps in the tenant.
+    </p>
+
+    <p>
+        The node has a built-in timer that can be started and stopped using the <strong>startTimer</strong> and
+        <strong>stopTimer</strong> operations.<br />
+        When the timer is started, the node will periodically check the reload state of all apps in the tenant, update the internal state
+        machine and if there are nay changes also send updates to the first output.<br />
+    </p>
+
+    <p>
+        The node has two outputs. The first is used to send updates when changes are detected in an app's reload state.<br />
+        The second is used to send the full state of all apps in the tenant as well as results from the operations carried out by the node.
+    </p>
+
+    <h2>Properties</h2>
+    <ul>
+        <li><b>Name</b> - Name of the node.</li>
+        <li><b>Qlik Sense Cloud tenant</b> - The Qlik Sense Cloud tenant to use.</li>
+    </ul>
+
+    <h2>Input & output messages</h2>
+
+    <p>
+        The contents of the output message vary depending on the operation, which in turn is determined by the
+        <strong>msg.payload.operation</strong> property of the input message.
+    </p>
+
+    <p>Allowed values of <strong>msg.payload.operation</strong> are</p>
+
+    <h3>getFullState</h3>
+    <p>Do a full dump of the state machine.</p>
+
+    <h4>Output message</h4>
+    <p>The message is sent to the <b>second</b> output.</p>
+    <p>The output message will be an array of app reload objects.</p>
+
+    <h3>updateReloadStates</h3>
+    <p>Update the state machine with the latest reload states for all apps in the tenant.</p>
+
+    <h4>Output message</h4>
+    <p>The message is sent to the <b>second</b> output.</p>
+    <p>The output message will have the following properties:</p>
+    <ul>
+        <li><b>message</b> - A text describing the outcome of the operation.</li>
+        <li><b>numReloadsAdded</b> - The number of reloads added to the state machine.</li>
+        <li><b>numReloadsDeleted</b> - The number of reloads deleted from the state machine.</li>
+        <li><b>numReloadsUpdated</b> - The number of reloads updated in the state machine.</li>
+    </ul>
+
+    <h3>startTimer</h3>
+    <p>Start the built-in update timer, using the interval set by the <strong>setUpdateInterval</strong> operation.</p>
+    <p>Default interval is 60 seconds.</p>
+    <p>When the timer is running, the node will display a countdown to the next update.</p>
+
+    <h4>Output message</h4>
+    <p>The message is sent to the <b>second</b> output.</p>
+    <p>The output message will have the following properties:</p>
+    <ul>
+        <li><b>message</b> - A text describing the outcome of the operation.</li>
+    </ul>
+
+    <h3>stopTimer</h3>
+    <p>Stop the built-in update timer.</p>
+
+    <h4>Output message</h4>
+    <p>The message is sent to the <b>second</b> output.</p>
+    <p>The output message will have the following properties:</p>
+    <ul>
+        <li><b>message</b> - A text describing the outcome of the operation.</li>
+    </ul>
+
+    <h3>setUpdateInterval</h3>
+    <p>Set the interval for the built-in update timer. The provided value should be in milliseconds.</p>
+
+    <h4>Output message</h4>
+    <p>The message is sent to the <b>second</b> output.</p>
+    <p>The output message will have the following properties:</p>
+    <ul>
+        <li><b>message</b> - A text describing the outcome of the operation.</li>
+        <li><b>updateInterval</b> - The new interval for the built-in update timer (milliseconds).</li>
+        <li><b>updateIntervalSeconds</b> - The new interval for the built-in update timer (seconds).</li>
+    </ul>
+
+    <h3>getUpdateInterval</h3>
+    <p>Get the current interval for the built-in update timer.</p>
+    <h4>Output message</h4>
+    <p>The message is sent to the <b>second</b> output.</p>
+    <p>The output message will have the following properties:</p>
+    <ul>
+        <li><b>message</b> - A text describing the outcome of the operation.</li>
+        <li><b>updateInterval</b> - The current interval for the built-in update timer (milliseconds).</li>
+        <li><b>updateIntervalSeconds</b> - The current interval for the built-in update timer (seconds).</li>
+    </ul>
 </script>

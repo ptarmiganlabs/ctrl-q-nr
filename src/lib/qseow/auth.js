@@ -16,6 +16,10 @@ function getAuth(node) {
     const { authType } = node.senseServer;
     let httpsAgent;
 
+    // Variable to keep our own root CA cert in
+    // let additionalCerts;
+    let combinedCert;
+
     if (authType === 'cert') {
         // Ensure that the cert and key files exist
         if (!fs.existsSync(node.senseServer.certFile)) {
@@ -34,46 +38,89 @@ function getAuth(node) {
                 node.error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
                 throw new Error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
             }
-            process.env.NODE_EXTRA_CA_CERTS = 'node.senseServer.certCaFile';
+
+            // Debug: Does https.globalAgent.options exist?
+            if (https.globalAgent.options) {
+                node.log('https.globalAgent.options exists');
+
+                // Debug: Does https.globalAgent.options.ca exist?
+                if (https.globalAgent.options.ca) {
+                    node.log('https.globalAgent.options.ca exists');
+                } else {
+                    node.log('https.globalAgent.options.ca does not exist');
+                }
+            } else {
+                node.log('https.globalAgent.options does not exist');
+            }
+
+            // const list = (node.senseServer.certCaFile || '').split(',');
+            // additionalCerts = list.map((extraCert) => fs.readFileSync(extraCert, 'utf8'));
+
+            // console.log('https.globalAgent: ' + https.globalAgent);
+            // console.log('https.globalAgent: ' + JSON.stringify(https.globalAgent, null, 2));
+
+            // additionalCerts = fs.readFileSync(node.senseServer.certCaFile, 'utf8');
+            // https.globalAgent.options.ca = [...tls.rootCertificates, ...additionalCerts];
+
+            // rootCas.addFile(path.resolve(__dirname, 'intermediate.pem'));
+            // process.env.NODE_EXTRA_CA_CERTS = 'node.senseServer.certCaFile';
+
+            // const list = (process.env.NODE_EXTRA_CA_CERTS || '').split(',');
+            // additionalCerts = list.map((extraCert) => fs.readFileSync(extraCert, 'utf8'));
+
+            // if (!https.globalAgent.options) https.globalAgent.options = {};
+            // https.globalAgent.options.ca = [...tls.rootCertificates, ...additionalCerts];
         }
 
-        const cert = fs.readFileSync(node.senseServer.certFile);
-        const key = fs.readFileSync(node.senseServer.keyFile);
+        const clientCert = fs.readFileSync(node.senseServer.certFile);
+        const clientKey = fs.readFileSync(node.senseServer.keyFile);
+        let rootCert;
 
-        httpsAgent = new https.Agent({
-            cert,
-            key,
-            rejectUnauthorized: false,
-        });
+        if (node.senseServer.certCaFile !== '') {
+            node.log('Combining client cert and root cert');
+            rootCert = fs.readFileSync(node.senseServer.certCaFile);
+            combinedCert = Buffer.concat([clientCert, rootCert]);
+            node.log(`Combined cert: " ${combinedCert}`);
+        }
 
         // Only use the cert CA file if it is specified
-        // if (node.senseServer.certCaFile !== '') {
-        //     node.log('Using root CA file');
-        //     // Debug which files are being used
-        //     node.log(`Using cert file: "${node.senseServer.certFile}"`);
-        //     node.log(`Using key file: "${node.senseServer.keyFile}"`);
-        //     node.log(`Using cert CA file: "${node.senseServer.certCaFile}"`);
+        if (node.senseServer.certCaFile !== '') {
+            node.log('Using root CA file');
+            // Debug which files are being used
+            node.log(`Using cert file: "${node.senseServer.certFile}"`);
+            node.log(`Using key file: "${node.senseServer.keyFile}"`);
+            node.log(`Using cert CA file: "${node.senseServer.certCaFile}"`);
 
-        //     const ca = fs.readFileSync(node.senseServer.certCaFile);
+            httpsAgent = new https.Agent({
+                cert: clientCert,
+                key: clientKey,
+                ca: rootCert,
+                rejectUnauthorized: true,
+            });
+        } else {
+            node.log('Not using root CA file');
+            node.log(`Using cert file: "${node.senseServer.certFile}"`);
+            node.log(`Using key file: "${node.senseServer.keyFile}"`);
 
-        //     httpsAgent = new https.Agent({
-        //         cert,
-        //         key,
-        //         ca,
-        //         rejectUnauthorized: false,
-        //     });
-        // } else {
-        //     node.log('Not using root CA file');
-        //     node.log(`Using cert file: "${node.senseServer.certFile}"`);
-        //     node.log(`Using key file: "${node.senseServer.keyFile}"`);
-        //     node.log(`Using cert CA file: "${node.senseServer.certCaFile}"`);
+            if (https.globalAgent.options) {
+                node.log('https.globalAgent.options exists');
+                node.log(`https.globalAgent.options: ${JSON.stringify(https.globalAgent.options)}`);
+                if (https.globalAgent.options.ca) {
+                    node.log('https.globalAgent.options.ca exists');
+                    node.log(`https.globalAgent.options.ca: ${JSON.stringify(https.globalAgent.options.ca)}`);
+                } else {
+                    node.log('https.globalAgent.options.ca does not exist');
+                }
+            } else {
+                node.log('https.globalAgent.options does not exist');
+            }
 
-        //     httpsAgent = new https.Agent({
-        //         cert,
-        //         key,
-        //         rejectUnauthorized: false,
-        //     });
-        // };
+            httpsAgent = new https.Agent({
+                cert: clientCert,
+                key: clientKey,
+                rejectUnauthorized: false,
+            });
+        }
     } else if (authType === 'jwt') {
         const token = node.senseServer.jwt;
         headers.Authorization = `Bearer ${token}`;

@@ -4,7 +4,36 @@ function getCandidateApps(node, msg, done) {
     let appIdCandidates = [];
 
     // Where should we get the app identifiers from?
-    if (node.appSource1 === 'predefined') {
+    if (node.appSource1 === 'msg-in') {
+        let appsIncoming;
+
+        // Use the app ids in the incoming message
+        // Ensure that
+        // 1. msg.payload exists
+        // 2. msg.payload.appId exists
+        // 3. msg.payload.appId is an array
+        if (msg.payload && msg.payload.appId && Array.isArray(msg.payload.appId)) {
+            appsIncoming = msg.payload.appId;
+        } else {
+            // Log error
+            node.status({ fill: 'red', shape: 'ring', text: 'nothing to do' });
+            done('Incoming message did not contain an array of app IDs.');
+            return;
+        }
+
+        // Use the app IDs in the incoming message
+        // Log the app IDs
+        node.log(`Incoming app IDs: ${appsIncoming}`);
+
+        // Were there any app IDs specified?
+        if (appsIncoming.length === 0) {
+            appIdCandidates = [];
+        } else {
+            appsIncoming.forEach((appId) => {
+                appIdCandidates.push(appId);
+            });
+        }
+    } else if (node.appSource1 === 'predefined') {
         let appIdsPredefined;
 
         // Use the apps in the node configuration
@@ -23,35 +52,6 @@ function getCandidateApps(node, msg, done) {
             appIdCandidates = [];
         } else {
             appIdsPredefined.forEach((appId) => {
-                appIdCandidates.push(appId);
-            });
-        }
-    } else if (node.appSource1 === 'msg-in') {
-        let appsIncoming;
-
-        // Use the app ids in the incoming message
-        // Ensure that
-        // 1. msg.payload exists
-        // 2. msg.payload.id exists
-        // 3. msg.payload.id is an array
-        if (msg.payload && msg.payload.id && Array.isArray(msg.payload.id)) {
-            appsIncoming = msg.payload.id;
-        } else {
-            // Log error
-            node.status({ fill: 'red', shape: 'ring', text: 'nothing to do' });
-            done('Incoming message did not contain an array of app IDs.');
-            return;
-        }
-
-        // Use the app IDs in the incoming message
-        // Log the app IDs
-        node.log(`Incoming app IDs: ${appsIncoming}`);
-
-        // Were there any app IDs specified?
-        if (appsIncoming.length === 0) {
-            appIdCandidates = [];
-        } else {
-            appsIncoming.forEach((appId) => {
                 appIdCandidates.push(appId);
             });
         }

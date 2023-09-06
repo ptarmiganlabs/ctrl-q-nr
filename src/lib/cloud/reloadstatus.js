@@ -121,13 +121,13 @@ class ReloadStateMachine {
     // Start the timer to update the state machine at regular intervals
     startTimer() {
         // Only start the timer if it is not already running
-        if (this.updateTimer) {
+        if (this.updateTimer !== null) {
             this.node.log('timer is already running');
             return;
         }
         this.node.log(`starting timer to update reload states every ${this.updateInterval} milliseconds`);
         this.updateTimer = setInterval(() => {
-            this.updateReloadStates();
+            this.updateReloadStates(this.node);
         }, this.updateInterval);
 
         // Start the tick interval to call the tick method every second
@@ -142,6 +142,14 @@ class ReloadStateMachine {
 
         // Reset number of remaining seconds
         this.remainingSeconds = this.updateIntervalSeconds;
+
+        // Send message to output 2
+        const outMsg = {
+            payload: {
+                message: 'Timer started',
+            },
+        };
+        this.node.send([null, outMsg]);
     }
 
     // Stop the timer
@@ -164,6 +172,14 @@ class ReloadStateMachine {
 
         this.updateTimer = null;
         this.tickTimer = null;
+
+        // Send message to output 2
+        const outMsg = {
+            payload: {
+                message: 'Timer stopped',
+            },
+        };
+        this.node.send([null, outMsg]);
     }
 
     // Set update interval in milliseconds
@@ -240,10 +256,18 @@ class ReloadStateMachine {
             this.node.error(err);
         }
 
+        // Variables to keep track of the number of changes made to the state machine
+        let numReloadsAdded = 0;
+        let numReloadsDeleted = 0;
+        let numReloadsUpdated = 0;
+
         // Add new reloads to the state machine
         allItemsInCloud.forEach((reload) => {
             if (!this.reloads.has(reload.id)) {
+                // Reload is not in the state machine
+                // Add it to the state machine
                 this.addReload(reload.id, reload);
+                numReloadsAdded += 1;
             }
         });
 
@@ -251,7 +275,10 @@ class ReloadStateMachine {
         const reloadIds = Array.from(this.reloads.keys());
         reloadIds.forEach((reloadId) => {
             if (!allItemsInCloud.find((item) => item.id === reloadId)) {
+                // Reload is not in the response
+                // Delete it from the state machine
                 this.deleteReload(reloadId);
+                numReloadsDeleted += 1;
             }
         });
 
@@ -259,10 +286,22 @@ class ReloadStateMachine {
         allItemsInCloud.forEach((reload) => {
             const reloadId = reload.id;
             this.updateReload(reloadId, reload.status, reload);
+            numReloadsUpdated += 1;
         });
 
         // Reset number of remaining seconds
         this.remainingSeconds = this.updateIntervalSeconds;
+
+        // Send message to output 2
+        const outMsg = {
+            payload: {
+                message: 'Relead states updated',
+                numReloadsAdded,
+                numReloadsDeleted,
+                numReloadsUpdated,
+            },
+        };
+        this.node.send([null, outMsg]);
 
         return true;
     }

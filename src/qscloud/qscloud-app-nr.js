@@ -39,8 +39,8 @@ module.exports = function (RED) {
                     node.status({ fill: 'yellow', shape: 'dot', text: 'getting apps' });
 
                     // Add app arrays to out message
-                    outMsg.payload.appExist = [];
-                    outMsg.payload.appNoExist = [];
+                    outMsg.payload.app = [];
+                    outMsg.payload.appIdNoExist = [];
 
                     const { appIdCandidates } = getCandidateApps(node, msg, done);
 
@@ -54,9 +54,9 @@ module.exports = function (RED) {
                         response = await auth.rest('/apps');
                         allApps = await response.json();
 
-                        // Push all app objects to the outMsg.payload.appExist array
+                        // Push all app objects to the outMsg.payload.app array
                         allApps.data.forEach((app) => {
-                            outMsg.payload.appExist.push(app);
+                            outMsg.payload.app.push(app);
                         });
                     } else if (appIdCandidates.length > 0) {
                         // Loop through the app IDs
@@ -70,17 +70,17 @@ module.exports = function (RED) {
 
                             if (responseStatus === 200) {
                                 const app = await response.json();
-                                outMsg.payload.appExist.push(app);
+                                outMsg.payload.app.push(app);
                             } else {
                                 // App does not exist
-                                outMsg.payload.appExist.push(appId);
+                                outMsg.payload.appIdNoExist.push(appId);
                             }
                         }
                     }
 
                     // Log success
-                    node.log(`Found ${outMsg.payload.appExist.length} matching apps on Qlik Sense server.`);
-                    node.log(`${outMsg.payload.appNoExist.length} of the provided app IDs don't exist on Qlik Sense server.`);
+                    node.log(`Found ${outMsg.payload.app.length} matching apps on Qlik Sense server.`);
+                    node.log(`${outMsg.payload.appIdNoExist.length} of the provided app IDs don't exist on Qlik Sense server.`);
                     node.status({ fill: 'green', shape: 'dot', text: 'apps retrieved' });
                 } else if (node.op === 'u') {
                     // Update apps
@@ -92,8 +92,8 @@ module.exports = function (RED) {
                     node.status({ fill: 'yellow', shape: 'dot', text: 'reloading apps' });
 
                     // Add app arrays to out message
-                    outMsg.payload.appExist = [];
-                    outMsg.payload.appNoExist = [];
+                    outMsg.payload.app = [];
+                    outMsg.payload.appIdNoExist = [];
                     outMsg.payload.appError = [];
 
                     const { appIdCandidates } = getCandidateApps(node, msg, done);
@@ -128,7 +128,7 @@ module.exports = function (RED) {
 
                             if (responseStatus === 201) {
                                 // Reload queued successfully
-                                outMsg.payload.appExist.push(reloadInfo);
+                                outMsg.payload.app.push(reloadInfo);
                             } else {
                                 // Error when queuing reload
                                 outMsg.payload.appError.push(reloadInfo);
@@ -154,7 +154,7 @@ module.exports = function (RED) {
 
                             if (err.status === 404) {
                                 // App does not exist
-                                outMsg.payload.appNoExist.push(appId);
+                                outMsg.payload.appIdNoExist.push(appId);
                             } else {
                                 // Other error
                                 outMsg.payload.appError.push({ appId, err });
@@ -167,11 +167,11 @@ module.exports = function (RED) {
                     }
 
                     // Log success
-                    node.log(`Queued ${outMsg.payload.appExist.length} app reloads on Qlik Sense Cloud.`);
-                    node.log(`${outMsg.payload.appNoExist.length} of the provided app IDs could not be reloaded on Qlik Sense Cloud.`);
+                    node.log(`Queued ${outMsg.payload.app.length} app reloads on Qlik Sense Cloud.`);
+                    node.log(`${outMsg.payload.appIdNoExist.length} of the provided app IDs could not be reloaded on Qlik Sense Cloud.`);
 
                     // Set node status. If there were any missing apps or errors, set status to red
-                    if (outMsg.payload.appNoExist.length > 0 || outMsg.payload.appError.length > 0) {
+                    if (outMsg.payload.appIdNoExist.length > 0 || outMsg.payload.appError.length > 0) {
                         node.status({ fill: 'red', shape: 'ring', text: 'errors/warnings, check output' });
                     } else {
                         node.status({ fill: 'green', shape: 'dot', text: 'app reloads queued' });
