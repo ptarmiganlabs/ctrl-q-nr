@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.6](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.5...v0.0.6) (2023-09-06)
+
+
+### Miscellaneous
+
+* Add .npmignore file ([819dde5](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/819dde5a189f1b0a719ea57af713d8a988cb4d9d)), closes [#24](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/24)
+* **deps:** update actions/checkout action to v4 ([3257516](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/325751671b0da4b06b7497fe4ad43d928fbe709e))
+
+
+### Documentation
+
+* Add docs for cloud nodes ([65eac94](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/65eac9465e2ebde822c5f48a2a939f8848762899)), closes [#28](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/28)
+* Added 2 QSEoW examples ([54a87aa](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/54a87aa77519a04d3100cd0b13c9fee6a7c45ee2)), closes [#31](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/31)
+* Create logo ([a172337](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/a172337bc8600c224610fc5641b88a6f1011d86b)), closes [#32](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/32)
+* Update README with logo and badges ([c5e3a60](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/c5e3a608ab0aa6531e459867b29a8154be94d69e)), closes [#33](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/33)
+
 ## [0.0.5](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.4...v0.0.5) (2023-09-03)
 
 ### Bug Fixes
