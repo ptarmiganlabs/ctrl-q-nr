@@ -33,4 +33,58 @@
 
 <script type="text/html" data-help-name="qscloud-license">
     <p>A node that gets license information from Qlik Sense Cloud</p>
+
+    <h2>Properties</h2>
+    <ul>
+        <li><b>Name</b> - Name of the node.</li>
+        <li><b>Qlik Sense Cloud tenant</b> - The Qlik Sense Cloud tenant to use.</li>
+    </ul>
+
+    <h2>Output message</h2>
+    <p>The output message contains the following properties, with example values:</p>
+
+    <ul>
+        <li><strong>status</strong></li>
+        <ul>
+            <li><strong>status:</strong> Ok</li>
+            <li><strong>valid:</strong> ./2023-12-31</li>
+            <li><strong>type:</strong> Signed</li>
+            <li><strong>origin:</strong> Internal</li>
+            <li><strong>trial:</strong> false</li>
+            <li><strong>product:</strong> Qlik Sense Enterprise SaaS</li>
+        </ul>
+        <li><strong>overview</strong></li>
+        <ul>
+            <li><strong>liceseNumber:</strong> 0123 4567 8901 2345</li>
+            <li><strong>licenseKey:</strong> ...some secret key...</li>
+            <li><strong>valid:</strong> ./2023-12-31</li>
+            <li><strong>status:</strong> Ok</li>
+            <li><strong>origin:</strong> Internal</li>
+            <li><strong>updated:</strong> 0001-01-01T00:00:00Z</li>
+            <li><strong>changeTime:</strong> 2023-01-01T01:30:30Z</li>
+            <li><strong>latestValidTime:</strong> 2024-01-01T00:00:00Z</li>
+            <li><strong>trial:</strong> false</li>
+            <li><strong>licenseType:</strong></li>
+            <li><strong>allotments:</strong> Array of objects containing info about what features are included in this license</li>
+            <li><strong>product:</strong> Qlik Sense Enterprise SaaS</li>
+            <li><strong>parameters:</strong> Array of objects containing detailed settings for this license</li>
+            <li><strong>secondaryNumber:</strong> 0123 4567 8901 2345</li>
+        </ul>
+        <li><strong>settings</strong></li>
+        <ul>
+            <li><strong>autoAssignProfessional:</strong> true</li>
+            <li><strong>autoAssignAnalyzer:</strong> false</li>
+        </ul>
+        <li><strong>consumption</strong></li>
+        <ul>
+            <li>
+                <strong>data:</strong> Array of objects containing historical info about what has been done in this tenant with respect to
+                licenses
+            </li>
+        </ul>
+        <li><strong>assignments</strong></li>
+        <ul>
+            <li><strong>data:</strong> Array of objects containing info about what licenses are assigned to what users</li>
+        </ul>
+    </ul>
 </script>

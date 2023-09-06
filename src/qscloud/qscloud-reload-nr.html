@@ -6,7 +6,7 @@
         defaults: {
             name: { value: '' },
             tenant: { value: '', type: 'qscloud-tenant' },
-            op: { value: 'r', options: ['r', 'monitorstate'], required: true },
+            op: { value: 'r', options: ['r'], required: true },
         },
         inputs: 1,
         outputs: 1,
@@ -35,11 +35,27 @@
         <label for="node-input-op"><i class="fa fa-cog"></i> Operation</label>
         <select id="node-input-op">
             <option value="r">Get reload queue</option>
-            <option value="monitorstate">Monitor reload state</option>
         </select>
     </div>
 </script>
 
 <script type="text/html" data-help-name="qscloud-reload">
     <p>A node that manage app reloads in Qlik Sense Cloud</p>
+
+    <h2>Properties</h2>
+
+    <ul>
+        <li><b>Name</b> - Name of the node.</li>
+        <li><b>Qlik Sense Cloud tenant</b> - The Qlik Sense Cloud tenant to use.</li>
+        <li><b>Operation</b> - The operation to perform.</li>
+    </ul>
+
+    <h2>Output message</h2>
+    <p>The output message vary depending on the operation.</p>
+
+    <h3>Get reload queue</h3>
+    <p>When the operation is <b>Get reload queue</b> the output message will contain the following properties:</p>
+    <ul>
+        <li><b>appReload</b> - An array of historical app reload objects. Which app was reloaded, when, result etc.</li>
+    </ul>
 </script>

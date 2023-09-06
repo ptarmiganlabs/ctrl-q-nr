@@ -21,7 +21,6 @@ async function getApps(node, done, appIdsToGet) {
 
         // Debug
         node.log(`Filtering apps by ID: ${appIdsToGet.join(', ')}`);
-        // node.log(`URL: ${axiosConfig.url}`);
     }
 
     try {
