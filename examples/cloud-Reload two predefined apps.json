@@ -11,11 +11,7 @@
         "appSource2": "msg-in",
         "x": 560,
         "y": 200,
-        "wires": [
-            [
-                "36932ce69a55eafe"
-            ]
-        ]
+        "wires": [["36932ce69a55eafe"]]
     },
     {
         "id": "7a8aa940ff53441d",
@@ -30,11 +26,7 @@
         "topic": "",
         "x": 110,
         "y": 200,
-        "wires": [
-            [
-                "7d5d4f4c9de2d2fd"
-            ]
-        ]
+        "wires": [["7d5d4f4c9de2d2fd"]]
     },
     {
         "id": "36932ce69a55eafe",
