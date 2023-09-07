@@ -1,0 +1,136 @@
+[
+    {
+        "id": "10914a77dd8344dc",
+        "type": "inject",
+        "z": "0b5596fd57f8cd30",
+        "name": "Delete tags set in tag node",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 190,
+        "y": 740,
+        "wires": [
+            [
+                "a3b3fc358f514930"
+            ]
+        ]
+    },
+    {
+        "id": "a3b3fc358f514930",
+        "type": "qseow-tag",
+        "z": "0b5596fd57f8cd30",
+        "name": "",
+        "server": "18609cb899039437",
+        "op": "d",
+        "tagName": "# Tags\nstartTask10\n\n# Some more tags\nstartTask11\nstartTask12\n",
+        "tagSource": "predefined",
+        "x": 530,
+        "y": 740,
+        "wires": [
+            [
+                "f84a38cb2abc8d56"
+            ]
+        ]
+    },
+    {
+        "id": "f84a38cb2abc8d56",
+        "type": "debug",
+        "z": "0b5596fd57f8cd30",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "67b01aa0ceef181e",
+        "type": "inject",
+        "z": "0b5596fd57f8cd30",
+        "name": "Delete tags included in this message",
+        "props": [
+            {
+                "p": "payload.tagName",
+                "v": "[\"startTask10\",\"startTask11\",\"startTask12\"]",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 220,
+        "y": 820,
+        "wires": [
+            [
+                "9464cedb0a47607d"
+            ]
+        ]
+    },
+    {
+        "id": "9464cedb0a47607d",
+        "type": "qseow-tag",
+        "z": "0b5596fd57f8cd30",
+        "name": "",
+        "server": "18609cb899039437",
+        "op": "d",
+        "tagSource": "msg-in",
+        "x": 530,
+        "y": 820,
+        "wires": [
+            [
+                "63ef913cf249414c"
+            ]
+        ]
+    },
+    {
+        "id": "63ef913cf249414c",
+        "type": "debug",
+        "z": "0b5596fd57f8cd30",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "d076fb22a675eaa4",
+        "type": "comment",
+        "z": "0b5596fd57f8cd30",
+        "name": "Delete tags",
+        "info": "",
+        "x": 90,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]

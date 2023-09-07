@@ -1,0 +1,621 @@
+[
+    {
+        "id": "c0e36491fcb3304e",
+        "type": "inject",
+        "z": "6b2d354d8ec66db5",
+        "name": "Get all apps",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "0acfcb245c27a146"
+            ]
+        ]
+    },
+    {
+        "id": "b15bb8e5183c95e1",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "Result (single JSON for all apps)",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "99db3b8475d13b3f",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "Result (one msg for each app)",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "36bf6229d5886fe4",
+        "type": "switch",
+        "z": "6b2d354d8ec66db5",
+        "name": "Last reload was during ...",
+        "property": "payload.lastReloadTime",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "btwn",
+                "v": "2017-01-01",
+                "vt": "str",
+                "v2": "2017-12-31",
+                "v2t": "str"
+            },
+            {
+                "t": "btwn",
+                "v": "2018-01-01",
+                "vt": "str",
+                "v2": "2018-12-31",
+                "v2t": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 710,
+        "y": 300,
+        "wires": [
+            [
+                "27098d5b724479a3"
+            ],
+            [
+                "9e32e89cc4e45730"
+            ]
+        ]
+    },
+    {
+        "id": "a8c07b848ff15033",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "lastReloadTime",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.lastReloadTime",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "95af517f5b6a82b7",
+        "type": "comment",
+        "z": "6b2d354d8ec66db5",
+        "name": "Find and tag rarely reloaded apps",
+        "info": "",
+        "x": 150,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "aeba82c2cadbd81a",
+        "type": "qseow-app",
+        "z": "6b2d354d8ec66db5",
+        "name": "Get apps",
+        "server": "18609cb899039437",
+        "op": "r",
+        "appId": "",
+        "appSource1": "predefined",
+        "x": 700,
+        "y": 160,
+        "wires": [
+            [
+                "b15bb8e5183c95e1",
+                "95cbb0fa0ef6a6b8"
+            ]
+        ]
+    },
+    {
+        "id": "02ce278a3598584c",
+        "type": "split",
+        "z": "6b2d354d8ec66db5",
+        "name": "Split into one msg per app",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 360,
+        "y": 260,
+        "wires": [
+            [
+                "99db3b8475d13b3f",
+                "36bf6229d5886fe4"
+            ]
+        ]
+    },
+    {
+        "id": "95cbb0fa0ef6a6b8",
+        "type": "change",
+        "z": "6b2d354d8ec66db5",
+        "name": "Create array of found apps",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.appExist",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 160,
+        "wires": [
+            [
+                "02ce278a3598584c"
+            ]
+        ]
+    },
+    {
+        "id": "72a3f10e62c46bef",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "2018",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "0acfcb245c27a146",
+        "type": "qseow-tag",
+        "z": "6b2d354d8ec66db5",
+        "name": "Create tags \"reload2017\", \"reload2018\"",
+        "server": "18609cb899039437",
+        "op": "c",
+        "tagName": "",
+        "tagSource": "predefined",
+        "x": 420,
+        "y": 160,
+        "wires": [
+            [
+                "aeba82c2cadbd81a"
+            ]
+        ]
+    },
+    {
+        "id": "9906610dc2dbebbb",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "lastReloadTime",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.lastReloadTime",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "64541fc9baae1a3f",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "2017",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "dac3a5bf367621bf",
+        "type": "change",
+        "z": "6b2d354d8ec66db5",
+        "name": "Prepare \"reload2017\" tag update",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\t   \"app\": [\t       {\t           \"id\": payload.id\t       }\t\t    ],\t   \"newData\": {\t       \"tag\": [\t            \"reload2017\"\t        ]\t    }\t}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 400,
+        "wires": [
+            [
+                "3549f833e4145a73"
+            ]
+        ]
+    },
+    {
+        "id": "f35389d5f241e5d0",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3549f833e4145a73",
+        "type": "delay",
+        "z": "6b2d354d8ec66db5",
+        "name": "Rate limit to 1 msg every second",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 400,
+        "wires": [
+            [
+                "f35389d5f241e5d0",
+                "f5b5879d90d6edfa"
+            ]
+        ]
+    },
+    {
+        "id": "f5b5879d90d6edfa",
+        "type": "qseow-app",
+        "z": "6b2d354d8ec66db5",
+        "name": "Update",
+        "server": "18609cb899039437",
+        "op": "u",
+        "appId": "\n\nad61b901-3343-4bbf-b3e6-aa3ee333abef\n\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4b\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4c\n",
+        "appSource1": "msg-in",
+        "appSource2": "msg-in",
+        "x": 920,
+        "y": 440,
+        "wires": [
+            [
+                "27346bbef9920321"
+            ]
+        ]
+    },
+    {
+        "id": "27346bbef9920321",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "Result 2017",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "27098d5b724479a3",
+        "type": "link out",
+        "z": "6b2d354d8ec66db5",
+        "name": "2017 out",
+        "mode": "link",
+        "links": [
+            "0d76cb0ee2d95a88"
+        ],
+        "x": 975,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "0d76cb0ee2d95a88",
+        "type": "link in",
+        "z": "6b2d354d8ec66db5",
+        "name": "2017 in",
+        "links": [
+            "27098d5b724479a3"
+        ],
+        "x": 135,
+        "y": 400,
+        "wires": [
+            [
+                "64541fc9baae1a3f",
+                "9906610dc2dbebbb",
+                "dac3a5bf367621bf"
+            ]
+        ]
+    },
+    {
+        "id": "9e32e89cc4e45730",
+        "type": "link out",
+        "z": "6b2d354d8ec66db5",
+        "name": "2018 out",
+        "mode": "link",
+        "links": [
+            "cb1402b392cb9c80"
+        ],
+        "x": 975,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "cb1402b392cb9c80",
+        "type": "link in",
+        "z": "6b2d354d8ec66db5",
+        "name": "2018 in",
+        "links": [
+            "9e32e89cc4e45730"
+        ],
+        "x": 135,
+        "y": 580,
+        "wires": [
+            [
+                "72a3f10e62c46bef",
+                "a8c07b848ff15033",
+                "b20e322b7273664f"
+            ]
+        ]
+    },
+    {
+        "id": "b20e322b7273664f",
+        "type": "change",
+        "z": "6b2d354d8ec66db5",
+        "name": "Prepare \"reload2018\" tag update",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\t   \"app\": [\t       {\t           \"id\": payload.id\t       }\t\t    ],\t   \"newData\": {\t       \"tag\": [\t            \"reload2018\"\t        ]\t    }\t}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 580,
+        "wires": [
+            [
+                "acd9a32d0af9a246"
+            ]
+        ]
+    },
+    {
+        "id": "fb6cbd34246ec3d9",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "acd9a32d0af9a246",
+        "type": "delay",
+        "z": "6b2d354d8ec66db5",
+        "name": "Rate limit to 1 msg every second",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 580,
+        "wires": [
+            [
+                "fb6cbd34246ec3d9",
+                "86af4b868eea57b1"
+            ]
+        ]
+    },
+    {
+        "id": "86af4b868eea57b1",
+        "type": "qseow-app",
+        "z": "6b2d354d8ec66db5",
+        "name": "Update",
+        "server": "18609cb899039437",
+        "op": "u",
+        "appId": "\n\nad61b901-3343-4bbf-b3e6-aa3ee333abef\n\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4b\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4c\n",
+        "appSource1": "msg-in",
+        "appSource2": "msg-in",
+        "x": 920,
+        "y": 620,
+        "wires": [
+            [
+                "369d39f7a1c817ad"
+            ]
+        ]
+    },
+    {
+        "id": "369d39f7a1c817ad",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "Result 2018",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "b11706cfccfbcc8f",
+        "type": "qseow-tag",
+        "z": "6b2d354d8ec66db5",
+        "name": "",
+        "server": "18609cb899039437",
+        "op": "d",
+        "tagSource": "msg-in",
+        "x": 410,
+        "y": 760,
+        "wires": [
+            [
+                "851d1986d69eb974"
+            ]
+        ]
+    },
+    {
+        "id": "851d1986d69eb974",
+        "type": "debug",
+        "z": "6b2d354d8ec66db5",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "51b5a5f5c5c299df",
+        "type": "inject",
+        "z": "6b2d354d8ec66db5",
+        "name": "Delete \"reload2018\" tag",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[\"reload2018\"]",
+        "payloadType": "json",
+        "x": 180,
+        "y": 800,
+        "wires": [
+            [
+                "b11706cfccfbcc8f"
+            ]
+        ]
+    },
+    {
+        "id": "31cd8c6825e26ef4",
+        "type": "inject",
+        "z": "6b2d354d8ec66db5",
+        "name": "Delete \"reload2017\" tag",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[\"reload2017\"]",
+        "payloadType": "json",
+        "x": 180,
+        "y": 760,
+        "wires": [
+            [
+                "b11706cfccfbcc8f"
+            ]
+        ]
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]

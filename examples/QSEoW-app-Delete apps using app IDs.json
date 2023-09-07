@@ -1,0 +1,84 @@
+[
+    {
+        "id": "72ded6e7d874a699",
+        "type": "comment",
+        "z": "adaddf859632b31a",
+        "name": "Delete apps using app IDs",
+        "info": "",
+        "x": 130,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "aab816d4307e7f6d",
+        "type": "inject",
+        "z": "adaddf859632b31a",
+        "name": "Delete two apps",
+        "props": [
+            {
+                "p": "payload.appId",
+                "v": "[\"214652f1-8704-471c-8b9d-ce97c716ac8f\",\"2e9b9cbe-0b2c-4e3d-8e55-6a3a664ea1ab\",\"2e9b9cbe-0b2c-4e3d-8e55-6a3a664ea1aa\"]",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 160,
+        "y": 1160,
+        "wires": [
+            [
+                "41d6355f7dc1b14e"
+            ]
+        ]
+    },
+    {
+        "id": "5132271d745ebb14",
+        "type": "debug",
+        "z": "adaddf859632b31a",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "41d6355f7dc1b14e",
+        "type": "qseow-app",
+        "z": "adaddf859632b31a",
+        "name": "Delete",
+        "server": "18609cb899039437",
+        "op": "d",
+        "appId": "\n\nad61b901-3343-4bbf-b3e6-aa3ee333abef\n\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4b\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4c\n",
+        "appSource2": "msg-in",
+        "x": 470,
+        "y": 1160,
+        "wires": [
+            [
+                "5132271d745ebb14"
+            ]
+        ]
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]

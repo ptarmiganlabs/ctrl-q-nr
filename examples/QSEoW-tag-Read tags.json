@@ -1,0 +1,243 @@
+[
+    {
+        "id": "e773cba1a37f7702",
+        "type": "inject",
+        "z": "0b5596fd57f8cd30",
+        "name": "Get info about tags set in tag node",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 220,
+        "y": 440,
+        "wires": [
+            [
+                "e90589401074930a"
+            ]
+        ]
+    },
+    {
+        "id": "2a5b10b8b70c617f",
+        "type": "debug",
+        "z": "0b5596fd57f8cd30",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "326be93d6d5cd155",
+        "type": "inject",
+        "z": "0b5596fd57f8cd30",
+        "name": "Get info about tags included in this message",
+        "props": [
+            {
+                "p": "payload.tagName",
+                "v": "[\"startTask2\",\"startTask3\"]",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 250,
+        "y": 580,
+        "wires": [
+            [
+                "17710cf4cad6b9d2"
+            ]
+        ]
+    },
+    {
+        "id": "17710cf4cad6b9d2",
+        "type": "qseow-tag",
+        "z": "0b5596fd57f8cd30",
+        "name": "",
+        "server": "18609cb899039437",
+        "op": "r",
+        "tagName": "",
+        "tagSource": "msg-in",
+        "x": 530,
+        "y": 580,
+        "wires": [
+            [
+                "1135e7db0b175058"
+            ]
+        ]
+    },
+    {
+        "id": "1135e7db0b175058",
+        "type": "debug",
+        "z": "0b5596fd57f8cd30",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "82456a41e8c6031a",
+        "type": "inject",
+        "z": "0b5596fd57f8cd30",
+        "name": "Get info about all tags",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "990771479ba3c04a"
+            ]
+        ]
+    },
+    {
+        "id": "0747068f5b96d447",
+        "type": "debug",
+        "z": "0b5596fd57f8cd30",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "990771479ba3c04a",
+        "type": "qseow-tag",
+        "z": "0b5596fd57f8cd30",
+        "name": "",
+        "server": "18609cb899039437",
+        "op": "r",
+        "tagName": "",
+        "tagSource": "predefined",
+        "x": 530,
+        "y": 360,
+        "wires": [
+            [
+                "0747068f5b96d447"
+            ]
+        ]
+    },
+    {
+        "id": "bc574b55e4768cdb",
+        "type": "comment",
+        "z": "0b5596fd57f8cd30",
+        "name": "Read tags",
+        "info": "",
+        "x": 80,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e90589401074930a",
+        "type": "qseow-tag",
+        "z": "0b5596fd57f8cd30",
+        "name": "1, 10, 11",
+        "server": "18609cb899039437",
+        "op": "r",
+        "tagName": "# Tags\nstartTask10\n\n# Some more tags\nstartTask1\nstartTask11\n\n",
+        "tagSource": "predefined",
+        "x": 520,
+        "y": 440,
+        "wires": [
+            [
+                "2a5b10b8b70c617f"
+            ]
+        ]
+    },
+    {
+        "id": "7bcf83662945a604",
+        "type": "inject",
+        "z": "0b5596fd57f8cd30",
+        "name": "Get info about tags set in tag node",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 220,
+        "y": 500,
+        "wires": [
+            [
+                "45ddaa624678350d"
+            ]
+        ]
+    },
+    {
+        "id": "8c2ba5cabd6a7b88",
+        "type": "debug",
+        "z": "0b5596fd57f8cd30",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "45ddaa624678350d",
+        "type": "qseow-tag",
+        "z": "0b5596fd57f8cd30",
+        "name": "1, 10, 11",
+        "server": "18609cb899039437",
+        "op": "r",
+        "tagName": "# Tags\nstartTask10\n\n# Some more tags\nstartTask1\nstartTask11\n\n",
+        "tagSource": "predefined",
+        "x": 520,
+        "y": 500,
+        "wires": [
+            [
+                "8c2ba5cabd6a7b88"
+            ]
+        ]
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]

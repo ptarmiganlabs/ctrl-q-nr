@@ -1,0 +1,153 @@
+[
+    {
+        "id": "0ff8665de847867d",
+        "type": "http in",
+        "z": "6aa8bdb3e26ce475",
+        "name": "Incoming reload-done webhook from Qlik Sense Cloud",
+        "url": "/ctrl-q/abcdefg123456789",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 180,
+        "wires": [
+            [
+                "32f483f955d007c3",
+                "34c7c80eabed6fa5",
+                "fd261171b3b05ba3"
+            ]
+        ]
+    },
+    {
+        "id": "32f483f955d007c3",
+        "type": "http response",
+        "z": "6aa8bdb3e26ce475",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 590,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "34c7c80eabed6fa5",
+        "type": "debug",
+        "z": "6aa8bdb3e26ce475",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "2ff1e15f28687504",
+        "type": "debug",
+        "z": "6aa8bdb3e26ce475",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "fd261171b3b05ba3",
+        "type": "qseow-task",
+        "z": "6aa8bdb3e26ce475",
+        "name": "Start on-prem Sense tasks",
+        "server": "18609cb899039437",
+        "op": "start",
+        "taskId": "eb018d95-8c0c-4613-9081-82b3822ecca2\n244ca6a8-8c20-488d-aed2-504048dd4516\nd6bfc66a-393b-4eea-8ecd-1b1629c91683",
+        "taskSource1": "predefined",
+        "x": 650,
+        "y": 240,
+        "wires": [
+            [
+                "2ff1e15f28687504",
+                "0cc57b72bbf72c5f"
+            ]
+        ]
+    },
+    {
+        "id": "53d356c8cea62f35",
+        "type": "comment",
+        "z": "6aa8bdb3e26ce475",
+        "name": "Detect reload-done in cloud, then start tasks in client-managed Qlik Sense",
+        "info": "",
+        "x": 290,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "0cc57b72bbf72c5f",
+        "type": "function",
+        "z": "6aa8bdb3e26ce475",
+        "name": "Turn on coffee machine",
+        "func": "msg.payload = 'Coffee break time!'\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 320,
+        "wires": [
+            [
+                "40b5616cc16b51ef"
+            ]
+        ]
+    },
+    {
+        "id": "40b5616cc16b51ef",
+        "type": "debug",
+        "z": "6aa8bdb3e26ce475",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "3f4fee75aed64240",
+        "type": "comment",
+        "z": "6aa8bdb3e26ce475",
+        "name": " 🚨 NOTE: Requires an Internet facing Node-RED environment",
+        "info": "This example shows how outgoing calls/webhooks from  \nQlik Sense Cloud can be received (and acted on) by Node-RED.\n\nFor this to work your Node-RED instance must be visible to Qlik Sense Cloud.  \nThis can be directly on the Internet or via some proxy or tunnel,  \nfor example a Cloudflare tunnel or similar.",
+        "x": 250,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]

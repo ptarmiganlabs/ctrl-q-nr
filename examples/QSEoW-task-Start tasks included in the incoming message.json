@@ -1,0 +1,84 @@
+[
+    {
+        "id": "52d1a8c93d55d5be",
+        "type": "comment",
+        "z": "bcfe6034b93adf44",
+        "name": "Start tasks included in the incoming message",
+        "info": "",
+        "x": 210,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "6b1f9bbbf086cc43",
+        "type": "inject",
+        "z": "bcfe6034b93adf44",
+        "name": "Start tasks included in this message",
+        "props": [
+            {
+                "p": "payload.taskId",
+                "v": "[\"eb018d95-8c0c-4613-9081-82b3822ecca2\",\"eb018d95-8c0c-4613-9081-82b3822ecca1\",\"244ca6a8-8c20-488d-aed2-504048dd4516\",\"d6bfc66a-393b-4eea-8ecd-1b1629c91683\"]",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 860,
+        "wires": [
+            [
+                "f08f45be9844ed38"
+            ]
+        ]
+    },
+    {
+        "id": "f08f45be9844ed38",
+        "type": "qseow-task",
+        "z": "bcfe6034b93adf44",
+        "name": "Start Sense tasks",
+        "server": "18609cb899039437",
+        "op": "start",
+        "taskId": "eb018d95-8c0c-4613-9081-82b3822ecca2\n244ca6a8-8c20-488d-aed2-504048dd4516\nd6bfc66a-393b-4eea-8ecd-1b1629c91683",
+        "taskSource1": "msg-in",
+        "x": 470,
+        "y": 860,
+        "wires": [
+            [
+                "01e0df01a994f319"
+            ]
+        ]
+    },
+    {
+        "id": "01e0df01a994f319",
+        "type": "debug",
+        "z": "bcfe6034b93adf44",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]
