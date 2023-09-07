@@ -25,6 +25,22 @@ To use these nodes, you will need to have Node-RED installed. Once you have Node
 5. Search for "ctrl-q-nr"
 6. Click "Install"
 
+## Available nodes
+
+Qlik Sense client-managed nodes:
+
+-   **qseow-app**: Used to interact with Qlik Sense apps.
+-   **qseow-task**: Used to start Qlik Sense tasks. Reload, external program, distribution, and user sync tasks are supported.
+-   **qseow-service-status**: Used to retrieve the status of a Qlik Sense service, such as the Qlik Sense Repository Service (QRS) or the Qlik Sense Engine Service (QES) for all the nodes in the Sense cluster.
+-   **qseow-tag**: Used to create, update, or delete Qlik Sense tags.
+
+Qlik Sense Cloud nodes:
+
+-   **qscloud-app**: Used to interact with Qlik Sense Cloud apps, for example reading app metadata or reloading apps.
+-   **qscloud-license**: Used to retrieve license information for a Qlik Sense Cloud tenant.
+-   **qscloud-reload**: Used to reload a Qlik Sense Cloud app.
+-   **qscloud-reload-status**: Used to monitor all reloads in a Qlik Sense Cloud tenant.
+
 ## Usage
 
 Once you have installed the nodes, you can use them in your Node-RED flows. The nodes are organized into different categories based on their functionality. To use a node, simply drag it from the palette onto your flow and configure it using the node's properties.

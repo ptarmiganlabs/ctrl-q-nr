@@ -10,13 +10,7 @@
         "swaggerDoc": "",
         "x": 250,
         "y": 180,
-        "wires": [
-            [
-                "32f483f955d007c3",
-                "34c7c80eabed6fa5",
-                "fd261171b3b05ba3"
-            ]
-        ]
+        "wires": [["32f483f955d007c3", "34c7c80eabed6fa5", "fd261171b3b05ba3"]]
     },
     {
         "id": "32f483f955d007c3",
@@ -74,12 +68,7 @@
         "taskSource1": "predefined",
         "x": 650,
         "y": 240,
-        "wires": [
-            [
-                "2ff1e15f28687504",
-                "0cc57b72bbf72c5f"
-            ]
-        ]
+        "wires": [["2ff1e15f28687504", "0cc57b72bbf72c5f"]]
     },
     {
         "id": "53d356c8cea62f35",
@@ -104,11 +93,7 @@
         "libs": [],
         "x": 640,
         "y": 320,
-        "wires": [
-            [
-                "40b5616cc16b51ef"
-            ]
-        ]
+        "wires": [["40b5616cc16b51ef"]]
     },
     {
         "id": "40b5616cc16b51ef",

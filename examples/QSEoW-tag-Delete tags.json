@@ -12,11 +12,7 @@
         "topic": "",
         "x": 190,
         "y": 740,
-        "wires": [
-            [
-                "a3b3fc358f514930"
-            ]
-        ]
+        "wires": [["a3b3fc358f514930"]]
     },
     {
         "id": "a3b3fc358f514930",
@@ -29,11 +25,7 @@
         "tagSource": "predefined",
         "x": 530,
         "y": 740,
-        "wires": [
-            [
-                "f84a38cb2abc8d56"
-            ]
-        ]
+        "wires": [["f84a38cb2abc8d56"]]
     },
     {
         "id": "f84a38cb2abc8d56",
@@ -71,11 +63,7 @@
         "topic": "",
         "x": 220,
         "y": 820,
-        "wires": [
-            [
-                "9464cedb0a47607d"
-            ]
-        ]
+        "wires": [["9464cedb0a47607d"]]
     },
     {
         "id": "9464cedb0a47607d",
@@ -87,11 +75,7 @@
         "tagSource": "msg-in",
         "x": 530,
         "y": 820,
-        "wires": [
-            [
-                "63ef913cf249414c"
-            ]
-        ]
+        "wires": [["63ef913cf249414c"]]
     },
     {
         "id": "63ef913cf249414c",

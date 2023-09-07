@@ -8,11 +8,7 @@
         "recursive": true,
         "x": 210,
         "y": 300,
-        "wires": [
-            [
-                "3a3de138b3e0b8da"
-            ]
-        ]
+        "wires": [["3a3de138b3e0b8da"]]
     },
     {
         "id": "3a3de138b3e0b8da",
@@ -25,11 +21,7 @@
         "taskSource1": "predefined",
         "x": 470,
         "y": 300,
-        "wires": [
-            [
-                "6b981a642e49462c"
-            ]
-        ]
+        "wires": [["6b981a642e49462c"]]
     },
     {
         "id": "6b981a642e49462c",
@@ -61,9 +53,7 @@
         "encoding": "none",
         "x": 360,
         "y": 240,
-        "wires": [
-            []
-        ]
+        "wires": [[]]
     },
     {
         "id": "7f1ff08e81ecd09b",
@@ -84,11 +74,7 @@
         "payloadType": "date",
         "x": 130,
         "y": 240,
-        "wires": [
-            [
-                "3f95e17397f36f3d"
-            ]
-        ]
+        "wires": [["3f95e17397f36f3d"]]
     },
     {
         "id": "5a4b14d626c07414",
