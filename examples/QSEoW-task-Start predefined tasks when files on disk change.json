@@ -1,0 +1,102 @@
+[
+    {
+        "id": "788985b23c08a2ed",
+        "type": "watch",
+        "z": "bcfe6034b93adf44",
+        "name": "Watch /datadrop directory",
+        "files": "/datadrop",
+        "recursive": true,
+        "x": 210,
+        "y": 300,
+        "wires": [["3a3de138b3e0b8da"]]
+    },
+    {
+        "id": "3a3de138b3e0b8da",
+        "type": "qseow-task",
+        "z": "bcfe6034b93adf44",
+        "name": "Start Sense tasks",
+        "server": "18609cb899039437",
+        "op": "start",
+        "taskId": "eb018d95-8c0c-4613-9081-82b3822ecca2\n244ca6a8-8c20-488d-aed2-504048dd4516\nd6bfc66a-393b-4eea-8ecd-1b1629c91683",
+        "taskSource1": "predefined",
+        "x": 470,
+        "y": 300,
+        "wires": [["6b981a642e49462c"]]
+    },
+    {
+        "id": "6b981a642e49462c",
+        "type": "debug",
+        "z": "bcfe6034b93adf44",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "3f95e17397f36f3d",
+        "type": "file",
+        "z": "bcfe6034b93adf44",
+        "name": "",
+        "filename": "/datadrop/reload-demo-1.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 360,
+        "y": 240,
+        "wires": [[]]
+    },
+    {
+        "id": "7f1ff08e81ecd09b",
+        "type": "inject",
+        "z": "bcfe6034b93adf44",
+        "name": "Write to file",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 240,
+        "wires": [["3f95e17397f36f3d"]]
+    },
+    {
+        "id": "5a4b14d626c07414",
+        "type": "comment",
+        "z": "bcfe6034b93adf44",
+        "name": "Start a set of predefined tasks when a file on disk changes",
+        "info": "",
+        "x": 250,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]

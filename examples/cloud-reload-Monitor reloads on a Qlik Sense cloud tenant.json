@@ -1,0 +1,589 @@
+[
+    {
+        "id": "cf1637d86e7b24d9",
+        "type": "qscloud-reload-status",
+        "z": "a8d0ac72dabc9c74",
+        "name": "",
+        "tenant": "a329efb577d33158",
+        "x": 540,
+        "y": 460,
+        "wires": [["34bd4822f3e25f18", "29da37b9359946d8", "61a1d0801b4613c7"], ["01c6e3ea91f74a85"]]
+    },
+    {
+        "id": "34bd4822f3e25f18",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Result",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "9d9d8c1ed4bb6f6f",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Dump state machine contents to output 2",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "getFullState",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 240,
+        "y": 500,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "01c6e3ea91f74a85",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "0f4d37345c041bb5",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Start timer",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "startTimer",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 140,
+        "y": 180,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "9d36237d62a49243",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Stop timer",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "stopTimer",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 140,
+        "y": 220,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "2e6249d00b49dc61",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Update reload states",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "updateReloadStates",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 180,
+        "y": 420,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "1618e2980536a359",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Set update interval to 10 sec",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "setUpdateInterval",
+                "vt": "str"
+            },
+            {
+                "p": "payload.updateInterval",
+                "v": "10000",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 300,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "bff05acceb0c116d",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Set update interval to 1 min",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "setUpdateInterval",
+                "vt": "str"
+            },
+            {
+                "p": "payload.updateInterval",
+                "v": "60000",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 340,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "e3303fb757de74fd",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Set update interval to 10 min",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "setUpdateInterval",
+                "vt": "str"
+            },
+            {
+                "p": "payload.updateInterval",
+                "v": "600000",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 200,
+        "y": 380,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "4420c25ee27eaa9d",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Get update interval",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "getUpdateInterval",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 260,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "a8e06a693c9440e8",
+        "type": "switch",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Status switch",
+        "property": "payload.reloadStatus",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "QUEUED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "RELOADING",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CANCELING",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SUCCEEDED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "FAILED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CANCELED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "EXCEEDED_LIMIT",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 7,
+        "x": 600,
+        "y": 220,
+        "wires": [
+            ["0ec46d8cd5de6534"],
+            ["31b15722ebe4754b"],
+            ["0b6f7b146542cf01"],
+            ["a64275992edcfcf0"],
+            ["8a91099a67b0b09f"],
+            ["1c3dbb28a518549a"],
+            ["b8bf7a84912b0b3f"]
+        ]
+    },
+    {
+        "id": "0ec46d8cd5de6534",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "QUEUED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "31b15722ebe4754b",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "RELOADING",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "0b6f7b146542cf01",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "CANCELING",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "a64275992edcfcf0",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "SUCCEEDED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "8a91099a67b0b09f",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "FAILED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "1c3dbb28a518549a",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "CANCELED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b8bf7a84912b0b3f",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "EXCEEDED_LIMIT",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "29da37b9359946d8",
+        "type": "switch",
+        "z": "a8d0ac72dabc9c74",
+        "name": "\"reload status changed\"",
+        "property": "payload.message",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "reload status changed",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 570,
+        "y": 380,
+        "wires": [["a8e06a693c9440e8"]]
+    },
+    {
+        "id": "61a1d0801b4613c7",
+        "type": "switch",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Status switch for all messages",
+        "property": "payload.reloadStatus",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "QUEUED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "RELOADING",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CANCELING",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "SUCCEEDED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "FAILED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "CANCELED",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "EXCEEDED_LIMIT",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 7,
+        "x": 570,
+        "y": 640,
+        "wires": [["ba1e655e89b7b0c9"], ["8827c240e3a7a045"], [], ["3fbc0da08a807a4c"], ["4ba7a7d597e343d1"], [], []]
+    },
+    {
+        "id": "ba1e655e89b7b0c9",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "QUEUED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "8827c240e3a7a045",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "RELOADING",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "3fbc0da08a807a4c",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "SUCCEEDED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "4ba7a7d597e343d1",
+        "type": "debug",
+        "z": "a8d0ac72dabc9c74",
+        "name": "FAILED",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "90d2d987d8228865",
+        "type": "comment",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Monitor reloads in Qlik Sense Cloud",
+        "info": "1. Do an initial update of reload states, to get the current status of reloads.\n2. Start the timer to get periodic updates of the status of all reloads in the tenant.\n3. Start a reload that ideally runs for longer than the update interval.\n4. You will get updates on the various debug nodes when the reload changes status.\n",
+        "x": 170,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "f2ad9dab33b84458",
+        "type": "inject",
+        "z": "a8d0ac72dabc9c74",
+        "name": "Invalid opeation",
+        "props": [
+            {
+                "p": "payload.operation",
+                "v": "invalidOp",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 160,
+        "y": 580,
+        "wires": [["cf1637d86e7b24d9"]]
+    },
+    {
+        "id": "a329efb577d33158",
+        "type": "qscloud-tenant",
+        "name": "Dummy API key authorisation",
+        "tenant": "abcdefgh123456789",
+        "region": "eu",
+        "authType": "apikey",
+        "clientId": "",
+        "clientSecret": "",
+        "apiKey": "abcdefgh123456789abcdefgh123456789abcdefgh123456789"
+    }
+]

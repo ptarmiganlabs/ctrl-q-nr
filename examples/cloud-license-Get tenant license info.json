@@ -1,0 +1,55 @@
+[
+    {
+        "id": "064ac47d017e15bf",
+        "type": "qscloud-license",
+        "z": "d861baa8b9fa63a4",
+        "name": "",
+        "tenant": "a329efb577d33158",
+        "x": 480,
+        "y": 100,
+        "wires": [["7c5d855d49f390ca"]]
+    },
+    {
+        "id": "d11a9ee464e7502b",
+        "type": "inject",
+        "z": "d861baa8b9fa63a4",
+        "name": "Get license info for current tenant",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 100,
+        "wires": [["064ac47d017e15bf"]]
+    },
+    {
+        "id": "7c5d855d49f390ca",
+        "type": "debug",
+        "z": "d861baa8b9fa63a4",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "a329efb577d33158",
+        "type": "qscloud-tenant",
+        "name": "Dummy API key authorisation",
+        "tenant": "abcdefgh123456789",
+        "region": "eu",
+        "authType": "apikey",
+        "clientId": "",
+        "clientSecret": "",
+        "apiKey": "abcdefgh123456789abcdefgh123456789abcdefgh123456789"
+    }
+]

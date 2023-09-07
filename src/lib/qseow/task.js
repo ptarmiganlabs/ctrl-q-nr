@@ -68,9 +68,9 @@ async function startTasks(node, done, taskIdsToStart) {
     axiosConfig.url = `/qrs/task/full?filter=${filterString}&xrfkey=${xref}`;
 
     // Debug
-    node.log(`URL: ${axiosConfig.url}`);
-    node.log(`Method: ${axiosConfig.method}`);
-    node.log(`Headers: ${JSON.stringify(axiosConfig.headers, null, 4)}`);
+    // node.log(`URL: ${axiosConfig.url}`);
+    // node.log(`Method: ${axiosConfig.method}`);
+    // node.log(`Headers: ${JSON.stringify(axiosConfig.headers, null, 4)}`);
     // End debug
 
     let response;
@@ -154,7 +154,7 @@ async function startTasks(node, done, taskIdsToStart) {
     // Start reload tasks using endpoint /qrs/task/start/many
     axiosConfig.url = `/qrs/task/start/many?xrfkey=${xref}`;
     axiosConfig.method = 'post';
-    axiosConfig.data = taskIdsToStart;
+    axiosConfig.data = allTaskIds;
     axiosConfig.headers['Content-Type'] = 'application/json';
 
     // Start tasks

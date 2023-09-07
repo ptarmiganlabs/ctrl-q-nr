@@ -1,0 +1,94 @@
+[
+    {
+        "id": "b1bbc693c7a7aae4",
+        "type": "comment",
+        "z": "adaddf859632b31a",
+        "name": "Update apps with new tags",
+        "info": "",
+        "x": 140,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "3202f3a2048f9d73",
+        "type": "inject",
+        "z": "adaddf859632b31a",
+        "name": "Add tag to apps",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"app\":[{\"id\":\"4788dc51-2bf6-45f0-a4ad-8bd8d40e1d3f\"},{\"id\":\"4788dc51-2bf6-45f0-a4ad-8bd8d40e1d3a\"}],\"newData\":{\"tag\":[\"startTask1\",\"startTask2\"]}}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 820,
+        "wires": [["6f40d987957a6f1d", "b0744405766db218"]]
+    },
+    {
+        "id": "6f40d987957a6f1d",
+        "type": "qseow-app",
+        "z": "adaddf859632b31a",
+        "name": "Update apps",
+        "server": "18609cb899039437",
+        "op": "u",
+        "appId": "\n\nad61b901-3343-4bbf-b3e6-aa3ee333abef\n\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4b\n7e5866aa-dd2b-42aa-81fc-3765e0d7cf4c\n",
+        "appSource1": "msg-in",
+        "appSource2": "msg-in",
+        "x": 430,
+        "y": 820,
+        "wires": [["e60e5312f36e44d3"]]
+    },
+    {
+        "id": "e60e5312f36e44d3",
+        "type": "debug",
+        "z": "adaddf859632b31a",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "b0744405766db218",
+        "type": "debug",
+        "z": "adaddf859632b31a",
+        "name": "Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "18609cb899039437",
+        "type": "qseow-sense-server",
+        "name": "",
+        "protocol": "https",
+        "host": "192.168.111.111",
+        "port": "4242",
+        "authType": "cert",
+        "certFile": "/secret/client.pem",
+        "keyFile": "/secret/client_key.pem",
+        "certCaFile": "",
+        "jwt": ""
+    }
+]
