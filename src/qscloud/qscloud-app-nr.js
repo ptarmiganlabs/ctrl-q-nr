@@ -122,9 +122,10 @@ module.exports = function (RED) {
 
                             responseStatus = response.status;
                             const reloadInfo = await response.json();
+
                             // Debug log
-                            node.log(`Reload response: ${JSON.stringify(response, null, 2)}`);
-                            node.log(`Reload result: ${JSON.stringify(reloadInfo, null, 2)}`);
+                            // node.log(`Reload response: ${JSON.stringify(response, null, 2)}`);
+                            // node.log(`Reload result: ${JSON.stringify(reloadInfo, null, 2)}`);
 
                             if (responseStatus === 201) {
                                 // Reload queued successfully

@@ -43,6 +43,9 @@ function getCandidateApps(node, msg, done) {
         // Remove any empty elements from the arrayy
         appIdsPredefined = appIdsPredefined.filter((el) => el !== '');
 
+        // Remove any rows that have # (comment) as first non-whitespace or space character
+        appIdsPredefined = appIdsPredefined.filter((el) => !el.match(/^\s*#/));
+
         // Use the app IDs in the node configuration
         // Log the app IDs
         node.log(`Predefined app IDs: ${appIdsPredefined}`);

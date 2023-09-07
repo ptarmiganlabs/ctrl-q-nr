@@ -1,0 +1,59 @@
+[
+    {
+        "id": "7d5d4f4c9de2d2fd",
+        "type": "qscloud-app",
+        "z": "97a01b7c6e63b834",
+        "name": "Reload 2 apps (1 existing, 1 non-existing)",
+        "tenant": "a329efb577d33158",
+        "op": "reload",
+        "appId": "# This app exists\n5838acc6-1139-4a3e-8b6f-1517f9deb19f\n\n# Non-existing app\n5838acc6-1139-4a3e-8b6f-1517f9deb19e",
+        "appSource1": "predefined",
+        "appSource2": "msg-in",
+        "x": 560,
+        "y": 200,
+        "wires": [["36932ce69a55eafe"]]
+    },
+    {
+        "id": "7a8aa940ff53441d",
+        "type": "inject",
+        "z": "97a01b7c6e63b834",
+        "name": "Reload",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 200,
+        "wires": [["7d5d4f4c9de2d2fd"]]
+    },
+    {
+        "id": "36932ce69a55eafe",
+        "type": "debug",
+        "z": "97a01b7c6e63b834",
+        "name": "Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "a329efb577d33158",
+        "type": "qscloud-tenant",
+        "name": "Dummy API key authorisation",
+        "tenant": "abcdefgh123456789",
+        "region": "eu",
+        "authType": "apikey",
+        "clientId": "",
+        "clientSecret": "",
+        "apiKey": "abcdefgh123456789abcdefgh123456789abcdefgh123456789"
+    }
+]
