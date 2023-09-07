@@ -34,6 +34,8 @@ jobs:
           release-search-depth: 5
           commit-search-depth: 200
           draft: true
+          bump-minor-pre-major: true
+          bump-patch-for-minor-pre-major: true
           changelog-types: '[{"type": "feat","section": "Features","hidden": false},{"type": "fix","section": "Bug Fixes","hidden": false},{"type": "chore","section": "Miscellaneous","hidden": false},{"type": "refactor","section": "Refactoring","hidden": false},{"type": "docs","section": "Documentation","hidden": false},{"type": "build","section": "Miscellaneous","hidden": false}]'
 
       - name: Show output from Release-Please
