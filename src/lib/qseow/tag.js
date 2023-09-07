@@ -157,7 +157,7 @@ async function createTags(node, done, tagNamesToCreate) {
     const tagExist = [];
 
     // Debug existing tags
-    node.log(`Existing tags: ${existingTags}`);
+    // node.log(`Existing tags: ${existingTags}`);
 
     // Find tags that already exist on the server
     const tagsToCreate = [];
@@ -267,7 +267,7 @@ async function deleteTags(node, done, tagNamesToDelete) {
         node.error(`Error getting tags from Qlik Sense server: ${err}`);
         return null;
     }
-    const tagNoExist = [];
+    const tagNameNoExist = [];
 
     // Find tags that already exist on the server
     const tagsToDelete = [];
@@ -277,7 +277,7 @@ async function deleteTags(node, done, tagNamesToDelete) {
         if (found) {
             tagsToDelete.push(found);
         } else {
-            tagNoExist.push(tagName);
+            tagNameNoExist.push(tagName);
         }
     });
 
@@ -286,7 +286,7 @@ async function deleteTags(node, done, tagNamesToDelete) {
         node.status({ fill: 'green', shape: 'dot', text: 'no tags to delete' });
         return {
             tagDeleted: [],
-            tagNoExist,
+            tagNameNoExist,
         };
     }
 
@@ -335,7 +335,7 @@ async function deleteTags(node, done, tagNamesToDelete) {
     // Return object containing created tags, status and statusText
     return {
         tagDeleted,
-        tagNoExist,
+        tagNameNoExist,
     };
 }
 

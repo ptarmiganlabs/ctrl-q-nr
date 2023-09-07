@@ -149,8 +149,17 @@
 <script type="text/html" data-help-name="qseow-app">
     <p></p>
     <p>A node that perform operations on apps on a client-managed Qlik Sense server.</p>
+    <p>The supported operations are:</p>
+
+    <ul>
+        <li><strong>Read:</strong> Read metadata for one or more apps.</li>
+        <li><strong>Update:</strong> Update metadata for one or more apps.</li>
+        <li><strong>Delete:</strong> Delete one or more apps.</li>
+        <li><strong>Duplicate:</strong> Duplicate one or more apps.</li>
+    </ul>
 
     <h2>Shared properties</h2>
+    <p>Some node properties are shared by all operations:</p>
     <ul>
         <li><strong>Name:</strong> The name of the node.</li>
         <li><strong>Qlik Sense server:</strong> The Qlik Sense server to connect to.</li>
@@ -203,11 +212,21 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
     </pre
     >
 
-    <h2>Operations</h2>
+    <h2>Input and output messages, per operation</h2>
+
+    <p>
+        Different operations use different properties in the input message.<br />
+        Similarly, different operations set different properties in the output message.
+    </p>
 
     <h3>Read</h3>
     <p>Read metadata for one or more apps.</p>
     <p>If no app IDs are specified, metadata for all apps will be retrieved.</p>
+
+    <h4>Input message</h4>
+    <p>If app IDs in the incoming message are used, the app IDs must be in the <code>payload.appId</code> array.</p>
+
+    <h4>Output message</h4>
     <p>The output message includes the following properties:</p>
     <ul>
         <li><strong>payload.app:</strong> Array of app objects, one for each app that was read.</li>
@@ -216,9 +235,10 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
 
     <h3>Update</h3>
     <p>Update metadata for one or more apps.</p>
+    <p>All info needed for the update operation must be in the input message.</p>
 
     <h4>Input message</h4>
-    <p>The input message <strong>must</strong> contain the following properties:</p>
+    <p>The input message must contain the following properties:</p>
     <ul>
         <li>
             <strong>payload.app:</strong> Array of objects, one for each app to be updated. The objects have at least one of these
@@ -235,11 +255,6 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
         </ul>
     </ul>
 
-    <p>The input message <strong>may</strong> contain the following properties:</p>
-    <ul>
-        <li><strong>payload.appId:</strong> Array of app IDs, one for each app to be updated.</li>
-    </ul>
-
     <h4>Output message</h4>
     <p>The output message includes the following properties:</p>
     <ul>
@@ -249,9 +264,10 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
 
     <h3>Delete</h3>
     <p>Delete one or more apps.</p>
+    <p>All info needed for the update operation must be in the input message.</p>
 
     <h4>Input message</h4>
-    <p>The input message <strong>must</strong> contain the following properties:</p>
+    <p>The input message must contain the following properties:</p>
     <ul>
         <li><strong>payload.appId:</strong> Array of app IDs, one for each app to be deleted.</li>
     </ul>
@@ -264,9 +280,26 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
 
     <h3>Duplicate</h3>
     <p>Duplicate one or more apps.</p>
+    <p>All info needed for the update operation must be in the input message.</p>
+
+    <h4>Input message</h4>
+    <p>The input message must contain the following properties:</p>
+    <ul>
+        <li><strong>payload:</strong> Array of objects, each with the following properties:</li>
+        <ul>
+            <li><strong>sourceAppId:</strong> Id of the app to be duplicated.</li>
+            <li><strong>newAppName:</strong> Name to be set on the new app.</li>
+            <li>
+                <strong>includeCustomProperties:</strong> Boolean indicating whether to include custom properties in the duplication.
+                Default is <code>false</code>.
+            </li>
+        </ul>
+    </ul>
+
+    <h4>Output message</h4>
     <p>The output message includes the following properties:</p>
     <ul>
-        <li><strong>payload.appDuplicated:</strong> Array of app objects, one for each new app that was created.</li>
+        <li><strong>payload.appCreated:</strong> Array of app objects, one for each new app that was created.</li>
         <li><strong>payload.appNoExist:</strong> Array of app IDs, one for each source app ID that was not found on the Sense server.</li>
     </ul>
 </script>

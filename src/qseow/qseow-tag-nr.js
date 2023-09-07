@@ -95,7 +95,7 @@ module.exports = function (RED) {
                     if (result !== null) {
                         // Build outMsg1
                         outMsg1.payload.tagDeleted = result.tagDeleted;
-                        outMsg1.payload.tagNoExist = result.tagNoExist;
+                        outMsg1.payload.tagNameNoExist = result.tagNameNoExist;
 
                         // Send outMsg11
                         node.send(outMsg1);
