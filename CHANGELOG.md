@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.1.0](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.6...v0.1.0) (2023-09-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Updated README and prettified example files
+
+### Features
+
+* Add support for comments in cloud app ID definition editor ([e56f389](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/e56f389acef3cf0d4065cb7de4a54485b465e526)), closes [#38](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/38)
+
+
+### Miscellaneous
+
+* Make breaking changes pre 1.0.0 result in minor updates ([4721bd4](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/4721bd4d34288e690de1fa3d0656ef71b00bbc2b))
+
+
+### Documentation
+
+* Add missing output property for cloud app reload node ([986f235](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/986f2357e3d5fe53eea2d037e8645bd44c235240))
+* Add more examples of using cloud nodes ([ba7d54c](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/ba7d54cd8e97abb45fe2f598337e42910b79ccf1))
+* Added numerous examples for both Cloud and QSEoW. ([ef7209e](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/ef7209e68bb5170201c136c6cd1aa8ed47976a02))
+* Updated README and prettified example files ([ba8ccbb](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/ba8ccbb74f26e2cfc6611af9b12f352a4ee2bf4a))
+
 ## [0.0.6](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.5...v0.0.6) (2023-09-06)
 
 ### Miscellaneous
