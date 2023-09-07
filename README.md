@@ -13,6 +13,7 @@
 Ctrl-Q NR is a collection of Node-RED nodes that allow you to interact with Qlik Sense, both the cloud and on-premises (=client-managed) versions.
 
 The nodes are designed to be easy to use and can be used to build powerful data-driven applications and integrations on the low-code Node-RED platform.
+
 ## Installation
 
 To use these nodes, you will need to have Node-RED installed. Once you have Node-RED installed, you can install these nodes using the Node-RED palette manager.
