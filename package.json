@@ -33,7 +33,7 @@
         "low-code"
     ],
     "dependencies": {
-        "@qlik/sdk": "^0.24.0",
+        "@qlik/sdk": "^0.25.0",
         "axios": "^1.5.0"
     },
     "devDependencies": {
