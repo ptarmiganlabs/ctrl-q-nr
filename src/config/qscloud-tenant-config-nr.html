@@ -6,7 +6,7 @@
             name: { value: '' },
             tenant: { value: '', required: true },
             region: { value: 'eu', required: true, options: ['eu', 'us'] },
-            authType: { value: 'oauth-m2m', required: true, options: ['oauth2-m2m', 'apikey'] },
+            authType: { value: 'apikey', required: true, options: ['oauth2-m2m', 'apikey'] },
             clientId: { value: '', required: false },
             clientSecret: { value: '', required: false },
             apiKey: { value: '', required: false },
@@ -65,7 +65,6 @@
         <select id="node-config-input-authType">
             <option value="oauth2-m2m">OAuth2 m2m</option>
             <option value="apikey">API key</option>
-
         </select>
     </div>
     <div class="form-row">
