@@ -38,7 +38,7 @@ function getCandidateApps(node, msg, done) {
 
         // Use the apps in the node configuration
         // Break the \n separated list of apps into an array
-        appIdsPredefined = node.appId.split('\n');
+        appIdsPredefined = node.appId.split(/\r?\n/);
 
         // Remove any empty elements from the arrayy
         appIdsPredefined = appIdsPredefined.filter((el) => el !== '');

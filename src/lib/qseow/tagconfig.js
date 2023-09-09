@@ -7,7 +7,7 @@ function getCandidateTags(node, done, msg) {
     if (node.tagSource === 'predefined') {
         // Use the tags in the node configuration
         // Break the \n separated list of tags into an array
-        let tagsPredefined = node.tagName.split('\n');
+        let tagsPredefined = node.tagName.split(/\r?\n/);
 
         // Remove any empty elements from the arrayy
         tagsPredefined = tagsPredefined.filter((el) => el !== '');
