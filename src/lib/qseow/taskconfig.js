@@ -9,7 +9,7 @@ function getCandidateTasks(node, done, msg) {
 
         // Use the tasks in the node configuration
         // Break the \n separated list of tasks into an array
-        taskIdsPredefined = node.taskId.split('\n');
+        taskIdsPredefined = node.taskId.split(/\r?\n/);
 
         // Remove any empty elements from the arrayy
         taskIdsPredefined = taskIdsPredefined.filter((el) => el !== '');

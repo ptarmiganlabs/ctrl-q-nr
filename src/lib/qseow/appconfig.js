@@ -36,7 +36,7 @@ function getCandidateAppsPredefAndIncoming(node, done, msg) {
     } else if (node.appSource1 === 'predefined') {
         // Use the app Ids in the node configuration
         // Break the \n separated list of app ids into an array
-        let appIdsPredefined = node.appId.split('\n');
+        let appIdsPredefined = node.appId.split(/\r?\n/);
 
         // Remove any empty elements from the arrayy
         appIdsPredefined = appIdsPredefined.filter((el) => el !== '');
