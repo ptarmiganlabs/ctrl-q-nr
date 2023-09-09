@@ -110,7 +110,7 @@ module.exports = function (RED) {
                     // Log success
                     node.log(`Deleted tags: ${outMsg1.payload.tagDeleted}`);
                     node.log(`Tags that did not exist on server: ${outMsg1.payload.tagNoExist}`);
-                    node.status({ fill: 'green', shape: 'dot', text: 'tags created' });
+                    node.status({ fill: 'green', shape: 'dot', text: 'tags deleted' });
                 } else {
                     // Invalid operation. Log error and return
                     node.error(`Invalid operation: ${node.op}`);
