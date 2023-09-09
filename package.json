@@ -1,6 +1,6 @@
 {
     "name": "@ptarmiganlabs/ctrl-q-nr",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Node-RED components for cloud and client-managed Qlik Sense",
     "main": "index.js",
     "scripts": {
