@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.0...v0.1.1) (2023-09-09)
+
+
+### Bug Fixes
+
+* Handle Windows line breaks in tag/app/task editors ([fb54601](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/fb54601ee1da117854f80046af4c0de27be36030)), closes [#46](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/46)
+* Set default auth type to API key when creating new tenant config ([34703a8](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/34703a841072d33d6c3cf974f46f97e4e8b513fd)), closes [#44](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/44)
+
 ## [0.1.0](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.0.6...v0.1.0) (2023-09-07)
 
 ### ⚠ BREAKING CHANGES
