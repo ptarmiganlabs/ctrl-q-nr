@@ -108,7 +108,7 @@ module.exports = function (RED) {
                     }
 
                     // Log success
-                    node.log(`Deleted tags: ${outMsg1.payload.tagDeleted}`);
+                    node.log(`Deleted tags: ${JSON.stringify(outMsg1.payload.tagDeleted, null, 2)}`);
                     node.log(`Tags that did not exist on server: ${outMsg1.payload.tagNoExist}`);
                     node.status({ fill: 'green', shape: 'dot', text: 'tags deleted' });
                 } else {

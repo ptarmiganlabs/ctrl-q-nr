@@ -2,10 +2,9 @@
 
 ## [0.1.2](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.1...v0.1.2) (2023-09-09)
 
-
 ### Bug Fixes
 
-* Show correct node status when tags have been deleted ([b9cd046](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/b9cd04651dfddb285ab0fccfb051afd0dcc18749)), closes [#49](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/49)
+-   Show correct node status when tags have been deleted ([b9cd046](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/b9cd04651dfddb285ab0fccfb051afd0dcc18749)), closes [#49](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/49)
 
 ## [0.1.1](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.0...v0.1.1) (2023-09-09)
 
