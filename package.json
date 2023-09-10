@@ -33,12 +33,12 @@
         "low-code"
     ],
     "dependencies": {
-        "@qlik/sdk": "^0.24.0",
+        "@qlik/sdk": "^0.25.0",
         "axios": "^1.5.0"
     },
     "devDependencies": {
         "esbuild": "^0.19.2",
-        "eslint": "^8.48.0",
+        "eslint": "^8.49.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-formatter-table": "^7.32.1",
