@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.3](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.2...v0.1.3) (2023-09-10)
+
+
+### Bug Fixes
+
+* **qseow:** Better logging when deleting tags ([3eee9ed](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/3eee9edd7777c2271e5ff698d944e42f2a7f8beb)), closes [#52](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/52)
+
+
+### Miscellaneous
+
+* **deps:** Update dependencies to stay safe and secure ([71c1c84](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/71c1c848a7191460bdce6163888dcbc2bdd3ed77))
+
 ## [0.1.2](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.1...v0.1.2) (2023-09-09)
 
 ### Bug Fixes
