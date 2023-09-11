@@ -118,13 +118,13 @@
     <h3>Tag select properties</h3>
     <p>The tags to be used can be defined in one of two ways:</p>
     <ul>
-        <li><strong>App IDs below:</strong> The tags are defined in the node's config.</li>
+        <li><strong>Tags below:</strong> The tags are defined in the node's config.</li>
         <li><strong>Tags in incoming message:</strong> The tags are in the <code>payload.tag</code> property of the incoming message.</li>
     </ul>
 
     <h4>Tags defined in the node itself</h4>
     <p>
-        Enter one tag per line in the editor.<br />
+        Enter one tag name per line in the editor.<br />
         Empty lines are ignored. Lines starting with a hash sign (#) are ignored.
     </p>
     <p>Example:</p>
@@ -139,8 +139,8 @@ sales-app
     </pre
     >
 
-    <h4>Tags in incoming message</h4>
-    <p>The tags are in the <code>payload.tag</code> array of the incoming message.</p>
+    <h4>Tag names in incoming message</h4>
+    <p>The tag names are in the <code>payload.tagName</code> array of the incoming message.</p>
     <p>Example:</p>
     <pre>
 [
