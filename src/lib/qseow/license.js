@@ -6,6 +6,7 @@ const { getAuth } = require('./auth');
 // Parameters:
 // - node: the node object
 // - done: the done function
+// eslint-disable-next-line no-unused-vars
 async function getLicense(node, done) {
     const { axiosConfig, xref } = getAuth(node);
 
