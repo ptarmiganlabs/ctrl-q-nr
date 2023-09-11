@@ -1,4 +1,4 @@
-const { Auth, AuthType } = require('@qlik/sdk');
+const { authenticate } = require('../lib/cloud/auth');
 // import { Auth, AuthType, Apps } from '@qlik/sdk';
 
 // eslint-disable-next-line func-names
@@ -15,23 +15,19 @@ module.exports = function (RED) {
 
             const outMsg = {
                 payload: {
-                    status: {},
+                    license: {},
                 },
             };
 
             try {
-                // Build host url
-                const host = `${node.tenant.tenant}.${node.tenant.region}.qlikcloud.com`;
-                node.log(`Host: ${host}`);
-
-                const auth = new Auth({
-                    authType: AuthType.OAuth2,
-                    host,
-                    clientId: node.tenant.clientId,
-                    clientSecret: node.tenant.clientSecret,
-                });
-
-                await auth.authorize();
+                // Get auth object
+                const auth = await authenticate(node, done);
+                if (!auth) {
+                    // Error when authenticating
+                    node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });
+                    done('Error authenticating');
+                    return false;
+                }
 
                 // Get endpoint /licenses/overview
                 let response = await auth.rest('/licenses/overview');
@@ -54,26 +50,21 @@ module.exports = function (RED) {
                 const licenseAssignments = await response.json();
 
                 // Assemble output message
-                outMsg.payload.overview = licenseOverview;
-                outMsg.payload.status = licenseStatus;
-                outMsg.payload.settings = licenseSettings;
-                outMsg.payload.consumption = licenseConsumption;
-                outMsg.payload.assignments = licenseAssignments;
+                outMsg.payload.license.overview = licenseOverview;
+                outMsg.payload.license.status = licenseStatus;
+                outMsg.payload.license.settings = licenseSettings;
+                outMsg.payload.license.consumption = licenseConsumption;
+                outMsg.payload.license.assignments = licenseAssignments;
 
                 send(outMsg);
 
                 done();
-
-                // Build path to license info
-                // const path = '/licenses/status';
-                // node.log(`Path: ${path}`);
-
-                //  response = await auth.rest(path);
-                // node.log(JSON.stringify(response));
             } catch (err) {
                 node.error(err);
                 done(err);
             }
+
+            return true;
         });
     }
 

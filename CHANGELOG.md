@@ -2,15 +2,13 @@
 
 ## [0.1.4](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.3...v0.1.4) (2023-09-11)
 
-
 ### Features
 
-* **qseow:** Add qseow-license node ([c47e49d](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/c47e49d48ea7927988cd9b85fa9e27c1c87c0867)), closes [#56](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/56)
-
+-   **qseow:** Add qseow-license node ([c47e49d](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/c47e49d48ea7927988cd9b85fa9e27c1c87c0867)), closes [#56](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/56)
 
 ### Documentation
 
-* **client-managed:** Correct input message format for tag delete operation ([4ce510d](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/4ce510d4d4bd087da9d46902268424a4c9ed7823)), closes [#55](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/55)
+-   **client-managed:** Correct input message format for tag delete operation ([4ce510d](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/4ce510d4d4bd087da9d46902268424a4c9ed7823)), closes [#55](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/55)
 
 ## [0.1.3](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.2...v0.1.3) (2023-09-10)
 
