@@ -15,7 +15,7 @@ module.exports = function (RED) {
 
             const outMsg = {
                 payload: {
-                    status: {},
+                    license: {},
                 },
             };
 
@@ -50,11 +50,11 @@ module.exports = function (RED) {
                 const licenseAssignments = await response.json();
 
                 // Assemble output message
-                outMsg.payload.overview = licenseOverview;
-                outMsg.payload.status = licenseStatus;
-                outMsg.payload.settings = licenseSettings;
-                outMsg.payload.consumption = licenseConsumption;
-                outMsg.payload.assignments = licenseAssignments;
+                outMsg.payload.license.overview = licenseOverview;
+                outMsg.payload.license.status = licenseStatus;
+                outMsg.payload.license.settings = licenseSettings;
+                outMsg.payload.license.consumption = licenseConsumption;
+                outMsg.payload.license.assignments = licenseAssignments;
 
                 send(outMsg);
 
