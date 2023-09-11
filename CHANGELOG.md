@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.4...v0.2.0) (2023-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **cloud:** Move cloud license info to msg.payload.license in out msg
+
+### Bug Fixes
+
+* **cloud:** clientId no longer required when using API key auth ([233ede3](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/233ede30e6ad408f2ace7d885de74b21835ebf3f)), closes [#59](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/59)
+* **cloud:** Move cloud license info to msg.payload.license in out msg ([8c95c9e](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/8c95c9e775e3d07d8ebfa3f6eecf8ad177b5cc0b)), closes [#60](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/60)
+
 ## [0.1.4](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.3...v0.1.4) (2023-09-11)
 
 ### Features
