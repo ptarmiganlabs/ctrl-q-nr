@@ -295,7 +295,7 @@ class ReloadStateMachine {
         // Send message to output 2
         const outMsg = {
             payload: {
-                message: 'Relead states updated',
+                message: 'reload states updated',
                 numReloadsAdded,
                 numReloadsDeleted,
                 numReloadsUpdated,
