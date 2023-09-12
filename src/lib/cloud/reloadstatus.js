@@ -146,7 +146,7 @@ class ReloadStateMachine {
         // Send message to output 2
         const outMsg = {
             payload: {
-                message: 'Timer started',
+                message: 'timer started',
             },
         };
         this.node.send([null, outMsg]);
@@ -176,7 +176,7 @@ class ReloadStateMachine {
         // Send message to output 2
         const outMsg = {
             payload: {
-                message: 'Timer stopped',
+                message: 'timer stopped',
             },
         };
         this.node.send([null, outMsg]);
