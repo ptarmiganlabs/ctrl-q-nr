@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.1...v0.2.2) (2023-09-13)
+
+
+### Documentation
+
+* Format CHANGELOG.md ([8aed5ee](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/8aed5ee833421ec105ad11722b56cedafade77e8))
+
 ## [0.2.1](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.0...v0.2.1) (2023-09-13)
 
 ### Features
