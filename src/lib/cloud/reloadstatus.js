@@ -146,7 +146,7 @@ class ReloadStateMachine {
         // Send message to output 2
         const outMsg = {
             payload: {
-                message: 'Timer started',
+                message: 'timer started',
             },
         };
         this.node.send([null, outMsg]);
@@ -176,7 +176,7 @@ class ReloadStateMachine {
         // Send message to output 2
         const outMsg = {
             payload: {
-                message: 'Timer stopped',
+                message: 'timer stopped',
             },
         };
         this.node.send([null, outMsg]);
@@ -238,7 +238,7 @@ class ReloadStateMachine {
         this.node.log('updating reload states');
 
         // Get reloads from Qlik Sense Cloud
-        const auth = await authenticate(node);
+        const { auth } = await authenticate(node);
         if (!auth) {
             // Error when authenticating
             node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });
@@ -295,7 +295,7 @@ class ReloadStateMachine {
         // Send message to output 2
         const outMsg = {
             payload: {
-                message: 'Relead states updated',
+                message: 'reload states updated',
                 numReloadsAdded,
                 numReloadsDeleted,
                 numReloadsUpdated,

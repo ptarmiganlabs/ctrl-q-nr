@@ -6,14 +6,14 @@
         defaults: {
             name: { value: '' },
             tenant: { value: '', type: 'qscloud-tenant' },
-            op: { value: 'r', options: ['c', 'r', 'u', 'd', 'reload'], required: true },
+            op: { value: 'r', options: ['c', 'r', 'u', 'd', 'reload', 'app-id-lookup'], required: true },
             appId: { value: '', required: false },
             appSource1: { value: 'predefined', options: ['predefined', 'msg-in'] },
             appSource2: { value: 'msg-in', options: ['msg-in'] },
         },
         inputs: 1,
         outputs: 1,
-        outputLabels: ['One message containing all metadata for all matching apps'],
+        outputLabels: ['One message containing metadata for all matching apps'],
         icon: 'file.png',
         label() {
             return this.name || 'qscloud-app';
@@ -88,10 +88,10 @@
                         appIdEditorRow.hide();
                     }
                 } else if (appOpInput.val() === 'reload') {
-                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    // Show the app source selection that offers both "predefined" and "msg-in" options
                     appSourceInput1Row.show();
 
-                    // Show the app source selection that only offers option "msg-in"
+                    // Hide the app source selection that only offers option "msg-in"
                     appSourceInput2Row.hide();
 
                     if (appSourceInput1.val() === 'msg-in') {
@@ -99,6 +99,15 @@
                     } else if (appSourceInput1.val() === 'predefined') {
                         appIdEditorRow.show();
                     }
+                } else if (appOpInput.val() === 'app-id-lookup') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Hide the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.hide();
+
+                    // Hide the app ID editor
+                    appIdEditorRow.hide();
                 } else {
                     appIdEditorRow.hide();
                 }
@@ -137,6 +146,7 @@
             <!-- <option value="u">Update</option>
             <option value="d">Delete</option>
             <option value="dupl">Duplicate</option> -->
+            <option value="app-id-lookup">App ID lookup</option>
             <option value="reload">Reload</option>
         </select>
     </div>
@@ -173,6 +183,7 @@
                     <!-- <li><b>Update</b> - Update the metadata of an app.</li>
                     <li><b>Delete</b> - Delete an app.</li> -->
                     <!-- <li><b>Duplicate</b> - Duplicate an app.</li> -->
+                    <li><b>App ID lookup</b> - Lookup all app IDs associated with specified apps or spaces.</li>
                     <li><b>Reload</b> - Reload an app.</li>
                 </ul>
             </ul>
@@ -213,7 +224,7 @@
     ]
         </pre>
 
-        <h2>Operations</h2>
+        <h2>Input and output messages, per operation</h2>
 
         <h3>Read</h3>
         <p>Read metadata for one or more apps.</p>
@@ -230,6 +241,29 @@
         <ul>
             <li><strong>payload.app:</strong> Array of app objects, one for each app that was read.</li>
             <li><strong>payload.appIdNoExist:</strong> Array of app IDs, one for each app that was not found on the Sense server.</li>
+        </ul>
+
+        <h3>App ID lookup</h3>
+        <p>Lookup app IDs given app/space names.</p>
+        <p>Useful if there is a need to get app IDs that are needed later in a flow.</p>
+        <ul>
+            <li>If a specified app name matches more than one one app, app IDs for all matching apps will be returned.</li>
+            <li>App IDs for all apps in matching space names will be returned.</li>
+            <li>App IDs will be de-duplicated by the node, i.e. there will not be any duplicates in the returned app IDs.</li>
+        </ul>
+
+        <h4>Input message</h4>
+        <p>The input message may contain zero or more of the following properties:</p>
+        <ul>
+            <li><strong>payload.appName:</strong> Array of app names, one for each app to be looked up.</li>
+            <li><strong>payload.spaceName:</strong> Array of space names, one for each space to be looked up.</li>
+        </ul>
+
+        <h4>Output message</h4>
+        <p>The output message includes the following properties:</p>
+        <ul>
+            <li><strong>payload.appId:</strong> Array of app IDs, one for each app that matched the search criteria.</li>
+            <li><strong>payload.appObject:</strong> Array of app objects, one for each app that matched the search criteria.</li>
         </ul>
 
         <h3>Reload</h3>

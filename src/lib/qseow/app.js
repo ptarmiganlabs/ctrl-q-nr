@@ -45,7 +45,7 @@ async function getApps(node, done, appIdsToGet) {
             });
         }
 
-        // Return object containing apps, status and statusText
+        // Return object containing apps, and app IDs that don't exist
         return {
             app: response.data,
             appIdNoExist,
@@ -53,6 +53,132 @@ async function getApps(node, done, appIdsToGet) {
     } catch (err) {
         // Log error
         node.error(`Error when getting apps: ${err}`);
+        return null;
+    }
+}
+
+// Functon to get apps from Qlik Sense server, based on app name
+// Parameters:
+// - node: the node object
+// - appNames: an array of app names to get
+async function getAppsByAppName(node, appNames) {
+    // Make sure appNames is an array
+    if (!Array.isArray(appNames)) {
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+        node.log(`Error getting apps from Qlik Sense server: appNames is not an array`);
+        return null;
+    }
+
+    try {
+        const { axiosConfig, xref } = getAuth(node);
+
+        // Build url. Quote app names using single quotes
+        axiosConfig.url = `/qrs/app/full?filter=name%20eq%20'${appNames.join(`'%20or%20name%20eq%20'`)}'&xrfkey=${xref}`;
+
+        // Debug url
+        node.log(`URL: ${axiosConfig.url}`);
+
+        // Get apps from Qlik Sense server
+        const response = await axios.request(axiosConfig);
+
+        // Ensure response status is 200
+        if (response.status !== 200) {
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+            node.log(`Error getting apps by app name from Qlik Sense server: ${response.status} ${response.statusText}`);
+            return null;
+        }
+
+        // Return object containing apps
+        return {
+            app: response.data,
+        };
+    } catch (err) {
+        // Log error
+        node.error(`Error when getting apps by app name: ${err}`);
+        return null;
+    }
+}
+
+// Functon to get apps from Qlik Sense server, based on tag name
+// Parameters:
+// - node: the node object
+// - tagNames: an array of tag names that the apps must have
+async function getAppsByTagName(node, tagNames) {
+    // Make sure appNames is an array
+    if (!Array.isArray(tagNames)) {
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+        node.log(`Error getting apps from Qlik Sense server: tagNames is not an array`);
+        return null;
+    }
+
+    try {
+        const { axiosConfig, xref } = getAuth(node);
+
+        // Build url. Quote app names using single quotes. Use tags.name instead of name
+        axiosConfig.url = `/qrs/app/full?filter=tags.name%20eq%20'${tagNames.join(`'%20or%20tags.name%20eq%20'`)}'&xrfkey=${xref}`;
+
+        // Debug url
+        node.log(`URL: ${axiosConfig.url}`);
+
+        // Get apps from Qlik Sense server
+        const response = await axios.request(axiosConfig);
+
+        // Ensure response status is 200
+        if (response.status !== 200) {
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+            node.log(`Error getting apps by tag name from Qlik Sense server: ${response.status} ${response.statusText}`);
+            return null;
+        }
+
+        // Return object containing apps
+        return {
+            app: response.data,
+        };
+    } catch (err) {
+        // Log error
+        node.error(`Error when getting apps by tag name: ${err}`);
+        return null;
+    }
+}
+
+// Functon to get apps from Qlik Sense server, based on stream name
+// Parameters:
+// - node: the node object
+// - streamNames: an array of stream names that the apps must be in
+async function getAppsByStreamName(node, streamNames) {
+    // Make sure appNames is an array
+    if (!Array.isArray(streamNames)) {
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+        node.log(`Error getting apps from Qlik Sense server: streamNames is not an array`);
+        return null;
+    }
+
+    try {
+        const { axiosConfig, xref } = getAuth(node);
+
+        // Build url. Quote app names using single quotes. Use stream.name instead of name
+        axiosConfig.url = `/qrs/app/full?filter=stream.name%20eq%20'${streamNames.join(`'%20or%20stream.name%20eq%20'`)}'&xrfkey=${xref}`;
+
+        // Debug url
+        node.log(`URL: ${axiosConfig.url}`);
+
+        // Get apps from Qlik Sense server
+        const response = await axios.request(axiosConfig);
+
+        // Ensure response status is 200
+        if (response.status !== 200) {
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+            node.log(`Error getting apps by stream name from Qlik Sense server: ${response.status} ${response.statusText}`);
+            return null;
+        }
+
+        // Return object containing apps
+        return {
+            app: response.data,
+        };
+    } catch (err) {
+        // Log error
+        node.error(`Error when getting apps by stream name: ${err}`);
         return null;
     }
 }
@@ -451,9 +577,113 @@ async function updateApps(node, apps) {
     };
 }
 
+// Function to look up apo IDs given app names, colletion names or managed space names
+// Parameters:
+// node: node object
+// lookupSource: object containing entities to look up and translate into app IDs
+//
+// Return
+// Success: An object containing an array of unique app IDs and an array of unique app objects
+// Failure: false
+async function lookupAppId(node, lookupSource) {
+    const allAppIds = [];
+    const allAppObjects = [];
+
+    // lookupSource.appName is an array of app names.
+    // Build filter string that can be used when calling QRS API
+    if (lookupSource.appName) {
+        // Get apps from Qlik Sense server
+        const resApps = await getAppsByAppName(node, lookupSource.appName);
+
+        // Did we get any apps? If not, report error and return
+        // Also make sure we got an array
+        if (!resApps.app || !Array.isArray(resApps.app)) {
+            node.log('Error getting apps by app name in lookupAppId');
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+            return false;
+        }
+
+        // Iterate through array of apps and add app IDs to allAppIds array
+        resApps.app.forEach((app) => {
+            allAppIds.push(app.id);
+            allAppObjects.push(app);
+        });
+
+        // Debug
+        node.log(`allAppIds: ${JSON.stringify(allAppIds, null, 2)}`);
+    }
+
+    // lookupSource.tagName is an array of tag names.
+    // Build filter string that can be used when calling QRS API
+    if (lookupSource.tagName) {
+        // Get apps from Qlik Sense server, based on which tags they have
+        const resApps = await getAppsByTagName(node, lookupSource.tagName);
+
+        // Did we get any apps? If not, report error and return
+        // Also make sure we got an array
+        if (!resApps.app || !Array.isArray(resApps.app)) {
+            node.log('Error getting apps by tag name in lookupAppId');
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+            return false;
+        }
+
+        // Iterate through array of apps and add app IDs to allAppIds array
+        resApps.app.forEach((app) => {
+            allAppIds.push(app.id);
+            allAppObjects.push(app);
+        });
+    }
+
+    // lookupSource.streamName is an array of stream names.
+    // Build filter string that can be used when calling QRS API
+    if (lookupSource.streamName) {
+        // Get apps from Qlik Sense server, based on which streams they are in
+        const resApps = await getAppsByStreamName(node, lookupSource.streamName);
+
+        // Did we get any apps? If not, report error and return
+        // Also make sure we got an array
+        if (!resApps.app || !Array.isArray(resApps.app)) {
+            node.log('Error getting apps by stream name in lookupAppId');
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+            return false;
+        }
+
+        // Iterate through array of apps and add app IDs to allAppIds array
+        resApps.app.forEach((app) => {
+            allAppIds.push(app.id);
+            allAppObjects.push(app);
+        });
+    }
+
+    // Remove duplicates from the allAppIds array
+    const uniqueAppIds = [...new Set(allAppIds)];
+
+    // Get the app objects for the unique app IDs
+    const uniqueAppObjects = [];
+
+    // Make sure we got an array
+    if (!uniqueAppIds || !Array.isArray(uniqueAppIds)) {
+        node.log('Error getting unique app IDs in lookupAppId');
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting unique app IDs' });
+        return false;
+    }
+
+    uniqueAppIds.forEach((appId) => {
+        const appObject = allAppObjects.find((app) => app.id === appId);
+        uniqueAppObjects.push(appObject);
+    });
+
+    // Return object containing unique app IDs and app objects
+    return {
+        uniqueAppIds,
+        uniqueAppObjects,
+    };
+}
+
 module.exports = {
     getApps,
     deleteApps,
     duplicateApps,
     updateApps,
+    lookupAppId,
 };

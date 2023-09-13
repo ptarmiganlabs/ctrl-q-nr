@@ -1,5 +1,4 @@
 const { authenticate } = require('../lib/cloud/auth');
-// import { Auth, AuthType, Apps } from '@qlik/sdk';
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {
@@ -21,7 +20,7 @@ module.exports = function (RED) {
 
             try {
                 // Get auth object
-                const auth = await authenticate(node, done);
+                const { auth } = await authenticate(node, done);
                 if (!auth) {
                     // Error when authenticating
                     node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });

@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const { authenticate } = require('../lib/cloud/auth');
 const { getCandidateApps } = require('../lib/cloud/appconfig');
+const { lookupAppId } = require('../lib/cloud/app');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {
@@ -22,7 +23,8 @@ module.exports = function (RED) {
                 };
 
                 // Get auth object
-                const auth = await authenticate(node, done);
+                const { auth, qlik } = await authenticate(node, done);
+
                 if (!auth) {
                     // Error when authenticating
                     node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });
@@ -179,6 +181,71 @@ module.exports = function (RED) {
                     }
                 } else if (node.op === 'dupl') {
                     // Duplicate apps
+                } else if (node.op === 'app-id-lookup') {
+                    // Lookup app IDs
+                    node.log('Looking up app IDs on Qlik Sense Cloud...');
+                    node.status({ fill: 'yellow', shape: 'dot', text: 'looking up app IDs' });
+
+                    // Make sure there is a msg.payload object
+                    if (!msg.payload) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload is missing' });
+                        done('msg.payload is missing');
+                        return false;
+                    }
+
+                    // If msg.payload.appName exists it should be an array
+                    if (msg.payload.appName && !Array.isArray(msg.payload.appName)) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.appName is not an array' });
+                        done('msg.payload.appName is not an array');
+                        return false;
+                    }
+
+                    // If msg.payload.spaceName exists it should be an array
+                    if (msg.payload.spaceName && !Array.isArray(msg.payload.spaceName)) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.spaceName is not an array' });
+                        done('msg.payload.spaceName is not an array');
+                        return false;
+                    }
+
+                    // Add app object, which in turn has an id array, to out message
+                    outMsg.payload = { appId: [], appObj: [] };
+
+                    try {
+                        // Get app information from Qlik Sense Cloud
+                        // Return from lookupAppId is an array of app IDs
+                        const { uniqueAppIds, uniqueAppObjects } = await lookupAppId(node, qlik, msg.payload);
+
+                        // Did we get any results in uniqueAppIds?
+                        if (!uniqueAppIds || !Array.isArray(uniqueAppIds)) {
+                            node.log('Error getting app IDs in lookupAppId');
+                            node.status({ fill: 'red', shape: 'ring', text: 'error getting app IDs' });
+                            return false;
+                        }
+
+                        // Did we get any results in uniqueAppObjects?
+                        if (!uniqueAppObjects || !Array.isArray(uniqueAppObjects)) {
+                            node.log('Error getting app objects in lookupAppId');
+                            node.status({ fill: 'red', shape: 'ring', text: 'error getting app objects' });
+                            return false;
+                        }
+
+                        // Concatenate all app IDs and objects into output message
+                        outMsg.payload.appId.push(...uniqueAppIds);
+                        outMsg.payload.appObj.push(...uniqueAppObjects);
+
+                        send(outMsg);
+
+                        done();
+                    } catch (err) {
+                        node.error(err);
+                        done(err);
+                    }
+
+                    // Log success
+                    node.log(`Found ${outMsg.payload.appId.length} matching apps on Qlik Sense Cloud.`);
+                    node.status({ fill: 'green', shape: 'dot', text: 'app IDs retrieved' });
+
+                    return true;
                 } else if (node.op === 'get-scripts') {
                     // Get scripts from apps
                 } else {
