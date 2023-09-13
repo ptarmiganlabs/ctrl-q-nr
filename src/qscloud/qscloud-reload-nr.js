@@ -19,7 +19,7 @@ module.exports = function (RED) {
                 };
 
                 // Get auth object
-                const auth = await authenticate(node, done);
+                const { auth } = await authenticate(node, done);
                 if (!auth) {
                     // Error when authenticating
                     node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });

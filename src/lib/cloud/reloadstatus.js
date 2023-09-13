@@ -238,7 +238,7 @@ class ReloadStateMachine {
         this.node.log('updating reload states');
 
         // Get reloads from Qlik Sense Cloud
-        const auth = await authenticate(node);
+        const { auth } = await authenticate(node);
         if (!auth) {
             // Error when authenticating
             node.status({ fill: 'red', shape: 'ring', text: 'error authenticating' });

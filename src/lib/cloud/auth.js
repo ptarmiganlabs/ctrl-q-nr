@@ -1,19 +1,31 @@
 const { Auth, AuthType } = require('@qlik/sdk');
+const Qlik = require('@qlik/sdk').default;
 
-// Function to get host url for Qlik Sense Cloud
+/**
+ * Function to get host url for Qlik Sense Cloud
+ * @param {*} tenant
+ * @returns {string}    host url
+ */
+
 function getHostUrl(tenant) {
     const host = `${tenant.tenant}.${tenant.region}.qlikcloud.com`;
     return host;
 }
 
-// Function to authenticate with Qlik Sense Cloud
-// Return an auth object
+/**
+ * Function to authenticate with Qlik Sense Cloud
+ * @param {*} node
+ * @param {*} done
+ * @returns {object}    auth and qlik objects, or false if authentication fails
+ */
 async function authenticate(node, done) {
     // Get host url
     const host = getHostUrl(node.tenant);
 
     // Which authentication type to use?
     let auth;
+    let qlik;
+
     if (node.tenant.authType === 'oauth2-m2m') {
         // Make sure that the client ID and client secret are specified
         if (node.tenant.clientId === '') {
@@ -42,6 +54,13 @@ async function authenticate(node, done) {
             clientSecret: node.tenant.clientSecret,
         });
 
+        qlik = new Qlik({
+            authType: AuthType.OAuth2,
+            host,
+            clientId: node.tenant.clientId,
+            clientSecret: node.tenant.clientSecret,
+        });
+
         await auth.authorize();
     } else if (node.tenant.authType === 'apikey') {
         // Make sure that the API key is specified
@@ -60,6 +79,12 @@ async function authenticate(node, done) {
             host,
             apiKey: node.tenant.apiKey,
         });
+
+        qlik = new Qlik({
+            authType: AuthType.APIKey,
+            host,
+            apiKey: node.tenant.apiKey,
+        });
     } else {
         // Invalid auth type. Log error and return
         node.status({ fill: 'red', shape: 'ring', text: 'invalid auth type' });
@@ -70,7 +95,7 @@ async function authenticate(node, done) {
         return false;
     }
 
-    return auth;
+    return { auth, qlik };
 }
 
 module.exports = {
