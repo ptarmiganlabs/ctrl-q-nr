@@ -2,17 +2,15 @@
 
 ## [0.2.1](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.0...v0.2.1) (2023-09-13)
 
-
 ### Features
 
-* **cloud:** Add app ID lookup operation to qscloud-app node ([f502b31](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/f502b3148957c53a8862373757c4bf87e3a1b988)), closes [#64](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/64)
-* **qseow:** Add app ID lookup operation to qseow-app node ([b18afa7](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/b18afa7f660c2f6aadac362ac15842e7ba446c3b)), closes [#65](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/65)
-
+-   **cloud:** Add app ID lookup operation to qscloud-app node ([f502b31](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/f502b3148957c53a8862373757c4bf87e3a1b988)), closes [#64](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/64)
+-   **qseow:** Add app ID lookup operation to qseow-app node ([b18afa7](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/b18afa7f660c2f6aadac362ac15842e7ba446c3b)), closes [#65](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/65)
 
 ### Bug Fixes
 
-* **cloud:** Fix typo in reload status out msg ([326342e](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/326342e864aab759ac26604879ad2e9e6f0ed299)), closes [#63](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/63)
-* **cloud:** Make all output msgs from reload status lower case ([3b4676c](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/3b4676c9e138347ca795e0e765c069066946127f))
+-   **cloud:** Fix typo in reload status out msg ([326342e](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/326342e864aab759ac26604879ad2e9e6f0ed299)), closes [#63](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/63)
+-   **cloud:** Make all output msgs from reload status lower case ([3b4676c](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/3b4676c9e138347ca795e0e765c069066946127f))
 
 ## [0.2.0](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.1.4...v0.2.0) (2023-09-11)
 
