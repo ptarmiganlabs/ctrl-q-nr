@@ -1,3 +1,4 @@
+const { lookupAppId } = require('../lib/qseow/app');
 const { getApps, deleteApps, duplicateApps, updateApps } = require('../lib/qseow/app');
 const { getCandidateAppsPredefAndIncoming } = require('../lib/qseow/appconfig');
 
@@ -19,14 +20,6 @@ module.exports = function (RED) {
                 const outMsg1 = {
                     payload: {},
                 };
-
-                // // Process incoming apps from the incoming message
-                // let appIdsPredefined;
-                // let appsIncoming;
-                // let appsCreated = [];
-
-                // const appsProcess = [];
-                // const appIdsNoExists = [];
 
                 // Which operation to perform?
                 if (node.op === 'c') {
@@ -213,6 +206,67 @@ module.exports = function (RED) {
 
                     // Send message to output 1
                     send(outMsg1);
+                } else if (node.op === 'app-id-lookup') {
+                    // Lookup app IDs
+                    node.log('Looking up app IDs on Qlik Sense server...');
+                    node.status({ fill: 'yellow', shape: 'dot', text: 'looking up app IDs' });
+
+                    // Make sure there is a msg.payload object
+                    if (!msg.payload) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload is missing' });
+                        done('msg.payload is missing');
+                        return;
+                    }
+
+                    // If msg.payload.appName exists it should be an array
+                    if (msg.payload.appName && !Array.isArray(msg.payload.appName)) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.appName is not an array' });
+                        done('msg.payload.appName is not an array');
+                        return;
+                    }
+
+                    // If msg.payload.spaceName exists it should be an array
+                    if (msg.payload.spaceName && !Array.isArray(msg.payload.spaceName)) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.spaceName is not an array' });
+                        done('msg.payload.spaceName is not an array');
+                        return;
+                    }
+
+                    // Add app arrays to out message
+                    outMsg1.payload = { appId: [], appObj: [] };
+
+                    try {
+                        // Get app info from Qlik Sense server
+                        const { uniqueAppIds, uniqueAppObjects } = await lookupAppId(node, msg.payload);
+
+                        // Di we get any result in quniqueAppIds?
+                        if (!uniqueAppIds || !Array.isArray(uniqueAppIds)) {
+                            node.log('Error getting app IDs in lookupAppId');
+                            node.status({ fill: 'red', shape: 'ring', text: 'error getting app IDs' });
+                            return;
+                        }
+
+                        // Did we get any results in uniqueAppObjects?
+                        if (!uniqueAppObjects || !Array.isArray(uniqueAppObjects)) {
+                            node.log('Error getting app objects in lookupAppId');
+                            node.status({ fill: 'red', shape: 'ring', text: 'error getting app objects' });
+                            return;
+                        }
+
+                        // Concatenate all app IDs and objects into output message
+                        outMsg1.payload.appId.push(...uniqueAppIds);
+                        outMsg1.payload.appObj.push(...uniqueAppObjects);
+
+                        // Send message to output 1
+                        send(outMsg1);
+                    } catch (err) {
+                        node.error(err);
+                        done(err);
+                    }
+
+                    // Log success
+                    node.log(`Found ${outMsg1.payload.appId.length} matching apps on Qlik Sense server.`);
+                    node.status({ fill: 'green', shape: 'dot', text: 'apps IDs retrieved' });
                 } else if (node.op === 'dupl') {
                     // Duplicate apps
                     node.log('Duplicating apps on Qlik Sense server...');

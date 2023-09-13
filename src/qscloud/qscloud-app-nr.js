@@ -229,7 +229,7 @@ module.exports = function (RED) {
                             return false;
                         }
 
-                        // Concatenate all app IDs into one array
+                        // Concatenate all app IDs and objects into output message
                         outMsg.payload.appId.push(...uniqueAppIds);
                         outMsg.payload.appObj.push(...uniqueAppObjects);
 
