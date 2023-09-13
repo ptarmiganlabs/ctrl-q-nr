@@ -93,9 +93,9 @@ async function lookupAppId(node, qlik, lookupSource) {
             }
 
             // Iterate through the array of space names
-            lookupSource.spaceName.forEach(async (spaceName) => {
+            lookupSource.spaceName.forEach((spaceName) => {
                 // Iterate through the array of spaces
-                allSpaces.forEach(async (space) => {
+                allSpaces.forEach((space) => {
                     // Does the space name match?
                     if (space.name === spaceName) {
                         // Yes. Get the ID of this space
