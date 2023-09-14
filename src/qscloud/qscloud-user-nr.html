@@ -1,0 +1,71 @@
+<script type="text/javascript">
+    // eslint-disable-next-line no-undef
+    RED.nodes.registerType('qscloud-user', {
+        category: 'Qlik Sense Cloud',
+        color: '#6BC46D',
+        defaults: {
+            name: { value: '' },
+            tenant: { value: '', type: 'qscloud-tenant' },
+            op: { value: 'r', options: ['r'], required: true },
+        },
+        inputs: 1,
+        outputs: 1,
+        outputLabels: ['One message containing metadata for all matching users'],
+        icon: 'file.png',
+        label() {
+            return this.name || 'qscloud-user';
+        },
+        oneditprepare() {
+            // eslint-disable-next-line no-unused-vars
+            const node = this;
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="qscloud-user">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-tenant"><i class="fa fa-server"></i> Qlik Sense Cloud tenant</label>
+        <input type="text" id="node-input-tenant" placeholder="Select tenant" readonly />
+    </div>
+    <div class="form-row">
+        <label for="node-input-op"><i class="fa fa-cog"></i> Operation</label>
+        <select id="node-input-op">
+            <option value="r">Read</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="qscloud-user">
+        <p>A node that performas operations on Qlik Sense Cloud users.</p>
+
+        <h2>Shared properties</h2>
+        <ul>
+            <li><b>Name</b> - Name of the node.</li>
+            <li><b>Qlik Sense Cloud tenant</b> - The Qlik Sense Cloud tenant to use.</li>
+            <li><b>Operation</b> - The operation to perform.</li>
+                <ul>
+                    <li><b>Read</b> - Get user metadata.</li>
+                </ul>
+            </ul>
+        </ul>
+
+
+        <h2>Input and output messages, per operation</h2>
+
+        <h3>Read</h3>
+        <p>Get metadata for users in Qlik Sense Cloud.</p>
+        <p>In current version data for all users in the tenant will be returned.</p>
+
+        <h4>Input message</h4>
+        <p>Content of the input message is ignored - the messge is only used to trigger the retrieval of user metadata.</p>
+
+        <p>Output message</p>
+        <p>The output message has the following properties:</p>
+        <ul>
+            <li><strong>payload.user:</strong> Array of user objects, one for each user in the tenant.</li>
+        </ul>
+</script>

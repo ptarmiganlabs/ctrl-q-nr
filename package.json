@@ -63,7 +63,8 @@
             "qscloud-app": "src/qscloud/qscloud-app-nr.js",
             "qscloud-license": "src/qscloud/qscloud-license-nr.js",
             "qscloud-reload": "src/qscloud/qscloud-reload-nr.js",
-            "qscloud-reload-status": "src/qscloud/qscloud-reload-status-nr.js"
+            "qscloud-reload-status": "src/qscloud/qscloud-reload-status-nr.js",
+            "qscloud-user": "src/qscloud/qscloud-user-nr.js"
         }
     }
 }
