@@ -1,7 +1,68 @@
 const axios = require('axios');
+const enigma = require('enigma.js');
 
 const { getTags, getAppTags } = require('./tag');
-const { getAuth } = require('./auth');
+const { getAuth, getEnigmaAuth } = require('./auth');
+
+// Function to check if app exists on Qlik Sense server
+// Parameters:
+// - appId: the app ID
+//
+// Return
+// - App exists: true
+// - App does not exist: false
+// - Error: false
+async function appExist(node, appId) {
+    // Make sure appId is a string and a valid UUID
+    if (typeof appId !== 'string' || !appId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)) {
+        node.status({ fill: 'red', shape: 'ring', text: 'error checking if app exists' });
+        node.log(`Error checking if app exists on Qlik Sense server: invalid app ID "${appId}"`);
+        return false;
+    }
+
+    try {
+        // Set up authentication
+        const { axiosConfig, xref } = getAuth(node);
+
+        // Build URL, using filter to only get app with specified ID
+        axiosConfig.url = `/qrs/app/full?filter=id%20eq%20${appId}&xrfkey=${xref}`;
+
+        // Get app from Qlik Sense server
+        const response = await axios.request(axiosConfig);
+
+        // How many apps did we get?
+        const numApps = response.data.length;
+
+        // Debug
+        node.log(`Number of apps with ID ${appId}: ${numApps}`);
+
+        // Ensure response status is 200
+        if (response.status !== 200) {
+            node.status({ fill: 'red', shape: 'ring', text: 'error checking if app exists' });
+            node.log(`Error checking if app ${appId} exists on Qlik Sense server: ${response.status} ${response.statusText}`);
+            return false;
+        }
+
+        // If we got 0 apps, the app does not exist
+        if (numApps === 0) {
+            return false;
+        }
+
+        // If we got more than 1 app, something is wrong
+        if (numApps > 1) {
+            node.status({ fill: 'red', shape: 'ring', text: 'error checking if app exists' });
+            node.log(`Error checking if app ${appId} exists on Qlik Sense server: more than 1 app with same ID`);
+            return false;
+        }
+
+        // If we got here, the app exists
+        return true;
+    } catch (err) {
+        // Log error
+        node.error(`Error when checking if app ${appId} exists on Qlik Sense server: ${err}`);
+        return false;
+    }
+}
 
 // Functon to get apps from Qlik Sense server
 // Parameters:
@@ -680,10 +741,207 @@ async function lookupAppId(node, lookupSource) {
     };
 }
 
+// Function to get app load scripts
+// Parameters:
+// - node: the node object
+// - appIdsToGet: an array of app IDs to get
+//
+// Return
+// Success:
+// - app. An array of objects, each containing an app ID and the app load script
+// - appIdNoExist. An array of app IDs that don't exist on the Qlik Sense server
+async function getAppLoadScript(node, appIdsToGet) {
+    // Make sure appIdsToGet exists and is an array
+    if (!appIdsToGet || !Array.isArray(appIdsToGet)) {
+        node.log('Error getting app load scripts: appIdsToGet is not an array');
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting app load scripts' });
+        return false;
+    }
+
+    // Get auth needed for connecting to engine API, using enigma.js
+    const { enigmaConfig } = getEnigmaAuth(node);
+
+    // Debug enigmaConfig.url
+    node.log(`enigmaConfig.url: ${enigmaConfig.url}`);
+
+    // Loop over all app IDs and get load script for each app
+    const app = [];
+    const appIdNoExist = [];
+
+    for (let i = 0; i < appIdsToGet.length; i += 1) {
+        // Get app ID
+        const appId = appIdsToGet[i];
+
+        // Make sure the app exists on the Qlik Sense server
+        // eslint-disable-next-line no-await-in-loop
+        const appExists = await appExist(node, appId);
+        if (!appExists) {
+            // The provided app ID does not exist on the Qlik Sense server
+            node.log(`App ${appId} does not exist on the Qlik Sense server`);
+            appIdNoExist.push(appId);
+        } else {
+            node.log(`App ${appId} exists on the Qlik Sense server`);
+            // Get app object
+            let appObj;
+            try {
+                // Update status
+                node.status({ fill: 'blue', shape: 'dot', text: `getting load script for app ${appId}` });
+
+                // Create session
+                const session = enigma.create(enigmaConfig);
+
+                // Open session
+                // eslint-disable-next-line no-await-in-loop
+                const global = await session.open();
+
+                // eslint-disable-next-line no-await-in-loop
+                appObj = await global.openDoc(appId, '', '', '', true);
+
+                // Get app load script
+                // eslint-disable-next-line no-await-in-loop
+                const loadScript = await appObj.getScript();
+
+                // Debug
+                node.log(`loadScript for app ${appId}: ${loadScript}`);
+
+                // Add app ID and load script to app array
+                app.push({
+                    id: appId,
+                    script: loadScript,
+                });
+
+                // Close session
+                // eslint-disable-next-line no-await-in-loop
+                await session.close();
+
+                // Log progress
+                node.log(`Got load script for app ${appId} from Qlik Sense server.`);
+            } catch (err) {
+                // Log error
+                node.error(`Error when getting load script for app "${appId}" from Qlik Sense server: ${err}`);
+                node.status({ fill: 'red', shape: 'ring', text: 'error getting load script' });
+                return null;
+            }
+        }
+    }
+
+    // Return object containing apps, and app IDs that don't exist
+    return {
+        app,
+        appIdNoExist,
+    };
+}
+
+// Function to set app load scripts
+// Parameters:
+// - node: the node object
+// - appObjectsToSet: an array of objects, each containing properties "id" and "script"
+//
+// Return
+// Success:
+// - app. An array of objects, each containing properties "id" and "script"
+// - appIdNoExist. An array of app IDs that don't exist on the Qlik Sense server
+async function setAppLoadScript(node, appObjectsToSet) {
+    // Make sure appObjectsToSet exists and is an array
+    if (!appObjectsToSet || !Array.isArray(appObjectsToSet)) {
+        node.log('Error setting app load scripts: appObjectsToSet is not an array');
+        node.status({ fill: 'red', shape: 'ring', text: 'error setting app load scripts' });
+        return false;
+    }
+
+    // Make sure all objects in appObjectsToSet have properties "id" and "script"
+    for (let i = 0; i < appObjectsToSet.length; i += 1) {
+        if (!appObjectsToSet[i].id || !appObjectsToSet[i].script) {
+            node.log('Error setting app load scripts: appObjectsToSet does not contain properties "id" and "script"');
+            node.status({ fill: 'red', shape: 'ring', text: 'error setting app load scripts' });
+            return false;
+        }
+    }
+
+    // Get auth needed for connecting to engine API, using enigma.js
+    const { enigmaConfig } = getEnigmaAuth(node);
+
+    // Debug enigmaConfig.url
+    node.log(`enigmaConfig.url: ${enigmaConfig.url}`);
+
+    // Loop over all app IDs and set load script for each app
+    // Take both app ID and load script from the incoming message
+    const app = [];
+    const appIdNoExist = [];
+
+    for (let i = 0; i < appObjectsToSet.length; i += 1) {
+        // Get app ID
+        const appId = appObjectsToSet[i].id;
+
+        // Make sure the app exists on the Qlik Sense server
+        // eslint-disable-next-line no-await-in-loop
+        const appExists = await appExist(node, appId);
+        if (!appExists) {
+            // The provided app ID does not exist on the Qlik Sense server
+            node.log(`App ${appId} does not exist on the Qlik Sense server`);
+            appIdNoExist.push(appId);
+        } else {
+            node.log(`App ${appId} exists on the Qlik Sense server`);
+            // Get app object
+            let appObj;
+            try {
+                // Update status
+                node.status({ fill: 'blue', shape: 'dot', text: `setting load script for app ${appId}` });
+
+                // Create session
+                const session = enigma.create(enigmaConfig);
+
+                // Open session
+                // eslint-disable-next-line no-await-in-loop
+                const global = await session.open();
+
+                // Open app including its data
+                // eslint-disable-next-line no-await-in-loop
+                appObj = await global.openDoc(appId, '', '', '', false);
+
+                // Set app load script
+                // eslint-disable-next-line no-await-in-loop
+                await appObj.setScript(appObjectsToSet[i].script);
+
+                // Save app
+                // eslint-disable-next-line no-await-in-loop
+                await appObj.doSave();
+
+                // Close session
+                // eslint-disable-next-line no-await-in-loop
+                await session.close();
+
+                // Add app ID and load script to app array
+                app.push({
+                    id: appId,
+                    script: appObjectsToSet[i].script,
+                });
+
+                // Log progress
+                node.log(`Done setting load script for app ${appId} on Qlik Sense server.`);
+            } catch (err) {
+                // Log error
+                node.error(`Error when setting load script for app "${appId}" on Qlik Sense server: ${err}`);
+                node.status({ fill: 'red', shape: 'ring', text: 'error setting load script' });
+                return null;
+            }
+        }
+    }
+
+    // Return object containing apps, and app IDs that don't exist
+    return {
+        app,
+        appIdNoExist,
+    };
+}
+
 module.exports = {
+    appExist,
     getApps,
     deleteApps,
     duplicateApps,
     updateApps,
     lookupAppId,
+    getAppLoadScript,
+    setAppLoadScript,
 };

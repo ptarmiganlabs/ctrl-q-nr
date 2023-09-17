@@ -6,7 +6,7 @@
         defaults: {
             name: { value: '' },
             server: { value: '', type: 'qseow-sense-server' },
-            op: { value: 'r', options: ['c', 'r', 'u', 'd'], required: true },
+            op: { value: 'r', options: ['c', 'r', 'u', 'd', 'app-id-lookup', 'dupl', 'get-script', 'set-script'], required: true },
             appId: { value: '', required: false },
             appSource1: { value: 'predefined', options: ['predefined', 'msg-in'] },
             appSource2: { value: 'msg-in', options: ['msg-in'] },
@@ -42,6 +42,7 @@
             const appSourceInput2 = $('#node-input-appSource2');
             // eslint-disable-next-line no-undef
             const appIdEditorRow = $('#node-input-appId-editor').parent();
+
             function updateOpAppIdSource() {
                 if (appOpInput.val() === 'c') {
                     appIdEditorRow.show();
@@ -96,6 +97,28 @@
                     if (appSourceInput2.val() === 'msg-in') {
                         appIdEditorRow.hide();
                     }
+                } else if (appOpInput.val() === 'get-script') {
+                    // Show the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.show();
+
+                    // Hide the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.hide();
+
+                    if (appSourceInput1.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    } else if (appSourceInput1.val() === 'predefined') {
+                        appIdEditorRow.show();
+                    }
+                } else if (appOpInput.val() === 'set-script') {
+                    // Hide the app source selection that offers both "predefined" and "msg-in" options
+                    appSourceInput1Row.hide();
+
+                    // Show the app source selection that only offers option "msg-in"
+                    appSourceInput2Row.show();
+
+                    if (appSourceInput1.val() === 'msg-in') {
+                        appIdEditorRow.hide();
+                    }
                 } else {
                     appIdEditorRow.hide();
                 }
@@ -135,6 +158,8 @@
             <option value="d">Delete</option>
             <option value="app-id-lookup">App ID lookup</option>
             <option value="dupl">Duplicate</option>
+            <option value="get-script">Get reload script</option>
+            <option value="set-script">Set reload script</option>
         </select>
     </div>
     <div class="form-row">
@@ -167,6 +192,8 @@
         <li><strong>Delete:</strong> Delete one or more apps.</li>
         <li><b>App ID lookup</b> - Lookup all app IDs associated with specified apps or spaces.</li>
         <li><strong>Duplicate:</strong> Duplicate one or more apps.</li>
+        <li><strong>Get reload script:</strong> Get the reload script for one or more apps.</li>
+        <li><strong>Set reload script:</strong> Set the reload script for one or more apps.</li>
     </ul>
 
     <h2>Shared properties</h2>
@@ -327,4 +354,110 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
         <li><strong>payload.appCreated:</strong> Array of app objects, one for each new app that was created.</li>
         <li><strong>payload.appNoExist:</strong> Array of app IDs, one for each source app ID that was not found on the Sense server.</li>
     </ul>
+
+    <h3>Get reload script</h3>
+
+    <p>Get the reload script for one or more apps.</p>
+    <p>
+        The node uses app IDs to determine which apps' load script to get.<br />
+        These IDs can either be specified in the node's config or in the incoming message.
+    </p>
+
+    <h4>Input message</h4>
+    <p>If app IDs in the incoming message are used, the incoming message should look like this:</p>
+    <pre>
+{
+    "payload": {
+        "app": [
+            {
+                "id": "5c8c5f3d-6d5c-4d3e-9f7a-5c3b1b5f7e7a"
+            },
+            {
+                "id": "1c6d8f7a-9b5c-4d3e-8f1a-2c5b1b5f7e6d"
+            }
+        ]
+    }
+}
+    </pre
+    >
+
+    <h4>Output message</h4>
+    <p>The output message looks like this:</p>
+    <pre>
+{
+    "payload": {
+        "app": [
+            {
+                "id": "5c8c5f3d-6d5c-4d3e-9f7a-5c3b1b5f7e7a",
+                "script": "LOAD * FROM [lib://datafiles/MyData.xlsx];"
+            },
+            {
+                "id": "1c6d8f7a-9b5c-4d3e-8f1a-2c5b1b5f7e6d",
+                "script": "LOAD * FROM [lib://datafiles/MyData.xlsx];"
+            }
+        ],
+        "appIdNoExist": []
+    }
+}
+    </pre
+    >
+
+    <h3>Set reload script</h3>
+
+    <p>Set the reload script for one or more apps.</p>
+    <p>App IDs and their new reload script are specified in the input message.</p>
+
+    <p>
+        <strong
+            >NOTE: The target app will be opened including its data.<br />
+            This may take a long time for large apps.
+        </strong>
+    </p>
+
+    <h4>Input message</h4>
+    <p>If app IDs in the incoming message are used, the incoming message should look like this:</p>
+    <pre>
+{
+    "payload": {
+        "app": [
+            {
+                "id": "5c8c5f3d-6d5c-4d3e-9f7a-5c3b1b5f7e7a",
+                "script": "LOAD * FROM [lib://datafiles/MyData.xlsx];"
+            },
+            {
+                "id": "1c6d8f7a-9b5c-4d3e-8f1a-2c5b1b5f7e6d",
+                "script": "LOAD * FROM [lib://datafiles/MyData.xlsx];"
+            },
+            {
+                "id": "2c5b1b5f-7e6d-4d3e-8f1a-1c6d8f7a9b5c",
+                "script": "LOAD * FROM [lib://datafiles/MyData.xlsx];"
+            }            
+        ]
+    }
+}
+    </pre
+    >
+
+    <h4>Output message</h4>
+    <p>The output message looks like this:</p>
+    <pre>
+{
+    "payload": {
+        "app": [
+            {
+                "id": "5c8c5f3d-6d5c-4d3e-9f7a-5c3b1b5f7e7a",
+                "script": "LOAD * FROM [lib://datafiles/MyData.xlsx];"
+            },
+            {
+                "id": "1c6d8f7a-9b5c-4d3e-8f1a-2c5b1b5f7e6d",
+                "script": "LOAD * FROM [lib://datafiles/MyData.xlsx];"
+            }
+        ],
+        "appIdNoExist": [
+            "2c5b1b5f-7e6d-4d3e-8f1a-1c6d8f7a9b5c"
+        ]
+    }
+}
+    </pre
+    >
 </script>

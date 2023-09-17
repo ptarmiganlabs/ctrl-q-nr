@@ -4,13 +4,17 @@
         category: 'config',
         defaults: {
             name: { value: '' },
-            protocol: { value: 'https', required: true, options: ['http', 'https'] },
-            host: { value: 'qlikserver.com', required: true },
-            port: { value: '4242', required: true },
+            qrsProtocol: { value: 'https', required: true, options: ['http', 'https'] },
+            qrsHost: { value: 'qlikserver.com', required: true },
+            qrsPort: { value: '4242', required: true },
+            engineProtocol: { value: 'wss', required: true, options: ['ws', 'wss'] },
+            engineHost: { value: 'qlikserver.com', required: true },
+            enginePort: { value: '4747', required: true },
             authType: { value: 'cert', required: true, options: ['jwt', 'cert'] },
             certFile: { value: '', required: false },
             keyFile: { value: '', required: false },
             certCaFile: { value: '', required: false },
+            rejectUnauthorized: { value: true, required: true },
             jwt: { value: '', required: false },
         },
         label() {
@@ -30,17 +34,23 @@
             // eslint-disable-next-line no-undef
             const certCaFileRow = $('#node-config-input-certCaFile').parent();
             // eslint-disable-next-line no-undef
+            const rejectUnauthorizedRow = $('#node-config-input-rejectUnauthorized-row');
+
+            // eslint-disable-next-line no-undef
             const jwtRow = $('#node-config-input-jwt-row');
+
             function updateAuthType() {
                 if (authTypeInput.val() === 'cert') {
                     certFileRow.show();
                     keyFileRow.show();
                     certCaFileRow.show();
+                    rejectUnauthorizedRow.show();
                     jwtRow.hide();
                 } else {
                     certFileRow.hide();
                     keyFileRow.hide();
                     certCaFileRow.hide();
+                    rejectUnauthorizedRow.hide();
                     jwtRow.show();
                 }
             }
@@ -56,19 +66,34 @@
         <input type="text" id="node-config-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-config-input-protocol"><i class="fa fa-plug"></i> Protocol</label>
-        <select id="node-config-input-protocol">
+        <label for="node-config-input-qrsProtocol"><i class="fa fa-plug"></i> QRS protocol</label>
+        <select id="node-config-input-qrsProtocol">
             <!-- <option value="http">HTTP</option> -->
-            <option value="https">HTTPS</option>
+            <option value="https">Secure (https)</option>
         </select>
     </div>
     <div class="form-row">
-        <label for="node-config-input-host"><i class="fa fa-plug"></i> QRS host</label>
-        <input type="text" id="node-config-input-host" placeholder="qlikserver.com" value="">
+        <label for="node-config-input-qrsHost"><i class="fa fa-plug"></i> QRS host</label>
+        <input type="text" id="node-config-input-qrsHost" placeholder="qlikserver.com" value="">
     </div>
     <div class="form-row">
-        <label for="node-config-input-port"><i class="fa fa-plug"></i> QRS port</label>
-        <input type="text" id="node-config-input-port" placeholder="Port" value="4242">
+        <label for="node-config-input-qrsPort"><i class="fa fa-plug"></i> QRS port</label>
+        <input type="text" id="node-config-input-qrsPort" placeholder="Port" value="4242">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-engineProtocol"><i class="fa fa-plug"></i> Engine protocol</label>
+        <select id="node-config-input-engineProtocol">
+            <option value="wss">Secure (wss)</option>
+            <option value="ws">Insecure (ws)</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-engineHost"><i class="fa fa-plug"></i> Engine host</label>
+        <input type="text" id="node-config-input-engineHost" placeholder="qlikserver.com" value="">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-enginePort"><i class="fa fa-plug"></i> Engine port</label>
+        <input type="text" id="node-config-input-enginePort" placeholder="Port" value="4747">
     </div>
     <div class="form-row">
         <label for="node-config-input-authType"><i class="fa fa-lock"></i> Authentication type</label>
@@ -93,6 +118,11 @@
     <div class="form-row" id="node-config-input-certCaFile-row" style="display:none">
         <label for="node-config-input-certCaFile"><i class="fa fa-file"></i> Certificate authority file</label>
         <input type="text" id="node-config-input-certCaFile" placeholder="/path/to/root.pem" value="">
+    </div>
+    <div class="form-row" id="node-config-input-rejectUnauthorized-row" style="display:none">
+        <label for="node-config-input-rejectUnauthorized"><i class="fa fa-lock"></i> Reject unauthorized certificate</label>
+        <input type="checkbox" id="node-config-input-rejectUnauthorized" value="true">
+    </div>
 </script>
 
 <script type="text/html" data-help-name="qseow-sense-server">
@@ -101,9 +131,12 @@
     <h2>Properties</h2>
         <ul>
             <li><strong>Name:</strong> The name of the node.</li>
-            <li><strong>Protocol:</strong> The protocol to use when connecting to the Qlik Sense server.</li>
-            <li><strong>QRS host:</strong> The host name or IP address where the Qlik Sense repository server (QRS) runs.</li>
+            <li><strong>QRS protocol:</strong> The protocol to use when connecting to the Qlik Repository Service (QRS) API.</li>
+            <li><strong>QRS host:</strong> The host name or IP address where the QRS runs.</li>
             <li><strong>QRS port:</strong> The port number of the QRS.</li>
+            <li><strong>Engine protocol:</strong> The protocol to use when connecting to the Qlik Sense engine API.</li>
+            <li><strong>Engine host:</strong> The host name or IP address where the engine API runs.</li>
+            <li><strong>Engine port:</strong> The port number of the engine API.</li>
             <li><strong>Authentication type:</strong> The authentication type to use when connecting to the QRS.
                 <ul>
                     <li>For authentication type <strong>Certificate</strong>, you must provide the location of the certificate and key files. Note that Node-RED must be able to access these files.</li>
@@ -111,6 +144,7 @@
                             <li><strong>Certificate file:</strong> The location of the certificate file.</li>
                             <li><strong>Key file:</strong> The location of the key file.</li>
                             <li><strong>Certificate authority file:</strong> The location of the root CA file. Only needed if that certificate is not already in the system's certificate store.</li>
+                            <li><strong>Reject unauthorized certificate:</strong> If set to true, the server certificate is verified against the list of supplied CAs. An error is thrown if verification fails. If set to false, no verification is performed. This is useful for self-signed certificates.</li>
                         </ul>
                     </li>
                 </ul>

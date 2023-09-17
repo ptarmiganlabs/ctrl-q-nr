@@ -42,7 +42,7 @@ async function startTasks(node, done, taskIdsToStart) {
     const axiosConfig = {
         url: '',
         method: 'get',
-        baseURL: `${node.senseServer.protocol}://${node.senseServer.host}:${node.senseServer.port}`,
+        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
         headers,
         timeout: 10000,
         responseType: 'json',
