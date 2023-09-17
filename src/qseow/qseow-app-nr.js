@@ -28,6 +28,18 @@ module.exports = function (RED) {
                     node.log('Getting apps from Qlik Sense server...');
                     node.status({ fill: 'yellow', shape: 'dot', text: 'getting apps' });
 
+                    // Get source of app IDs, then set save it in the node object
+                    if (node.appSource1 === 'msg-in') {
+                        node.appSource = 'msg-in';
+                    } else if (node.appSource1 === 'predefined') {
+                        node.appSource = 'predefined';
+                    } else {
+                        // Log error
+                        node.log(`Invalid app source: "${node.appSource1}"`);
+
+                        node.appSource = 'invalid';
+                    }
+
                     // Get candidate app IDs
                     const res = getCandidateAppsPredefAndIncoming(node, done, msg);
                     if (res === null) {
@@ -73,6 +85,9 @@ module.exports = function (RED) {
                     // Update apps
                     node.log('Updating apps on Qlik Sense server...');
                     node.status({ fill: 'yellow', shape: 'dot', text: 'updating apps' });
+
+                    // Source of app IDs is always incoming message for this operation
+                    node.appSource = 'msg-in';
 
                     // Only use app IDs from incoming messages, not from predefined list in node configuration
 
@@ -152,6 +167,9 @@ module.exports = function (RED) {
                     node.log('Deleting apps from Qlik Sense server...');
                     node.status({ fill: 'yellow', shape: 'dot', text: 'deleting apps' });
 
+                    // Source of app IDs is always incoming message for this operation
+                    node.appSource = 'msg-in';
+
                     // Only use app IDs from incoming messages, not from predefined list in node configuration
 
                     // Incoming message is an object with following properties
@@ -209,6 +227,9 @@ module.exports = function (RED) {
                     // Lookup app IDs
                     node.log('Looking up app IDs on Qlik Sense server...');
                     node.status({ fill: 'yellow', shape: 'dot', text: 'looking up app IDs' });
+
+                    // Source of app IDs is always incoming message for this operation
+                    node.appSource = 'msg-in';
 
                     // Make sure there is a msg.payload object
                     if (!msg.payload) {
@@ -270,6 +291,9 @@ module.exports = function (RED) {
                     // Duplicate apps
                     node.log('Duplicating apps on Qlik Sense server...');
                     node.status({ fill: 'yellow', shape: 'dot', text: 'duplicating apps' });
+
+                    // Source of app IDs is always incoming message for this operation
+                    node.appSource = 'msg-in';
 
                     // Only use app IDs from incoming messages, not from predefined list in node configuration
 
@@ -337,6 +361,18 @@ module.exports = function (RED) {
                     node.log('Getting app load scripts from Qlik Sense server...');
                     node.status({ fill: 'yellow', shape: 'dot', text: 'getting app load scripts' });
 
+                    // Get source of app IDs, then set save it in the node object
+                    if (node.appSource1 === 'msg-in') {
+                        node.appSource = 'msg-in';
+                    } else if (node.appSource1 === 'predefined') {
+                        node.appSource = 'predefined';
+                    } else {
+                        // Log error
+                        node.log(`Invalid app source: "${node.appSource1}"`);
+
+                        node.appSource = 'invalid';
+                    }
+
                     // Get candidate app IDs
                     const res = getCandidateAppsPredefAndIncoming(node, done, msg);
                     if (res === null) {
@@ -388,6 +424,9 @@ module.exports = function (RED) {
                     // Set script in app
                     node.log('Setting app load script on Qlik Sense server...');
                     node.status({ fill: 'yellow', shape: 'dot', text: 'setting app load script' });
+
+                    // Source of app IDs is always incoming message for this operation
+                    node.appSource = 'msg-in';
 
                     // Incoming message is an object with following properties
                     // - "app": Array of app objects

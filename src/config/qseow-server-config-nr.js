@@ -4,9 +4,13 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
 
         const node = this;
-        node.host = config.host;
-        node.port = config.port;
-        node.protocol = config.protocol;
+        node.qrsHost = config.qrsHost;
+        node.qrsPort = config.qrsPort;
+        node.qrsProtocol = config.qrsProtocol;
+        node.engineHost = config.engineHost;
+        node.enginePort = config.enginePort;
+        node.engineProtocol = config.engineProtocol;
+
         node.authType = config.authType;
         if (node.authType === 'cert') {
             node.certFile = config.certFile;

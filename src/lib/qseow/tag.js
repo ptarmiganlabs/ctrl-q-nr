@@ -48,7 +48,7 @@ async function getTags(node, done, tagNamesToGet) {
     const axiosConfig = {
         url: '',
         method: 'get',
-        baseURL: `${node.senseServer.protocol}://${node.senseServer.host}:${node.senseServer.port}`,
+        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
         headers,
         timeout: 10000,
         responseType: 'json',
@@ -191,7 +191,7 @@ async function createTags(node, done, tagNamesToCreate) {
     const axiosConfig = {
         url: `/qrs/tag/many?xrfkey=${xref}`,
         method: 'post',
-        baseURL: `${node.senseServer.protocol}://${node.senseServer.host}:${node.senseServer.port}`,
+        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
         headers,
         timeout: 10000,
         responseType: 'json',
@@ -300,7 +300,7 @@ async function deleteTags(node, done, tagNamesToDelete) {
     const axiosConfig = {
         url: '',
         method: 'delete',
-        baseURL: `${node.senseServer.protocol}://${node.senseServer.host}:${node.senseServer.port}`,
+        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
         headers,
         timeout: 10000,
         responseType: 'json',
@@ -374,7 +374,7 @@ async function getAppTags(node, appId) {
     const axiosConfig = {
         url: `/qrs/app/${appId}?xrfkey=${xref}`,
         method: 'get',
-        baseURL: `${node.senseServer.protocol}://${node.senseServer.host}:${node.senseServer.port}`,
+        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
         headers,
         timeout: 10000,
         responseType: 'json',

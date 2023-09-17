@@ -135,7 +135,7 @@ function getAuth(node) {
     const axiosConfig = {
         url: '',
         method: 'get',
-        baseURL: `${node.senseServer.protocol}://${node.senseServer.host}:${node.senseServer.port}`,
+        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
         headers,
         timeout: 10000,
         responseType: 'json',
@@ -207,8 +207,8 @@ function getEnigmaAuth(node) {
 
         enigmaConfig = {
             schema: qixSchema,
-            url: `wss://${node.senseServer.host}:4747`,
-            // url: `wss://${node.senseServer.host}:${node.senseServer.port}`,
+            url: `${node.senseServer.engineProtocol}://${node.senseServer.engineHost}:${node.senseServer.enginePort}`,
+            // url: `wss://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
             createSocket: (url) =>
                 new WebSocket(url, {
                     cert: clientCert,
@@ -240,8 +240,8 @@ function getEnigmaAuth(node) {
 
         enigmaConfig = {
             schema: qixSchema,
-            url: `wss://${node.senseServer.host}:4747`,
-            // url: `wss://${node.senseServer.host}:${node.senseServer.port}`,
+            url: `wss://${node.senseServer.qrsHost}:4747`,
+            // url: `wss://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
             createSocket: (url) =>
                 new WebSocket(url, {
                     cert: clientCert,

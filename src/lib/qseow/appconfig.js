@@ -3,8 +3,14 @@
 function getCandidateAppsPredefAndIncoming(node, done, msg) {
     let appIdCandidates = [];
 
+    // Debug node.appSource1
+    node.log(`node.appSource1: ${node.appSource1}`);
+    node.log(`node.appSource2: ${node.appSource2}`);
+    node.log(`node.op: ${node.op}`);
+    node.log(`node.appSource: ${node.appSource}`);
+
     // Where should we get the app identifiers from?
-    if (node.appSource1 === 'msg-in' || node.appSource2 === 'msg-in') {
+    if (node.appSource === 'msg-in') {
         let appIdsIncoming;
 
         // Different operations may have different structures for the incoming message
@@ -52,7 +58,7 @@ function getCandidateAppsPredefAndIncoming(node, done, msg) {
                 });
             }
         }
-    } else if (node.appSource1 === 'predefined') {
+    } else if (node.appSource === 'predefined') {
         // Use the app Ids in the node configuration
         // Break the \n separated list of app ids into an array
         let appIdsPredefined = node.appId.split(/\r?\n/);
@@ -77,9 +83,9 @@ function getCandidateAppsPredefAndIncoming(node, done, msg) {
         }
     } else {
         // Log error
-        node.log(`Invalid app source: "${node.appSource1}"`);
+        node.log(`Invalid app source: "${node.appSource}"`);
         node.status({ fill: 'red', shape: 'ring', text: 'invalid app source' });
-        done(`Invalid app source: "${node.appSource1}"`);
+        done(`Invalid app source: "${node.appSource}"`);
         return null;
     }
 
