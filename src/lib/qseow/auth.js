@@ -1,5 +1,6 @@
 const fs = require('fs');
 const https = require('https');
+const WebSocket = require('ws');
 
 const { getXref } = require('../misc/xref');
 const { getHeaders } = require('./header');
@@ -148,6 +149,116 @@ function getAuth(node) {
     };
 }
 
+// Function to get auth object for connecting to engine service on Qlik Sense Enterprise on Windows
+function getEnigmaAuth(node) {
+    // Get Qix schema
+    let qixSchema;
+    try {
+        // eslint-disable-next-line import/no-dynamic-require, global-require
+        qixSchema = require(`enigma.js/schemas/12.1657.0.json`);
+    } catch (err) {
+        node.error(`Error loading enigma schema: ${err}`);
+        throw new Error(`Error loading enigma schema: ${err}`);
+    }
+
+    // If the cert CA file is specified, ensure that it exists
+    if (node.senseServer.certCaFile !== '') {
+        if (!fs.existsSync(node.senseServer.certCaFile)) {
+            node.error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
+            throw new Error(`Cert CA file does not exist: ${node.senseServer.certCaFile}`);
+        }
+
+        // Debug: Does https.globalAgent.options exist?
+        if (https.globalAgent.options) {
+            node.log('https.globalAgent.options exists');
+
+            // Debug: Does https.globalAgent.options.ca exist?
+            if (https.globalAgent.options.ca) {
+                node.log('https.globalAgent.options.ca exists');
+            } else {
+                node.log('https.globalAgent.options.ca does not exist');
+            }
+        } else {
+            node.log('https.globalAgent.options does not exist');
+        }
+    }
+
+    const clientCert = fs.readFileSync(node.senseServer.certFile);
+    const clientKey = fs.readFileSync(node.senseServer.keyFile);
+    let rootCert;
+    let combinedCert;
+
+    let enigmaConfig;
+
+    if (node.senseServer.certCaFile !== '') {
+        node.log('Combining client cert and root cert');
+        rootCert = fs.readFileSync(node.senseServer.certCaFile);
+        combinedCert = Buffer.concat([clientCert, rootCert]);
+        node.log(`Combined cert: " ${combinedCert}`);
+    }
+
+    // Only use the cert CA file if it is specified
+    if (node.senseServer.certCaFile !== '') {
+        node.log('Using root CA file');
+        // Debug which files are being used
+        node.log(`Using cert file: "${node.senseServer.certFile}"`);
+        node.log(`Using key file: "${node.senseServer.keyFile}"`);
+        node.log(`Using cert CA file: "${node.senseServer.certCaFile}"`);
+
+        enigmaConfig = {
+            schema: qixSchema,
+            url: `wss://${node.senseServer.host}:4747`,
+            // url: `wss://${node.senseServer.host}:${node.senseServer.port}`,
+            createSocket: (url) =>
+                new WebSocket(url, {
+                    cert: clientCert,
+                    key: clientKey,
+                    ca: rootCert,
+                    headers: {
+                        'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_api',
+                    },
+                    rejectUnauthorized: false,
+                }),
+        };
+    } else {
+        node.log('Not using root CA file');
+        node.log(`Using cert file: "${node.senseServer.certFile}"`);
+        node.log(`Using key file: "${node.senseServer.keyFile}"`);
+
+        if (https.globalAgent.options) {
+            node.log('https.globalAgent.options exists');
+            node.log(`https.globalAgent.options: ${JSON.stringify(https.globalAgent.options)}`);
+            if (https.globalAgent.options.ca) {
+                node.log('https.globalAgent.options.ca exists');
+                node.log(`https.globalAgent.options.ca: ${JSON.stringify(https.globalAgent.options.ca)}`);
+            } else {
+                node.log('https.globalAgent.options.ca does not exist');
+            }
+        } else {
+            node.log('https.globalAgent.options does not exist');
+        }
+
+        enigmaConfig = {
+            schema: qixSchema,
+            url: `wss://${node.senseServer.host}:4747`,
+            // url: `wss://${node.senseServer.host}:${node.senseServer.port}`,
+            createSocket: (url) =>
+                new WebSocket(url, {
+                    cert: clientCert,
+                    key: clientKey,
+                    headers: {
+                        'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_api',
+                    },
+                    rejectUnauthorized: false,
+                }),
+        };
+    }
+
+    // Return configEnigma object
+    return { enigmaConfig };
+}
+
 module.exports = {
     getAuth,
+    getEnigmaAuth,
 };

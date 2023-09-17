@@ -34,7 +34,9 @@
     ],
     "dependencies": {
         "@qlik/sdk": "^0.25.0",
-        "axios": "^1.5.0"
+        "axios": "^1.5.0",
+        "enigma.js": "^2.12.0",
+        "ws": "^8.14.1"
     },
     "devDependencies": {
         "esbuild": "^0.19.2",

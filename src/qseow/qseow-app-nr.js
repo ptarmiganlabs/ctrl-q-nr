@@ -1,5 +1,4 @@
-const { lookupAppId } = require('../lib/qseow/app');
-const { getApps, deleteApps, duplicateApps, updateApps } = require('../lib/qseow/app');
+const { getApps, deleteApps, duplicateApps, updateApps, getAppLoadScript, setAppLoadScript, lookupAppId } = require('../lib/qseow/app');
 const { getCandidateAppsPredefAndIncoming } = require('../lib/qseow/appconfig');
 
 // eslint-disable-next-line func-names
@@ -333,6 +332,96 @@ module.exports = function (RED) {
 
                     // Send message to output 1
                     send(outMsg1);
+                } else if (node.op === 'get-script') {
+                    // Get script from apps
+                    node.log('Getting app load scripts from Qlik Sense server...');
+                    node.status({ fill: 'yellow', shape: 'dot', text: 'getting app load scripts' });
+
+                    // Get candidate app IDs
+                    const res = getCandidateAppsPredefAndIncoming(node, done, msg);
+                    if (res === null) {
+                        // Nothing to do
+                        return;
+                    }
+
+                    const { appIdCandidates } = res;
+
+                    // Make sure we have at least one app ID
+                    // if (appIdCandidates.length === 0) {
+                    //     node.status({ fill: 'red', shape: 'ring', text: 'no app IDs provided' });
+                    //     done('No app IDs provided.');
+                    //     return;
+                    // }
+
+                    // Log the app IDs
+                    node.log(`App IDs for operation "${node.op}": ${appIdCandidates}`);
+
+                    let result;
+                    try {
+                        result = await getAppLoadScript(node, appIdCandidates);
+                    } catch (error) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'error getting app load scripts' });
+                        done(error);
+                        return;
+                    }
+
+                    if (result !== null) {
+                        // Build outMsg1
+                        outMsg1.payload.app = result.app;
+                        outMsg1.payload.appIdNoExist = result.appIdNoExist;
+
+                        // Send outMsg11
+                        node.send(outMsg1);
+                    } else {
+                        // Error getting apps
+                        node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
+                        node.log('Error getting apps.');
+                        done('Error getting apps.');
+                        return;
+                    }
+
+                    // Log success
+                    node.log(`Found ${outMsg1.payload.app.length} matching apps on Qlik Sense server.`);
+                    node.log(`${outMsg1.payload.appIdNoExist.length} of the provided app IDs don't exist on Qlik Sense server.`);
+                    node.status({ fill: 'green', shape: 'dot', text: 'app load scripts retrieved' });
+                } else if (node.op === 'set-script') {
+                    // Set script in app
+                    node.log('Setting app load script on Qlik Sense server...');
+                    node.status({ fill: 'yellow', shape: 'dot', text: 'setting app load script' });
+
+                    // Incoming message is an object with following properties
+                    // - "app": Array of app objects
+                    //   - "id": App id to update
+                    //   - "script": App load script
+
+                    let result;
+                    try {
+                        result = await setAppLoadScript(node, msg.payload.app);
+                    } catch (error) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'error setting app load script' });
+                        done(error);
+                        return;
+                    }
+
+                    if (result !== null) {
+                        // Build outMsg1
+                        outMsg1.payload.app = result.app;
+                        outMsg1.payload.appIdNoExist = result.appIdNoExist;
+
+                        // Send outMsg11
+                        node.send(outMsg1);
+                    } else {
+                        // Error setting app load script
+                        node.status({ fill: 'red', shape: 'ring', text: 'error setting app load script' });
+                        node.log('Error setting app load script.');
+                        done('Error setting app load script.');
+                        return;
+                    }
+
+                    // Log success
+                    node.log(`Set app load script in ${outMsg1.payload.app.length} apps on Qlik Sense server.`);
+                    node.log(`${outMsg1.payload.appIdNoExist.length} of the provided app IDs don't exist on Qlik Sense server.`);
+                    node.status({ fill: 'green', shape: 'dot', text: 'app load script set' });
                 } else {
                     // Invalid operation
                     node.status({ fill: 'red', shape: 'ring', text: 'invalid operation' });
