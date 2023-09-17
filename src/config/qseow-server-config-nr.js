@@ -16,6 +16,7 @@ module.exports = function (RED) {
             node.certFile = config.certFile;
             node.keyFile = config.keyFile;
             node.certCaFile = config.certCaFile;
+            node.rejectUnauthorized = config.rejectUnauthorized;
         } else if (node.authType === 'jwt') {
             node.jwt = config.jwt || '';
         }

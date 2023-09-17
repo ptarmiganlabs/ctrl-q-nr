@@ -14,6 +14,7 @@
             certFile: { value: '', required: false },
             keyFile: { value: '', required: false },
             certCaFile: { value: '', required: false },
+            rejectUnauthorized: { value: true, required: true },
             jwt: { value: '', required: false },
         },
         label() {
@@ -33,17 +34,23 @@
             // eslint-disable-next-line no-undef
             const certCaFileRow = $('#node-config-input-certCaFile').parent();
             // eslint-disable-next-line no-undef
+            const rejectUnauthorizedRow = $('#node-config-input-rejectUnauthorized-row');
+
+            // eslint-disable-next-line no-undef
             const jwtRow = $('#node-config-input-jwt-row');
+
             function updateAuthType() {
                 if (authTypeInput.val() === 'cert') {
                     certFileRow.show();
                     keyFileRow.show();
                     certCaFileRow.show();
+                    rejectUnauthorizedRow.show();
                     jwtRow.hide();
                 } else {
                     certFileRow.hide();
                     keyFileRow.hide();
                     certCaFileRow.hide();
+                    rejectUnauthorizedRow.hide();
                     jwtRow.show();
                 }
             }
@@ -111,6 +118,11 @@
     <div class="form-row" id="node-config-input-certCaFile-row" style="display:none">
         <label for="node-config-input-certCaFile"><i class="fa fa-file"></i> Certificate authority file</label>
         <input type="text" id="node-config-input-certCaFile" placeholder="/path/to/root.pem" value="">
+    </div>
+    <div class="form-row" id="node-config-input-rejectUnauthorized-row" style="display:none">
+        <label for="node-config-input-rejectUnauthorized"><i class="fa fa-lock"></i> Reject unauthorized certificate</label>
+        <input type="checkbox" id="node-config-input-rejectUnauthorized" value="true">
+    </div>
 </script>
 
 <script type="text/html" data-help-name="qseow-sense-server">
@@ -132,6 +144,7 @@
                             <li><strong>Certificate file:</strong> The location of the certificate file.</li>
                             <li><strong>Key file:</strong> The location of the key file.</li>
                             <li><strong>Certificate authority file:</strong> The location of the root CA file. Only needed if that certificate is not already in the system's certificate store.</li>
+                            <li><strong>Reject unauthorized certificate:</strong> If set to true, the server certificate is verified against the list of supplied CAs. An error is thrown if verification fails. If set to false, no verification is performed. This is useful for self-signed certificates.</li>
                         </ul>
                     </li>
                 </ul>

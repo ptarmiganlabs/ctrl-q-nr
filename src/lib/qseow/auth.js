@@ -96,7 +96,7 @@ function getAuth(node) {
                 cert: clientCert,
                 key: clientKey,
                 ca: rootCert,
-                rejectUnauthorized: true,
+                rejectUnauthorized: node.senseServer.rejectUnauthorized,
             });
         } else {
             node.log('Not using root CA file');
@@ -119,7 +119,7 @@ function getAuth(node) {
             httpsAgent = new https.Agent({
                 cert: clientCert,
                 key: clientKey,
-                rejectUnauthorized: false,
+                rejectUnauthorized: node.senseServer.rejectUnauthorized,
             });
         }
     } else if (authType === 'jwt') {
@@ -217,7 +217,7 @@ function getEnigmaAuth(node) {
                     headers: {
                         'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_api',
                     },
-                    rejectUnauthorized: false,
+                    rejectUnauthorized: node.senseServer.rejectUnauthorized,
                 }),
         };
     } else {
@@ -249,7 +249,7 @@ function getEnigmaAuth(node) {
                     headers: {
                         'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_api',
                     },
-                    rejectUnauthorized: false,
+                    rejectUnauthorized: node.senseServer.rejectUnauthorized,
                 }),
         };
     }
