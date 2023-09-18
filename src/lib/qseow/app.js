@@ -1,5 +1,6 @@
 const axios = require('axios');
 const enigma = require('enigma.js');
+const SenseUtilities = require('enigma.js/sense-utilities');
 
 const { getTags, getAppTags } = require('./tag');
 const { getAuth, getEnigmaAuth } = require('./auth');
@@ -781,6 +782,15 @@ async function getAppLoadScript(node, appIdsToGet) {
             appIdNoExist.push(appId);
         } else {
             node.log(`App ${appId} exists on the Qlik Sense server`);
+
+            // Do final config of enigmaConfig
+            enigmaConfig.url = SenseUtilities.buildUrl({
+                secure: node.senseServer.engineProtocol === 'wss',
+                host: node.senseServer.engineHost,
+                port: node.senseServer.enginePort,
+                appId,
+            });
+
             // Get app object
             let appObj;
             try {
