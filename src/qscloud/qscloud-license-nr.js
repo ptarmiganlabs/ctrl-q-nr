@@ -12,7 +12,7 @@ module.exports = function (RED) {
         node.on('input', async (msg, send, done) => {
             node.log('Getting license info from Qlik Sense cloud...');
 
-            const outMsg = {
+            const outMsg1 = {
                 payload: {
                     license: {},
                 },
@@ -49,13 +49,26 @@ module.exports = function (RED) {
                 const licenseAssignments = await response.json();
 
                 // Assemble output message
-                outMsg.payload.license.overview = licenseOverview;
-                outMsg.payload.license.status = licenseStatus;
-                outMsg.payload.license.settings = licenseSettings;
-                outMsg.payload.license.consumption = licenseConsumption;
-                outMsg.payload.license.assignments = licenseAssignments;
+                outMsg1.payload.license.overview = licenseOverview;
+                outMsg1.payload.license.status = licenseStatus;
+                outMsg1.payload.license.settings = licenseSettings;
+                outMsg1.payload.license.consumption = licenseConsumption;
+                outMsg1.payload.license.assignments = licenseAssignments;
 
-                send(outMsg);
+                // Add parts and reset properties if they are present
+                if (msg.parts) {
+                    outMsg1.parts = msg.parts;
+                }
+                // eslint-disable-next-line no-underscore-dangle
+                if (msg._msgid) {
+                    // eslint-disable-next-line no-underscore-dangle
+                    outMsg1._msgid = msg._msgid;
+                }
+                if (msg.reset) {
+                    outMsg1.reset = msg.reset;
+                }
+
+                send(outMsg1);
 
                 done();
             } catch (err) {

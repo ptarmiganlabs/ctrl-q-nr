@@ -67,8 +67,21 @@ module.exports = function (RED) {
                         outMsg1.payload.app = result.app;
                         outMsg1.payload.appIdNoExist = result.appIdNoExist;
 
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
                         // Send outMsg11
-                        node.send(outMsg1);
+                        send(outMsg1);
                     } else {
                         // Error getting apps
                         node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
@@ -155,6 +168,19 @@ module.exports = function (RED) {
                     outMsg1.payload.appUpdated = appUpdated;
                     outMsg1.payload.appIdNoExist = appIdNoExist;
 
+                    // Add parts and reset properties if they are present
+                    if (msg.parts) {
+                        outMsg1.parts = msg.parts;
+                    }
+                    // eslint-disable-next-line no-underscore-dangle
+                    if (msg._msgid) {
+                        // eslint-disable-next-line no-underscore-dangle
+                        outMsg1._msgid = msg._msgid;
+                    }
+                    if (msg.reset) {
+                        outMsg1.reset = msg.reset;
+                    }
+
                     // Log success
                     node.log(`Updated ${appUpdated.length} apps on Qlik Sense server.`);
                     node.log(`App IDs that did not exist on server: ${appIdNoExist}`);
@@ -216,6 +242,19 @@ module.exports = function (RED) {
                     outMsg1.payload.appDeleted = appDeleted;
                     outMsg1.payload.appIdNoExist = appIdNoExist;
 
+                    // Add parts and reset properties if they are present
+                    if (msg.parts) {
+                        outMsg1.parts = msg.parts;
+                    }
+                    // eslint-disable-next-line no-underscore-dangle
+                    if (msg._msgid) {
+                        // eslint-disable-next-line no-underscore-dangle
+                        outMsg1._msgid = msg._msgid;
+                    }
+                    if (msg.reset) {
+                        outMsg1.reset = msg.reset;
+                    }
+
                     // Log success
                     node.log(`Deleted ${appDeleted.length} apps on Qlik Sense server.`);
                     node.log(`App IDs that did not exist on server: ${appIdNoExist}`);
@@ -276,6 +315,19 @@ module.exports = function (RED) {
                         // Concatenate all app IDs and objects into output message
                         outMsg1.payload.appId.push(...uniqueAppIds);
                         outMsg1.payload.appObj.push(...uniqueAppObjects);
+
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
 
                         // Send message to output 1
                         send(outMsg1);
@@ -406,8 +458,21 @@ module.exports = function (RED) {
                         outMsg1.payload.app = result.app;
                         outMsg1.payload.appIdNoExist = result.appIdNoExist;
 
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
                         // Send outMsg11
-                        node.send(outMsg1);
+                        send(outMsg1);
                     } else {
                         // Error getting apps
                         node.status({ fill: 'red', shape: 'ring', text: 'error getting apps' });
@@ -447,8 +512,21 @@ module.exports = function (RED) {
                         outMsg1.payload.app = result.app;
                         outMsg1.payload.appIdNoExist = result.appIdNoExist;
 
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
                         // Send outMsg11
-                        node.send(outMsg1);
+                        send(outMsg1);
                     } else {
                         // Error setting app load script
                         node.status({ fill: 'red', shape: 'ring', text: 'error setting app load script' });

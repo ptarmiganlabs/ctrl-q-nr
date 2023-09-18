@@ -1,9 +1,6 @@
-const fs = require('fs');
 const axios = require('axios');
-const https = require('https');
 
-const { getXref } = require('../misc/xref');
-const { getHeaders } = require('./header');
+const { getAuth } = require('./auth');
 
 // Function to get tags from Qlik Sense server
 // Parameters:
@@ -17,43 +14,8 @@ async function getTags(node, done, tagNamesToGet) {
         tagNamesToGet = [];
     }
 
-    // Get xref string
-    const xref = getXref(16);
-
-    // Get headers
-    const headers = getHeaders(xref);
-
-    // Create httpsAgent
-    const { authType } = node.senseServer;
-    let httpsAgent;
-
-    if (authType === 'cert') {
-        const cert = fs.readFileSync(node.senseServer.certFile);
-        const key = fs.readFileSync(node.senseServer.keyFile);
-        httpsAgent = new https.Agent({
-            cert,
-            key,
-            rejectUnauthorized: false,
-        });
-    } else if (authType === 'jwt') {
-        const token = node.senseServer.jwt;
-        headers.Authorization = `Bearer ${token}`;
-    } else {
-        // Invalid auth type. Log error to console, then throw error.
-        node.error(`Invalid auth type: ${authType}`);
-        throw new Error(`Invalid auth type: ${authType}`);
-    }
-
-    // Build Axios config
-    const axiosConfig = {
-        url: '',
-        method: 'get',
-        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
-        headers,
-        timeout: 10000,
-        responseType: 'json',
-        httpsAgent,
-    };
+    // Set up authentication
+    const { axiosConfig, xref } = getAuth(node);
 
     const tagRetrieved = [];
     const tagNameNoExist = [];
@@ -118,32 +80,8 @@ async function getTags(node, done, tagNamesToGet) {
 // - done: the done function
 // - tagsToCreate: an array of tag names to create
 async function createTags(node, done, tagNamesToCreate) {
-    // Get xref string
-    const xref = await getXref(16);
-
-    // Get headers
-    const headers = getHeaders(xref);
-
-    // Create httpsAgent
-    const { authType } = node.senseServer;
-    let httpsAgent;
-
-    if (authType === 'cert') {
-        const cert = fs.readFileSync(node.senseServer.certFile);
-        const key = fs.readFileSync(node.senseServer.keyFile);
-        httpsAgent = new https.Agent({
-            cert,
-            key,
-            rejectUnauthorized: false,
-        });
-    } else if (authType === 'jwt') {
-        const token = node.senseServer.jwt;
-        headers.Authorization = `Bearer ${token}`;
-    } else {
-        // Invalid auth type. Log error to console, then throw error.
-        node.error(`Invalid auth type: ${authType}`);
-        throw new Error(`Invalid auth type: ${authType}`);
-    }
+    // Set up authentication
+    const { axiosConfig, xref } = getAuth(node);
 
     // Get existing tags from server
     let existingTags;
@@ -183,21 +121,11 @@ async function createTags(node, done, tagNamesToCreate) {
     // Log number of tags that will be created
     node.log(`${tagsToCreate.length} tags will be created`);
 
-    // Add content-type header
-    headers['content-type'] = 'application/json';
-
-    // Build Axios config
-    // Place array of tag names to be created in body of request
-    const axiosConfig = {
-        url: `/qrs/tag/many?xrfkey=${xref}`,
-        method: 'post',
-        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
-        headers,
-        timeout: 10000,
-        responseType: 'json',
-        httpsAgent,
-        data: tagsToCreate,
-    };
+    // Build final Axios config
+    axiosConfig.url = `/qrs/tag/many?xrfkey=${xref}`;
+    axiosConfig.headers['content-type'] = 'application/json';
+    axiosConfig.method = 'post';
+    axiosConfig.data = tagsToCreate;
 
     let response;
     try {
@@ -231,32 +159,8 @@ async function createTags(node, done, tagNamesToCreate) {
 // - done: the done function
 // - tagsToDelete: an array of tag objects to delete
 async function deleteTags(node, done, tagNamesToDelete) {
-    // Get xref string
-    const xref = await getXref(16);
-
-    // Get headers
-    const headers = getHeaders(xref);
-
-    // Create httpsAgent
-    const { authType } = node.senseServer;
-    let httpsAgent;
-
-    if (authType === 'cert') {
-        const cert = fs.readFileSync(node.senseServer.certFile);
-        const key = fs.readFileSync(node.senseServer.keyFile);
-        httpsAgent = new https.Agent({
-            cert,
-            key,
-            rejectUnauthorized: false,
-        });
-    } else if (authType === 'jwt') {
-        const token = node.senseServer.jwt;
-        headers.Authorization = `Bearer ${token}`;
-    } else {
-        // Invalid auth type. Log error to console, then throw error.
-        node.error(`Invalid auth type: ${authType}`);
-        throw new Error(`Invalid auth type: ${authType}`);
-    }
+    // Set up authentication
+    const { axiosConfig, xref } = getAuth(node);
 
     // Get existing tags from server
     let existingTags;
@@ -293,19 +197,9 @@ async function deleteTags(node, done, tagNamesToDelete) {
     // Log number of tags that will be deleted
     node.log(`${tagsToDelete.length} tags will be deleted`);
 
-    // Add content-type header
-    headers['content-type'] = 'application/json';
-
-    // Build basic Axios config
-    const axiosConfig = {
-        url: '',
-        method: 'delete',
-        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
-        headers,
-        timeout: 10000,
-        responseType: 'json',
-        httpsAgent,
-    };
+    // Build final Axios config
+    axiosConfig.headers['content-type'] = 'application/json';
+    axiosConfig.method = 'delete';
 
     // Array to hold deleted tags
     const tagDeleted = [];
@@ -342,44 +236,11 @@ async function deleteTags(node, done, tagNamesToDelete) {
 // Function to get tags for a specific app
 // Use Axios to make the REST call to QRS API
 async function getAppTags(node, appId) {
-    // Get xref string
-    const xref = await getXref(16);
-
-    // Get headers
-    const headers = getHeaders(xref);
-
-    // Create httpsAgent
-    const { authType } = node.senseServer;
-    let httpsAgent;
-
-    if (authType === 'cert') {
-        const cert = fs.readFileSync(node.senseServer.certFile);
-        const key = fs.readFileSync(node.senseServer.keyFile);
-        httpsAgent = new https.Agent({
-            cert,
-            key,
-            rejectUnauthorized: false,
-        });
-    } else if (authType === 'jwt') {
-        const token = node.senseServer.jwt;
-        headers.Authorization = `Bearer ${token}`;
-    } else {
-        // Invalid auth type. Log error to console, then throw error.
-        node.error(`Invalid auth type: ${authType}`);
-        throw new Error(`Invalid auth type: ${authType}`);
-    }
+    // Set up authentication
+    const { axiosConfig, xref } = getAuth(node);
 
     // Build Axios config
-    // Place array of tag names in body of request
-    const axiosConfig = {
-        url: `/qrs/app/${appId}?xrfkey=${xref}`,
-        method: 'get',
-        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
-        headers,
-        timeout: 10000,
-        responseType: 'json',
-        httpsAgent,
-    };
+    axiosConfig.url = `/qrs/app/${appId}?xrfkey=${xref}`;
 
     // Make REST call to QRS API
     const response = await axios.request(axiosConfig);

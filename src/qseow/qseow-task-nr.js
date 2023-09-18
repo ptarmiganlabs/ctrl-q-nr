@@ -52,8 +52,21 @@ module.exports = function (RED) {
                         outMsg1.payload.started.userSyncTask = result.userSyncTaskToStart;
                         outMsg1.payload.taskIdNoExist = result.taskIdNoExist;
 
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
                         // Send outMsg1
-                        node.send(outMsg1);
+                        send(outMsg1);
                     } else {
                         // Log error
                         node.status({ fill: 'red', shape: 'ring', text: 'error starting tasks' });

@@ -14,7 +14,7 @@ module.exports = function (RED) {
 
         node.on('input', async (msg, send, done) => {
             try {
-                const outMsg = {
+                const outMsg1 = {
                     payload: {},
                 };
 
@@ -37,18 +37,18 @@ module.exports = function (RED) {
                     node.status({ fill: 'yellow', shape: 'dot', text: 'getting users' });
 
                     // Add app arrays to out message
-                    outMsg.payload.user = [];
+                    outMsg1.payload.user = [];
 
                     // Get user information from Qlik Sense Cloud
                     const users = await getUsers(node, qlik);
 
                     // Add users to out message
                     users.forEach((user) => {
-                        outMsg.payload.user.push(user);
+                        outMsg1.payload.user.push(user);
                     });
 
                     // Log success
-                    node.log(`Found ${outMsg.payload.user.length} matching users on Qlik Sense Cloud.`);
+                    node.log(`Found ${outMsg1.payload.user.length} matching users on Qlik Sense Cloud.`);
                     node.status({ fill: 'green', shape: 'dot', text: 'users retrieved' });
                 } else if (node.op === 'u') {
                     // Update users
@@ -62,8 +62,21 @@ module.exports = function (RED) {
                     return false;
                 }
 
+                // Add parts and reset properties if they are present
+                if (msg.parts) {
+                    outMsg1.parts = msg.parts;
+                }
+                // eslint-disable-next-line no-underscore-dangle
+                if (msg._msgid) {
+                    // eslint-disable-next-line no-underscore-dangle
+                    outMsg1._msgid = msg._msgid;
+                }
+                if (msg.reset) {
+                    outMsg1.reset = msg.reset;
+                }
+
                 // Send message to output 1
-                send(outMsg);
+                send(outMsg1);
 
                 done();
             } catch (err) {

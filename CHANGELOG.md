@@ -2,24 +2,21 @@
 
 ## [0.2.5](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.4...v0.2.5) (2023-09-18)
 
-
 ### Bug Fixes
 
-* **qseow:** Error when multiple Node-RED instances run in parallel ([5be3f63](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/5be3f63b710d978fa55bb5c62d6a28f4189a4f90)), closes [#78](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/78)
+-   **qseow:** Error when multiple Node-RED instances run in parallel ([5be3f63](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/5be3f63b710d978fa55bb5c62d6a28f4189a4f90)), closes [#78](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/78)
 
 ## [0.2.4](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.3...v0.2.4) (2023-09-17)
 
-
 ### Features
 
-* **qseow:** Add control of rejectUnauthorized cert to QSEoW server config ([435a479](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/435a479942c416c27f0f5e72949785fd8bfa371f))
-* **qseow:** Add get-script and set-script operations to qseow-app node ([9a0f4f6](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/9a0f4f631d1eedea3481ddb7ff9bb42bb7085caf)), closes [#75](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/75)
-* **qseow:** Add Qlik engine QSEOW server config node ([0f18a5c](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/0f18a5ce96c34efe37561fab4a15848d14094425))
-
+-   **qseow:** Add control of rejectUnauthorized cert to QSEoW server config ([435a479](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/435a479942c416c27f0f5e72949785fd8bfa371f))
+-   **qseow:** Add get-script and set-script operations to qseow-app node ([9a0f4f6](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/9a0f4f631d1eedea3481ddb7ff9bb42bb7085caf)), closes [#75](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/75)
+-   **qseow:** Add Qlik engine QSEOW server config node ([0f18a5c](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/0f18a5ce96c34efe37561fab4a15848d14094425))
 
 ### Miscellaneous
 
-* **deps:** Update esbuild ([eca3719](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/eca3719845929bf025cd4cd069e5b2ced927f92b))
+-   **deps:** Update esbuild ([eca3719](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/eca3719845929bf025cd4cd069e5b2ced927f92b))
 
 ## [0.2.3](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.2...v0.2.3) (2023-09-14)
 

@@ -762,9 +762,6 @@ async function getAppLoadScript(node, appIdsToGet) {
     // Get auth needed for connecting to engine API, using enigma.js
     const { enigmaConfig } = getEnigmaAuth(node);
 
-    // Debug enigmaConfig.url
-    node.log(`enigmaConfig.url: ${enigmaConfig.url}`);
-
     // Loop over all app IDs and get load script for each app
     const app = [];
     const appIdNoExist = [];
@@ -790,6 +787,9 @@ async function getAppLoadScript(node, appIdsToGet) {
                 port: node.senseServer.enginePort,
                 appId,
             });
+
+            // Debug enigmaConfig.url
+            node.log(`enigmaConfig.url: ${enigmaConfig.url}`);
 
             // Get app object
             let appObj;
@@ -871,9 +871,6 @@ async function setAppLoadScript(node, appObjectsToSet) {
     // Get auth needed for connecting to engine API, using enigma.js
     const { enigmaConfig } = getEnigmaAuth(node);
 
-    // Debug enigmaConfig.url
-    node.log(`enigmaConfig.url: ${enigmaConfig.url}`);
-
     // Loop over all app IDs and set load script for each app
     // Take both app ID and load script from the incoming message
     const app = [];
@@ -892,6 +889,18 @@ async function setAppLoadScript(node, appObjectsToSet) {
             appIdNoExist.push(appId);
         } else {
             node.log(`App ${appId} exists on the Qlik Sense server`);
+
+            // Do final config of enigmaConfig
+            enigmaConfig.url = SenseUtilities.buildUrl({
+                secure: node.senseServer.engineProtocol === 'wss',
+                host: node.senseServer.engineHost,
+                port: node.senseServer.enginePort,
+                appId,
+            });
+
+            // Debug enigmaConfig.url
+            node.log(`enigmaConfig.url: ${enigmaConfig.url}`);
+
             // Get app object
             let appObj;
             try {

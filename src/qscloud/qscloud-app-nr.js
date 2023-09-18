@@ -18,7 +18,7 @@ module.exports = function (RED) {
 
         node.on('input', async (msg, send, done) => {
             try {
-                const outMsg = {
+                const outMsg1 = {
                     payload: {},
                 };
 
@@ -41,8 +41,8 @@ module.exports = function (RED) {
                     node.status({ fill: 'yellow', shape: 'dot', text: 'getting apps' });
 
                     // Add app arrays to out message
-                    outMsg.payload.app = [];
-                    outMsg.payload.appIdNoExist = [];
+                    outMsg1.payload.app = [];
+                    outMsg1.payload.appIdNoExist = [];
 
                     const { appIdCandidates } = getCandidateApps(node, msg, done);
 
@@ -56,9 +56,9 @@ module.exports = function (RED) {
                         response = await auth.rest('/apps');
                         allApps = await response.json();
 
-                        // Push all app objects to the outMsg.payload.app array
+                        // Push all app objects to the outMsg1.payload.app array
                         allApps.data.forEach((app) => {
-                            outMsg.payload.app.push(app);
+                            outMsg1.payload.app.push(app);
                         });
                     } else if (appIdCandidates.length > 0) {
                         // Loop through the app IDs
@@ -72,17 +72,17 @@ module.exports = function (RED) {
 
                             if (responseStatus === 200) {
                                 const app = await response.json();
-                                outMsg.payload.app.push(app);
+                                outMsg1.payload.app.push(app);
                             } else {
                                 // App does not exist
-                                outMsg.payload.appIdNoExist.push(appId);
+                                outMsg1.payload.appIdNoExist.push(appId);
                             }
                         }
                     }
 
                     // Log success
-                    node.log(`Found ${outMsg.payload.app.length} matching apps on Qlik Sense server.`);
-                    node.log(`${outMsg.payload.appIdNoExist.length} of the provided app IDs don't exist on Qlik Sense server.`);
+                    node.log(`Found ${outMsg1.payload.app.length} matching apps on Qlik Sense server.`);
+                    node.log(`${outMsg1.payload.appIdNoExist.length} of the provided app IDs don't exist on Qlik Sense server.`);
                     node.status({ fill: 'green', shape: 'dot', text: 'apps retrieved' });
                 } else if (node.op === 'u') {
                     // Update apps
@@ -94,9 +94,9 @@ module.exports = function (RED) {
                     node.status({ fill: 'yellow', shape: 'dot', text: 'reloading apps' });
 
                     // Add app arrays to out message
-                    outMsg.payload.app = [];
-                    outMsg.payload.appIdNoExist = [];
-                    outMsg.payload.appError = [];
+                    outMsg1.payload.app = [];
+                    outMsg1.payload.appIdNoExist = [];
+                    outMsg1.payload.appError = [];
 
                     const { appIdCandidates } = getCandidateApps(node, msg, done);
 
@@ -131,10 +131,10 @@ module.exports = function (RED) {
 
                             if (responseStatus === 201) {
                                 // Reload queued successfully
-                                outMsg.payload.app.push(reloadInfo);
+                                outMsg1.payload.app.push(reloadInfo);
                             } else {
                                 // Error when queuing reload
-                                outMsg.payload.appError.push(reloadInfo);
+                                outMsg1.payload.appError.push(reloadInfo);
                             }
                         } catch (err) {
                             // Error when queuing reload
@@ -157,10 +157,10 @@ module.exports = function (RED) {
 
                             if (err.status === 404) {
                                 // App does not exist
-                                outMsg.payload.appIdNoExist.push(appId);
+                                outMsg1.payload.appIdNoExist.push(appId);
                             } else {
                                 // Other error
-                                outMsg.payload.appError.push({ appId, err });
+                                outMsg1.payload.appError.push({ appId, err });
                             }
                             // node.error(err);
                             // node.status({ fill: 'red', shape: 'ring', text: err });
@@ -170,11 +170,11 @@ module.exports = function (RED) {
                     }
 
                     // Log success
-                    node.log(`Queued ${outMsg.payload.app.length} app reloads on Qlik Sense Cloud.`);
-                    node.log(`${outMsg.payload.appIdNoExist.length} of the provided app IDs could not be reloaded on Qlik Sense Cloud.`);
+                    node.log(`Queued ${outMsg1.payload.app.length} app reloads on Qlik Sense Cloud.`);
+                    node.log(`${outMsg1.payload.appIdNoExist.length} of the provided app IDs could not be reloaded on Qlik Sense Cloud.`);
 
                     // Set node status. If there were any missing apps or errors, set status to red
-                    if (outMsg.payload.appIdNoExist.length > 0 || outMsg.payload.appError.length > 0) {
+                    if (outMsg1.payload.appIdNoExist.length > 0 || outMsg1.payload.appError.length > 0) {
                         node.status({ fill: 'red', shape: 'ring', text: 'errors/warnings, check output' });
                     } else {
                         node.status({ fill: 'green', shape: 'dot', text: 'app reloads queued' });
@@ -208,7 +208,7 @@ module.exports = function (RED) {
                     }
 
                     // Add app object, which in turn has an id array, to out message
-                    outMsg.payload = { appId: [], appObj: [] };
+                    outMsg1.payload = { appId: [], appObj: [] };
 
                     try {
                         // Get app information from Qlik Sense Cloud
@@ -230,10 +230,23 @@ module.exports = function (RED) {
                         }
 
                         // Concatenate all app IDs and objects into output message
-                        outMsg.payload.appId.push(...uniqueAppIds);
-                        outMsg.payload.appObj.push(...uniqueAppObjects);
+                        outMsg1.payload.appId.push(...uniqueAppIds);
+                        outMsg1.payload.appObj.push(...uniqueAppObjects);
 
-                        send(outMsg);
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
+                        send(outMsg1);
 
                         done();
                     } catch (err) {
@@ -242,7 +255,7 @@ module.exports = function (RED) {
                     }
 
                     // Log success
-                    node.log(`Found ${outMsg.payload.appId.length} matching apps on Qlik Sense Cloud.`);
+                    node.log(`Found ${outMsg1.payload.appId.length} matching apps on Qlik Sense Cloud.`);
                     node.status({ fill: 'green', shape: 'dot', text: 'app IDs retrieved' });
 
                     return true;
@@ -256,8 +269,21 @@ module.exports = function (RED) {
                     return false;
                 }
 
+                // Add parts and reset properties if they are present
+                if (msg.parts) {
+                    outMsg1.parts = msg.parts;
+                }
+                // eslint-disable-next-line no-underscore-dangle
+                if (msg._msgid) {
+                    // eslint-disable-next-line no-underscore-dangle
+                    outMsg1._msgid = msg._msgid;
+                }
+                if (msg.reset) {
+                    outMsg1.reset = msg.reset;
+                }
+
                 // Send message to output 1
-                send(outMsg);
+                send(outMsg1);
 
                 done();
             } catch (err) {
