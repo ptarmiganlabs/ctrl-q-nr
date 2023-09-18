@@ -1,6 +1,7 @@
 const fs = require('fs');
 const https = require('https');
 const WebSocket = require('ws');
+const crypto = require('crypto');
 
 const { getXref } = require('../misc/xref');
 const { getHeaders } = require('./header');
@@ -197,6 +198,9 @@ function getEnigmaAuth(node) {
         node.log(`Combined cert: " ${combinedCert}`);
     }
 
+    // Create random session id. It should be in hex format and have a length of 12 characters
+    const sessionId = crypto.randomBytes(12).toString('hex');
+
     // Only use the cert CA file if it is specified
     if (node.senseServer.certCaFile !== '') {
         node.log('Using root CA file');
@@ -208,7 +212,6 @@ function getEnigmaAuth(node) {
         enigmaConfig = {
             schema: qixSchema,
             url: `${node.senseServer.engineProtocol}://${node.senseServer.engineHost}:${node.senseServer.enginePort}`,
-            // url: `wss://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
             createSocket: (url) =>
                 new WebSocket(url, {
                     cert: clientCert,
@@ -218,6 +221,7 @@ function getEnigmaAuth(node) {
                         'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_api',
                     },
                     rejectUnauthorized: node.senseServer.rejectUnauthorized,
+                    identity: sessionId,
                 }),
         };
     } else {
@@ -240,8 +244,7 @@ function getEnigmaAuth(node) {
 
         enigmaConfig = {
             schema: qixSchema,
-            url: `wss://${node.senseServer.qrsHost}:4747`,
-            // url: `wss://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
+            url: `${node.senseServer.engineProtocol}://${node.senseServer.engineHost}:${node.senseServer.enginePort}`,
             createSocket: (url) =>
                 new WebSocket(url, {
                     cert: clientCert,
@@ -250,6 +253,7 @@ function getEnigmaAuth(node) {
                         'X-Qlik-User': 'UserDirectory=Internal;UserId=sa_api',
                     },
                     rejectUnauthorized: node.senseServer.rejectUnauthorized,
+                    identity: sessionId,
                 }),
         };
     }
