@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.6](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.5...v0.2.6) (2023-09-18)
+
+
+### Bug Fixes
+
+* Pass-through of parts/reset message properties ([2db6663](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/2db66632b36e968b5ab14e36d37a34da2d4cf769)), closes [#81](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/81)
+* **qseow:** Respect ignore-anauthorised-cert settings for all calls to QSEoW ([7427151](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/7427151f8a9a0a9f4ec276b049b8f2cc184f0fc7))
+
 ## [0.2.5](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.4...v0.2.5) (2023-09-18)
 
 ### Bug Fixes
