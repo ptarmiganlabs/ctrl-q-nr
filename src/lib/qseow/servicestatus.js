@@ -1,52 +1,14 @@
-const fs = require('fs');
 const axios = require('axios');
-const https = require('https');
 
-const { getXref } = require('../misc/xref');
-const { getHeaders } = require('./header');
+const { getAuth } = require('./auth');
 
 // Function to start tasks on Qlik Sense server
 // Parameters:
 // - node: the node object
 // - done: the done function
 async function getServiceStatus(node, done) {
-    // Get xref string
-    const xref = getXref(16);
-
-    // Get headers
-    const headers = getHeaders(xref);
-
-    // Create httpsAgent
-    const { authType } = node.senseServer;
-    let httpsAgent;
-
-    if (authType === 'cert') {
-        const cert = fs.readFileSync(node.senseServer.certFile);
-        const key = fs.readFileSync(node.senseServer.keyFile);
-        httpsAgent = new https.Agent({
-            cert,
-            key,
-            rejectUnauthorized: false,
-        });
-    } else if (authType === 'jwt') {
-        const token = node.senseServer.jwt;
-        headers.Authorization = `Bearer ${token}`;
-    } else {
-        // Invalid auth type. Log error to console, then throw error.
-        node.error(`Invalid auth type: ${authType}`);
-        throw new Error(`Invalid auth type: ${authType}`);
-    }
-
-    // Build Axios config
-    const axiosConfig = {
-        url: '',
-        method: 'get',
-        baseURL: `${node.senseServer.qrsProtocol}://${node.senseServer.qrsHost}:${node.senseServer.qrsPort}`,
-        headers,
-        timeout: 10000,
-        responseType: 'json',
-        httpsAgent,
-    };
+    // Set up authentication
+    const { axiosConfig, xref } = getAuth(node);
 
     // **********************************
     // *** Get enums from QRS ***
