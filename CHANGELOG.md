@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.4...v0.2.5) (2023-09-18)
+
+
+### Bug Fixes
+
+* **qseow:** Error when multiple Node-RED instances run in parallel ([5be3f63](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/5be3f63b710d978fa55bb5c62d6a28f4189a4f90)), closes [#78](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/78)
+
 ## [0.2.4](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.3...v0.2.4) (2023-09-17)
 
 
