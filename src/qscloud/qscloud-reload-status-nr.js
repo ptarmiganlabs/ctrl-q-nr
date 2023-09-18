@@ -15,15 +15,29 @@ module.exports = function (RED) {
 
         node.on('input', async (msg, send, done) => {
             try {
-                const outMsg = {
+                const outMsg1 = {
                     payload: {},
                 };
 
                 if (msg.payload.operation === 'getFullState') {
                     // If msg.payload.operation = getFullState, send the entire state machine to output 2
-                    outMsg.payload = reloadState.getFullState();
+                    outMsg1.payload = reloadState.getFullState();
                     node.status({ fill: 'green', shape: 'dot', text: 'full state sent to output 2' });
-                    node.send([null, outMsg]);
+
+                    // Add parts and reset properties if they are present
+                    if (msg.parts) {
+                        outMsg1.parts = msg.parts;
+                    }
+                    // eslint-disable-next-line no-underscore-dangle
+                    if (msg._msgid) {
+                        // eslint-disable-next-line no-underscore-dangle
+                        outMsg1._msgid = msg._msgid;
+                    }
+                    if (msg.reset) {
+                        outMsg1.reset = msg.reset;
+                    }
+
+                    node.send([null, outMsg1]);
                 } else if (msg.payload.operation === 'stopTimer') {
                     // Stop the timer
                     reloadState.stopTimer();

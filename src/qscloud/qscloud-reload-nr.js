@@ -14,7 +14,7 @@ module.exports = function (RED) {
 
         node.on('input', async (msg, send, done) => {
             try {
-                const outMsg = {
+                const outMsg1 = {
                     payload: {},
                 };
 
@@ -36,7 +36,7 @@ module.exports = function (RED) {
                     node.status({ fill: 'yellow', shape: 'dot', text: 'getting app reloads' });
 
                     // Add app arrays to out message
-                    outMsg.payload.appReload = [];
+                    outMsg1.payload.appReload = [];
 
                     const allItems = [];
                     try {
@@ -50,10 +50,10 @@ module.exports = function (RED) {
                         done(err);
                     }
 
-                    outMsg.payload.appReload = allItems;
+                    outMsg1.payload.appReload = allItems;
 
                     // Log success
-                    node.log(`Retrieved ${outMsg.payload.appReload.length} app reloads from Qlik Sense Cloud.`);
+                    node.log(`Retrieved ${outMsg1.payload.appReload.length} app reloads from Qlik Sense Cloud.`);
                     node.status({ fill: 'green', shape: 'dot', text: 'app reloads retrieved' });
                 } else if (node.op === 'u') {
                     // Update apps
@@ -67,8 +67,21 @@ module.exports = function (RED) {
                     return false;
                 }
 
+                // Add parts and reset properties if they are present
+                if (msg.parts) {
+                    outMsg1.parts = msg.parts;
+                }
+                // eslint-disable-next-line no-underscore-dangle
+                if (msg._msgid) {
+                    // eslint-disable-next-line no-underscore-dangle
+                    outMsg1._msgid = msg._msgid;
+                }
+                if (msg.reset) {
+                    outMsg1.reset = msg.reset;
+                }
+
                 // Send message to output 1
-                send(outMsg);
+                send(outMsg1);
 
                 done();
             } catch (err) {

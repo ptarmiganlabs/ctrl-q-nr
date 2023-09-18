@@ -28,6 +28,19 @@ module.exports = function (RED) {
                 // Build outMsg1
                 outMsg1.payload.serviceStatus = response;
 
+                // Add parts and reset properties if they are present
+                if (msg.parts) {
+                    outMsg1.parts = msg.parts;
+                }
+                // eslint-disable-next-line no-underscore-dangle
+                if (msg._msgid) {
+                    // eslint-disable-next-line no-underscore-dangle
+                    outMsg1._msgid = msg._msgid;
+                }
+                if (msg.reset) {
+                    outMsg1.reset = msg.reset;
+                }
+
                 send(outMsg1);
 
                 // Log success

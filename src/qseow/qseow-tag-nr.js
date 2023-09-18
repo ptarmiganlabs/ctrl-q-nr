@@ -44,8 +44,21 @@ module.exports = function (RED) {
                         outMsg1.payload.tagCreated = result.tagCreated;
                         outMsg1.payload.tagExist = result.tagExist;
 
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
                         // Send outMsg11
-                        node.send(outMsg1);
+                        send(outMsg1);
                     } else {
                         // Error creating tags
                         node.status({ fill: 'red', shape: 'ring', text: 'error creating tags' });
@@ -70,8 +83,21 @@ module.exports = function (RED) {
                         outMsg1.payload.tag = result.tag;
                         outMsg1.payload.tagNameNoExist = result.tagNameNoExist;
 
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
                         // Send outMsg11
-                        node.send(outMsg1);
+                        send(outMsg1);
                     } else {
                         // Error getting tags
                         node.status({ fill: 'red', shape: 'ring', text: 'error getting tags' });
@@ -97,8 +123,21 @@ module.exports = function (RED) {
                         outMsg1.payload.tagDeleted = result.tagDeleted;
                         outMsg1.payload.tagNameNoExist = result.tagNameNoExist;
 
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        // eslint-disable-next-line no-underscore-dangle
+                        if (msg._msgid) {
+                            // eslint-disable-next-line no-underscore-dangle
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
                         // Send outMsg11
-                        node.send(outMsg1);
+                        send(outMsg1);
                     } else {
                         // Error deleting tags
                         node.status({ fill: 'red', shape: 'ring', text: 'error deleting tags' });
