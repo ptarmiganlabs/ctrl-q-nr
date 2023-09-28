@@ -1,5 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 const { getCandidateTasks } = require('../lib/qseow/taskconfig');
-const { startTasks } = require('../lib/qseow/task');
+const { startTasks, lookupTaskId } = require('../lib/qseow/task');
 
 // eslint-disable-next-line func-names
 module.exports = function (RED) {
@@ -12,14 +13,13 @@ module.exports = function (RED) {
         node.senseServer = RED.nodes.getNode(config.server);
         node.op = config.op;
         node.taskId = config.taskId || '';
-        node.taskSource = config.taskSource1 || '';
+        node.taskSource1 = config.taskSource1 || '';
+        node.taskSource2 = config.taskSource2 || '';
 
         node.on('input', async (msg, send, done) => {
             try {
                 const outMsg1 = {
-                    payload: {
-                        started: {},
-                    },
+                    payload: {},
                 };
 
                 // Which operation to perform?
@@ -67,13 +67,80 @@ module.exports = function (RED) {
 
                         // Send outMsg1
                         send(outMsg1);
-                    } else {
-                        // Log error
-                        node.status({ fill: 'red', shape: 'ring', text: 'error starting tasks' });
-                        node.log('Error starting tasks.');
-                        done('Error starting tasks.');
+                    }
+                } else if (node.op === 'task-id-lookup') {
+                    // Look up task IDs
+                    node.log(`Looking up task IDs on Qlik Sense server...`);
+                    node.status({ fill: 'yellow', shape: 'dot', text: 'looking up task IDs' });
+
+                    // Make sure there is a msg.payload object
+                    if (!msg.payload) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload is missing' });
+                        done('msg.payload is missing');
                         return;
                     }
+
+                    // If msg.payload.taskName exists it should be an array
+                    if (msg.payload.taskName && !Array.isArray(msg.payload.taskName)) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.taskName is not an array' });
+                        done('msg.payload.taskName is not an array');
+                        return;
+                    }
+
+                    // If msg.payload.tagName exists it should be an array
+                    if (msg.payload.tagName && !Array.isArray(msg.payload.tagName)) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.tagName is not an array' });
+                        done('msg.payload.tagName is not an array');
+                        return;
+                    }
+                    // Add task arrays to out message
+                    outMsg1.payload = { taskId: [], taskObj: [] };
+
+                    try {
+                        // Get task info from Qlik Sense server
+                        const { uniqueTaskIds, uniqueTaskObjects } = await lookupTaskId(node, msg.payload);
+
+                        // Did we get any results in uniqueTaskIds?
+                        if (!uniqueTaskIds || !Array.isArray(uniqueTaskIds)) {
+                            node.log('Error getting task IDs in lookupTaskId');
+                            node.status({ fill: 'red', shape: 'ring', text: 'error getting task IDs' });
+                            return;
+                        }
+
+                        // Did we get any results in uniqueTaskObjects?
+                        if (!uniqueTaskObjects || !Array.isArray(uniqueTaskObjects)) {
+                            node.log('Error getting task objects in lookupTaskId');
+                            node.status({ fill: 'red', shape: 'ring', text: 'error getting task objects' });
+                            return;
+                        }
+
+                        // Concatenate all task IDs and objects into output message
+                        outMsg1.payload.taskId.push(...uniqueTaskIds);
+                        outMsg1.payload.taskObj.push(...uniqueTaskObjects);
+
+                        // Add parts and reset properties if they are present
+                        if (msg.parts) {
+                            outMsg1.parts = msg.parts;
+                        }
+                        if (msg._msgid) {
+                            outMsg1._msgid = msg._msgid;
+                        }
+                        if (msg.reset) {
+                            outMsg1.reset = msg.reset;
+                        }
+
+                        // Send outMsg1
+                        send(outMsg1);
+                    } catch (err) {
+                        // Log error
+                        node.error(`Error looking up task IDs on Qlik Sense server: ${err}`);
+                        node.status({ fill: 'red', shape: 'ring', text: 'error looking up task IDs' });
+                        done(err);
+                    }
+
+                    // Log success
+                    node.log(`Found ${outMsg1.payload.taskId.length} matching task IDs on Qlik Sense server`);
+                    node.status({ fill: 'green', shape: 'dot', text: 'task IDs retrieved' });
                 } else {
                     // Log error
                     node.status({ fill: 'red', shape: 'ring', text: 'invalid operation' });

@@ -639,7 +639,7 @@ async function updateApps(node, apps) {
     };
 }
 
-// Function to look up apo IDs given app names, colletion names or managed space names
+// Function to look up apo IDs given app names, tag names or stream names
 // Parameters:
 // node: node object
 // lookupSource: object containing entities to look up and translate into app IDs
@@ -725,7 +725,7 @@ async function lookupAppId(node, lookupSource) {
 
     // Make sure we got an array
     if (!uniqueAppIds || !Array.isArray(uniqueAppIds)) {
-        node.log('Error getting unique app IDs in lookupAppId');
+        node.error('Error getting unique app IDs in lookupAppId');
         node.status({ fill: 'red', shape: 'ring', text: 'error getting unique app IDs' });
         return false;
     }

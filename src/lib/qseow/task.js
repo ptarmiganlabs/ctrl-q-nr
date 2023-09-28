@@ -1,6 +1,95 @@
 const axios = require('axios');
 
+const { getTaskTags } = require('./tag');
 const { getAuth } = require('./auth');
+
+// Function to get tasks from Qlik Sense server, based on task names
+// Parameters:
+// - node: the node object
+// - taskNames: an array of task names
+// Return: an object containing an array of task objects
+async function getTasksByName(node, taskNames) {
+    // Make sure appNames is an array
+    if (!Array.isArray(taskNames)) {
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting tasks by name' });
+        node.log(`Error getting tasks from Qlik Sense server: taskNames is not an array.`);
+        return null;
+    }
+
+    try {
+        // Set up authentication
+        const { axiosConfig, xref } = getAuth(node);
+
+        // Build url that can be used with QRS API. Quote task names with single quotes
+        axiosConfig.url = `/qrs/task/full?filter=name%20eq%20'${taskNames.join(`'%20or%20name%20eq%20'`)}'&xrfkey=${xref}`;
+
+        // Debug url
+        node.log(`URL: ${axiosConfig.url}`);
+
+        // Get tasks from Qlik Sense server
+        const response = await axios(axiosConfig);
+
+        // Ensure response status is 200
+        if (response.status !== 200) {
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting tasks by name' });
+            node.log(`Error getting tasks from Qlik Sense server: ${response.status} ${response.statusText}`);
+            return null;
+        }
+
+        // Return object containing an array of task objects
+        return {
+            task: response.data,
+        };
+    } catch (err) {
+        // Log error
+        node.error(`Error when getting tasks by name: ${err}`);
+        return null;
+    }
+}
+
+// Function to get tasks from Qlik Sense server, based on tag names
+// Parameters:
+// - node: the node object
+// - tagNames: an array of tag names
+// Return: an object called "tag" containing an array of task objects
+async function getTasksByTagName(node, tagNames) {
+    // Make sure tagNames is an array
+    if (!Array.isArray(tagNames)) {
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting tasks by tag name' });
+        node.log(`Error getting tasks from Qlik Sense server: tagNames is not an array.`);
+        return null;
+    }
+
+    try {
+        // Set up authentication
+        const { axiosConfig, xref } = getAuth(node);
+
+        // Build url that can be used with QRS API. Quote task names with single quotes
+        axiosConfig.url = `/qrs/task/full?filter=tags.name%20eq%20'${tagNames.join(`'%20or%20tags.name%20eq%20'`)}'&xrfkey=${xref}`;
+
+        // Debug url
+        node.log(`URL: ${axiosConfig.url}`);
+
+        // Get tasks from Qlik Sense server
+        const response = await axios(axiosConfig);
+
+        // Ensure response status is 200
+        if (response.status !== 200) {
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting tasks by tag name' });
+            node.log(`Error getting tasks from Qlik Sense server: ${response.status} ${response.statusText}`);
+            return null;
+        }
+
+        // Return object containing an array of task objects
+        return {
+            task: response.data,
+        };
+    } catch (err) {
+        // Log error
+        node.error(`Error when getting tasks by tag name: ${err}`);
+        return null;
+    }
+}
 
 // Function to start tasks on Qlik Sense server
 // Parameters:
@@ -149,6 +238,89 @@ async function startTasks(node, done, taskIdsToStart) {
     };
 }
 
+// Function to look up task IDs given task names or tag names
+// Parameters:
+// - node: the node object
+// - lookupSource: object containing entities to look up and translate into task IDs
+
+// Return
+// Success: An object containing an array of unique task IDs and an array of unique task objects
+// Failure: false
+async function lookupTaskId(node, lookupSource) {
+    const allTaskIds = [];
+    const allTaskObjects = [];
+
+    // lookupSource.taskName is an array of task names
+    // Build filter string that can be used with QRS API
+    if (lookupSource.taskName) {
+        // Get tasks from Qlik Sense server
+        // Return a task property, which contains an array task objects
+        const resTasks = await getTasksByName(node, lookupSource.taskName);
+
+        // Make sure we got a response that contains the correct data
+        if (!resTasks || !resTasks.task || !Array.isArray(resTasks.task)) {
+            node.error('Error when getting tasks by name in lookupTaskIds()');
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting tasks by name' });
+            return false;
+        }
+
+        // Loop through array of tasks and add task IDs to allTaskIds array
+        resTasks.task.forEach((task) => {
+            allTaskIds.push(task.id);
+            allTaskObjects.push(task);
+        });
+
+        // Debug
+        node.log(`allTaskIds: ${JSON.stringify(allTaskIds, null, 4)}`);
+    }
+
+    // lookupSource.tagName is an array of tag names
+    // Build filter string that can be used with QRS API
+    if (lookupSource.tagName) {
+        // Get tasks from Qlik Sense server, based on which tag names they have
+        const resTasks = await getTasksByTagName(node, lookupSource.tagName);
+
+        // Make sure we got a response that contains the correct data
+        if (!resTasks || !resTasks.task || !Array.isArray(resTasks.task)) {
+            node.error('Error when getting tasks by tag name in lookupTaskIds()');
+            node.status({ fill: 'red', shape: 'ring', text: 'error getting tasks by tag name' });
+            return false;
+        }
+
+        // Loop through array of tasks and add task IDs to allTaskIds array
+        resTasks.task.forEach((task) => {
+            allTaskIds.push(task.id);
+            allTaskObjects.push(task);
+        });
+    }
+
+    // Remove duplicates from allTaskIds array
+    const uniqueTaskIds = [...new Set(allTaskIds)];
+
+    // Get the task objects for the unique task IDs
+    const uniqueTaskObjects = [];
+
+    // Make sure we got an array
+    if (!uniqueTaskIds || !Array.isArray(uniqueTaskIds)) {
+        node.error('Error when getting unique task IDs in lookupTaskIds()');
+        node.status({ fill: 'red', shape: 'ring', text: 'error getting unique task IDs' });
+        return false;
+    }
+
+    // Loop through array of unique task IDs and get the task objects
+    uniqueTaskIds.forEach((taskId) => {
+        const taskObject = allTaskObjects.find((task) => task.id === taskId);
+        uniqueTaskObjects.push(taskObject);
+    });
+
+    // Return object containing unique task IDs and unique task objects
+    return {
+        uniqueTaskIds,
+        uniqueTaskObjects,
+    };
+}
+
 module.exports = {
     startTasks,
+    lookupTaskId,
 };
