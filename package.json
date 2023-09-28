@@ -34,13 +34,13 @@
     ],
     "dependencies": {
         "@qlik/sdk": "^0.25.0",
-        "axios": "^1.5.0",
+        "axios": "^1.5.1",
         "enigma.js": "^2.12.0",
-        "ws": "^8.14.1"
+        "ws": "^8.14.2"
     },
     "devDependencies": {
-        "esbuild": "^0.19.3",
-        "eslint": "^8.49.0",
+        "esbuild": "^0.19.4",
+        "eslint": "^8.50.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-formatter-table": "^7.32.1",
