@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { getApps, deleteApps, duplicateApps, updateApps, getAppLoadScript, setAppLoadScript, lookupAppId } = require('../lib/qseow/app');
 const { getCandidateAppsPredefAndIncoming } = require('../lib/qseow/appconfig');
 
@@ -298,7 +299,7 @@ module.exports = function (RED) {
                         // Get app info from Qlik Sense server
                         const { uniqueAppIds, uniqueAppObjects } = await lookupAppId(node, msg.payload);
 
-                        // Di we get any result in quniqueAppIds?
+                        // Did we get any result in uniqueAppIds?
                         if (!uniqueAppIds || !Array.isArray(uniqueAppIds)) {
                             node.log('Error getting app IDs in lookupAppId');
                             node.status({ fill: 'red', shape: 'ring', text: 'error getting app IDs' });
@@ -320,9 +321,7 @@ module.exports = function (RED) {
                         if (msg.parts) {
                             outMsg1.parts = msg.parts;
                         }
-                        // eslint-disable-next-line no-underscore-dangle
                         if (msg._msgid) {
-                            // eslint-disable-next-line no-underscore-dangle
                             outMsg1._msgid = msg._msgid;
                         }
                         if (msg.reset) {
