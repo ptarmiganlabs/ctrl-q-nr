@@ -6,9 +6,10 @@
         defaults: {
             name: { value: '' },
             server: { value: '', type: 'qseow-sense-server' },
-            op: { value: 'start', options: ['start'], required: true },
+            op: { value: 'start', options: ['start', 'task-id-lookup'], required: true },
             taskId: { value: '', required: false },
             taskSource1: { value: 'predefined', options: ['predefined', 'msg-in'] },
+            taskSource2: { value: 'msg-in', options: ['msg-in'] },
         },
         inputs: 1,
         outputs: 1,
@@ -33,7 +34,14 @@
             // eslint-disable-next-line no-undef
             const taskSourceInput1 = $('#node-input-taskSource1');
             // eslint-disable-next-line no-undef
+            const taskSourceInput1Row = $('#node-input-taskSource1').parent();
+            // eslint-disable-next-line no-undef
+            const taskSourceInput2 = $('#node-input-taskSource2');
+            // eslint-disable-next-line no-undef
+            const taskSourceInput2Row = $('#node-input-taskSource2').parent();
+            // eslint-disable-next-line no-undef
             const taskIdEditorRow = $('#node-input-taskId-editor').parent();
+
             function updateTaskIdSource() {
                 if (appOpInput.val() === 'c') {
                     // Create task
@@ -44,18 +52,34 @@
                 } else if (appOpInput.val() === 'd') {
                     // Delete task
                     taskIdEditorRow.hide();
+                } else if (appOpInput.val() === 'task-id-lookup') {
+                    // Hide the task source selection that offers both "predefined" and "msg-in" options
+                    taskSourceInput1Row.hide();
+
+                    // Show the task source selection that offers only the "msg-in" option
+                    taskSourceInput2Row.show();
+
+                    // Hide the task ID editor
+                    taskIdEditorRow.hide();
                 } else if (appOpInput.val() === 'start') {
-                    // Start task
+                    // Show the task source selection that offers both "predefined" and "msg-in" options
+                    taskSourceInput1Row.show();
+
+                    // Hide the task source selection that offers only the "msg-in" option
+                    taskSourceInput2Row.hide();
+
                     if (taskSourceInput1.val() === 'predefined') {
                         // Show the task source selection that offers both "predefined" and "msg-in" options
                         taskIdEditorRow.show();
                     } else {
+                        // Hide the task ID editor
                         taskIdEditorRow.hide();
                     }
                 }
             }
             appOpInput.on('change', updateTaskIdSource);
             taskSourceInput1.on('change', updateTaskIdSource);
+            taskSourceInput2.on('change', updateTaskIdSource);
             updateTaskIdSource();
         },
         oneditsave() {
@@ -87,11 +111,18 @@
             <option value="u">Update</option>
             <option value="d">Delete</option> -->
             <option value="start">Start</option>
+            <option value="task-id-lookup">Task ID lookup</option>
         </select>
         <div class="form-row">
             <label for="node-input-taskSource1"><i class="fa fa-cog"></i> Source of task IDs</label>
             <select id="node-input-taskSource1">
                 <option value="predefined">Predefined task IDs</option>
+                <option value="msg-in">Task IDs in incoming message</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-taskSource2"><i class="fa fa-cog"></i> Source of task IDs</label>
+            <select id="node-input-taskSource2">
                 <option value="msg-in">Task IDs in incoming message</option>
             </select>
         </div>
@@ -124,6 +155,7 @@
             <strong>Operation:</strong> The operation to perform on the task(s). The options are:
             <ul>
                 <li><strong>Start:</strong> Start one or more tasks.</li>
+                <li><strong>Task ID lookup:</strong> Lookup task IDs based on task names, tags etc.</li>
             </ul>
         </li>
     </ul>
@@ -134,10 +166,7 @@
     <p>The tasks to be started can be defined in one of two ways:</p>
     <ul>
         <li><strong>Predefined task IDs:</strong> The task IDs are defined in the node itself.</li>
-        <li>
-            <strong>Task IDs in incoming message:</strong> The task IDs are in the <code>payload.taskId</code> property of the incoming
-            message.
-        </li>
+        <li><strong>Task IDs in incoming message:</strong> The task IDs are in the incoming message.</li>
     </ul>
 
     <h4>Predefined task IDs</h4>
@@ -168,11 +197,20 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
     </pre
     >
 
-    <h2>Input</h2>
-    <p>The node's logic will trigger when it receives a message on its input.</p>
+    <h2>Input and output messages, per operation</h2>
 
-    <h2>Output</h2>
-    <p>The node will output a message with the following properties:</p>
+    <p>
+        Different operations use different properties in the input message.<br />
+        Similarly, different operations set different properties in the output message.
+    </p>
+
+    <h3>Start task</h3>
+
+    <h4>Input message</h4>
+    <p>If task IDs in the incoming message are used, those IDs must be in the <code>payload.taskId</code> array.</p>
+
+    <h4>Output message</h4>
+    <p>The output message includes the following properties:</p>
     <ul>
         <li><strong>payload.started.reloadTask:</strong> Array of reload task objects that were started.</li>
         <li><strong>payload.started.externalProgramTask:</strong> Array of external program task objects that were started.</li>
@@ -181,7 +219,19 @@ b8d7f6a5-c4e3-2g1i-9h8j-7k6l5m4n3o2p
         <li><strong>payload.taskIdNoExist:</strong> Array of task IDs that does not exist on the Sense server.</li>
     </ul>
 
-    <h2>Example usage</h2>
-    <p>Here is an example of how to use the qseow-task node in a Node-RED flow:</p>
-    <pre></pre>
+    <h3>Task ID lookup</h3>
+
+    <h4>Input message</h4>
+    <p>The input message includes the following properties:</p>
+    <ul>
+        <li><strong>payload.taskName:</strong> Array of task names to look up.</li>
+        <li><strong>payload.tagName:</strong> Array of tag names to look up.</li>
+    </ul>
+
+    <h4>Output message</h4>
+    <p>The output message includes the following properties:</p>
+    <ul>
+        <li><strong>payload.taskId:</strong> Array of task IDs, one for each task that matched the search criteria.</li>
+        <li><strong>payload.taskObj:</strong> Array of task objects, one for each task that matched the search criteria.</li>
+    </ul>
 </script>

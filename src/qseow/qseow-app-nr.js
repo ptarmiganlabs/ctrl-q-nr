@@ -285,10 +285,10 @@ module.exports = function (RED) {
                         return;
                     }
 
-                    // If msg.payload.spaceName exists it should be an array
-                    if (msg.payload.spaceName && !Array.isArray(msg.payload.spaceName)) {
-                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.spaceName is not an array' });
-                        done('msg.payload.spaceName is not an array');
+                    // If msg.payload.streamName exists it should be an array
+                    if (msg.payload.streamName && !Array.isArray(msg.payload.streamName)) {
+                        node.status({ fill: 'red', shape: 'ring', text: 'msg.payload.streamName is not an array' });
+                        done('msg.payload.streamName is not an array');
                         return;
                     }
 
