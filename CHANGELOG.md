@@ -2,20 +2,17 @@
 
 ## [0.2.7](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.6...v0.2.7) (2023-09-28)
 
-
 ### Features
 
-* **qseow:** Add operation task-id-lookup operation ([fbd0d4e](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/fbd0d4ee91a9e22f53e05bc3acfa86f6b7ef1601)), closes [#85](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/85)
-
+-   **qseow:** Add operation task-id-lookup operation ([fbd0d4e](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/fbd0d4ee91a9e22f53e05bc3acfa86f6b7ef1601)), closes [#85](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/85)
 
 ### Bug Fixes
 
-* **qseow:** Test streams rather than spaces for QSEoW ([1807bac](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/1807bac46f5df3533dd1cedfebad3434128529db)), closes [#86](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/86)
-
+-   **qseow:** Test streams rather than spaces for QSEoW ([1807bac](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/1807bac46f5df3533dd1cedfebad3434128529db)), closes [#86](https://github.com/ptarmiganlabs/ctrl-q-nr/issues/86)
 
 ### Miscellaneous
 
-* **deps:** Update dependencies ([177c643](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/177c643b0d962c4aef38dbd41b9198f7e0018f47))
+-   **deps:** Update dependencies ([177c643](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/177c643b0d962c4aef38dbd41b9198f7e0018f47))
 
 ## [0.2.6](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.5...v0.2.6) (2023-09-18)
 

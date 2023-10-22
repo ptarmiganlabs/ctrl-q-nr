@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const { getTaskTags } = require('./tag');
+// const { getTaskTags } = require('./tag');
 const { getAuth } = require('./auth');
 
 // Function to get tasks from Qlik Sense server, based on task names

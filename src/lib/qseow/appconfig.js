@@ -4,10 +4,10 @@ function getCandidateAppsPredefAndIncoming(node, done, msg) {
     let appIdCandidates = [];
 
     // Debug node.appSource1
-    node.log(`node.appSource1: ${node.appSource1}`);
-    node.log(`node.appSource2: ${node.appSource2}`);
-    node.log(`node.op: ${node.op}`);
-    node.log(`node.appSource: ${node.appSource}`);
+    // node.log(`node.appSource1: ${node.appSource1}`);
+    // node.log(`node.appSource2: ${node.appSource2}`);
+    // node.log(`node.op: ${node.op}`);
+    // node.log(`node.appSource: ${node.appSource}`);
 
     // Where should we get the app identifiers from?
     if (node.appSource === 'msg-in') {

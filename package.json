@@ -39,14 +39,14 @@
         "ws": "^8.14.2"
     },
     "devDependencies": {
-        "esbuild": "^0.19.4",
-        "eslint": "^8.50.0",
+        "esbuild": "^0.19.5",
+        "eslint": "^8.52.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-formatter-table": "^7.32.1",
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-import": "^2.28.1",
-        "eslint-plugin-prettier": "^5.0.0",
+        "eslint-plugin-prettier": "^5.0.1",
         "prettier": "^3.0.3"
     },
     "engines": {

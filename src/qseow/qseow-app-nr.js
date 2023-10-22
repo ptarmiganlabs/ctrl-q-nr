@@ -36,7 +36,9 @@ module.exports = function (RED) {
                         node.appSource = 'predefined';
                     } else {
                         // Log error
+                        node.status({ fill: 'red', shape: 'ring', text: 'invalid app source' });
                         node.log(`Invalid app source: "${node.appSource1}"`);
+                        node.done(`Invalid app source: "${node.appSource1}"`);
 
                         node.appSource = 'invalid';
                     }
