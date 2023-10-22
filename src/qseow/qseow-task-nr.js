@@ -33,6 +33,21 @@ module.exports = function (RED) {
                     // Delete tasks
                 } else if (node.op === 'start') {
                     // Start tasks
+                    node.log(`Starting tasks on Qlik Sense server...`);
+                    node.status({ fill: 'yellow', shape: 'dot', text: 'starting tasks' });
+
+                    // Get source of task IDs, then set save it in the node object
+                    if (node.taskSource1 === 'msg-in') {
+                        node.taskSource = 'msg-in';
+                    } else if (node.taskSource1 === 'predefined') {
+                        node.taskSource = 'predefined';
+                    } else {
+                        // Log error
+                        node.status({ fill: 'red', shape: 'ring', text: 'invalid task source' });
+                        node.log(`Invalid task source: "${node.taskSource1}"`);
+                        done(`Invalid task source: "${node.taskSource1}"`);
+                        return;
+                    }
 
                     // Get candidate task IDs
                     const { taskIdCandidates } = getCandidateTasks(node, done, msg);
@@ -72,6 +87,9 @@ module.exports = function (RED) {
                     // Look up task IDs
                     node.log(`Looking up task IDs on Qlik Sense server...`);
                     node.status({ fill: 'yellow', shape: 'dot', text: 'looking up task IDs' });
+
+                    // Source of task IDs is always incoming message for this operation
+                    node.taskSource = 'msg-in';
 
                     // Make sure there is a msg.payload object
                     if (!msg.payload) {
