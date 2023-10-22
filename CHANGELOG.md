@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.8](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.7...v0.2.8) (2023-10-22)
+
+
+### Bug Fixes
+
+* **qseow:** No more "invalid task source" error for task operations ([027f388](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/027f38874e411ecea3f028d8e9d039bc91e6d16c))
+
 ## [0.2.7](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.6...v0.2.7) (2023-09-28)
 
 ### Features
