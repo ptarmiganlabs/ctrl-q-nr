@@ -1,4 +1,5 @@
 name: ci
+
 on:
   workflow_dispatch:
   push:
@@ -19,24 +20,16 @@ jobs:
       - name: Show github.ref
         run: echo "$GITHUB_REF"
 
-      - uses: google-github-actions/release-please-action@v3
+        - uses: google-github-actions/release-please-action@v4
         id: release
         if: github.repository_owner == 'ptarmiganlabs'
         with:
-          # command: manifest
-          # bootstrap-sha: ad2255c9c24f68d0adb5255159fa5a849ab880e4
-          # last-release-sha: b6266be9857c88405364c8af54fbfbed83bb9f66
-          # release-as: 0.0.1
-          release-type: node
-          package-name: ctrl-q-nr
-          default-branch: main
-          prerelease: true
-          release-search-depth: 5
-          commit-search-depth: 200
-          draft: true
-          bump-minor-pre-major: true
-          bump-patch-for-minor-pre-major: true
-          changelog-types: '[{"type": "feat","section": "Features","hidden": false},{"type": "fix","section": "Bug Fixes","hidden": false},{"type": "chore","section": "Miscellaneous","hidden": false},{"type": "refactor","section": "Refactoring","hidden": false},{"type": "docs","section": "Documentation","hidden": false},{"type": "build","section": "Miscellaneous","hidden": false}]'
+          token: ${{ secrets.RELEASE_PLEASE_PAT }}
+          # optional. customize path to release-please-config.json
+          config-file: release-please-config.json
+          # optional. customize path to .release-please-manifest.json
+          manifest-file: .release-please-manifest.json
+          target-branch: main
 
       - name: Show output from Release-Please
         if: always()
@@ -70,7 +63,7 @@ jobs:
       - name: Install dependencies
         run: |
           pwd 
-          npm ci
+          npm ci --include=dev --include=prod
 
       - name: Run Snyk to check for vulnerabilities
         if: |
@@ -117,7 +110,7 @@ jobs:
       - name: Install dependencies
         run: |
           pwd 
-          npm ci
+          npm ci --include=prod
 
       - name: Publish to npm
         uses: JS-DevTools/npm-publish@v3
