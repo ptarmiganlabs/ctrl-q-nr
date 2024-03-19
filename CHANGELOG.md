@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.9 (2024-03-19)
+
+
+### Miscellaneous
+
+* **deps:** Update dependencies ([7d67251](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/7d67251c3a71eed30ffa4ddfb3a8804aafda7425))
+* Upgrade build tools ([c72757c](https://github.com/ptarmiganlabs/ctrl-q-nr/commit/c72757c96153852f65bdb59f2b17306c077ac275))
+
 ## [0.2.8](https://github.com/ptarmiganlabs/ctrl-q-nr/compare/v0.2.7...v0.2.8) (2023-10-22)
 
 ### Bug Fixes
