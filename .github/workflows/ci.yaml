@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     # timeout-minutes: 15
 
-    if: ${{ needs.release-please.outputs.releases_created }} 
+    if: needs.release-please.outputs.releases_created == 'true'
     env:
       DIST_FILE_NAME: ctrl-q-nr
       GITHUB_TOKEN: ${{ secrets.PAT }}
