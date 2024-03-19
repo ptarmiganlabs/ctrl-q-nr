@@ -80,7 +80,7 @@ jobs:
       - name: Upload Snyk result to GitHub Code Scanning
         if: |
           github.repository_owner == 'ptarmiganlabs'
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
 
