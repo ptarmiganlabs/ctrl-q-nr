@@ -40,7 +40,7 @@
     },
     "devDependencies": {
         "esbuild": "^0.20.2",
-        "eslint": "^8.57.0",
+        "eslint": "^9.5.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-formatter-table": "^7.32.1",
